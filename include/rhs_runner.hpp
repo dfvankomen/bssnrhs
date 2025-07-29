@@ -157,7 +157,7 @@ struct RHSFunctionInputs {
           a_rhs(rhs_alpha),
           chi_rhs(rhs_chi),
           K_rhs(rhs_K),
-          gt_rhs00(rhs_Gt0),
+          gt_rhs00(rhs_gt0),
           gt_rhs01(rhs_gt1),
           gt_rhs02(rhs_gt2),
           gt_rhs11(rhs_gt3),
@@ -341,20 +341,10 @@ void register_all_rhs_functions();
 
 void run_rhs_function(std::string &func_name);
 
-template <typename T>
-void to_2d(std::vector<T> &vec_in, T **v2d, size_t total_points_per_dof,
-           size_t dof) {
-    // make sure we have enough points
-    if (vec_in.size() != total_points_per_dof * dof) {
-        throw std::runtime_error(
-            "Error when converting vector to 2d! vec_in is not the same size "
-            "as dof * total_points_per_dof!");
-    }
-
-    for (unsigned int i = 0; i < dof; i++)
-        v2d[i] = vec_in.data() + i * total_points_per_dof;
-
-    return;
-}
+void bssn_bcs(double *f_rhs, const double *f, const double *dxf,
+              const double *dyf, const double *dzf, const double *pmin,
+              const double *pmax, const double f_falloff,
+              const double f_asymptotic, const unsigned int *sz,
+              const unsigned int &bflag);
 
 }  // namespace bssnrhstests

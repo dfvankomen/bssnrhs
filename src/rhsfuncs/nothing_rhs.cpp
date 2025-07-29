@@ -46,7 +46,42 @@ void do_nothing_rhs(const RHSFunctionInputs& v) {
            grad2_1_1_beta2, grad2_1_2_beta2, grad2_2_2_beta2, bflag, nx, ny, nz,
            hx, hy, hz, pmin] = v;
 
-    // we've set everything up, but let's do nothing as a test!
+    // make sure everything is set to 0.0, this would be the "worst" state
+    // TODO: might be worthwhile to make these low-amplitude random or some
+    // other non-zero number
+    for (unsigned int k = bssnrhstests::pw; k < nz - bssnrhstests::pw; k++) {
+        for (unsigned int j = bssnrhstests::pw; j < ny - bssnrhstests::pw;
+             j++) {
+            for (unsigned int i = bssnrhstests::pw; i < nx - bssnrhstests::pw;
+                 i++) {
+                const unsigned int pp = i + nx * (j + ny * k);
+                a_rhs[pp]             = 0.0;
+                chi_rhs[pp]           = 0.0;
+                K_rhs[pp]             = 0.0;
+                gt_rhs00[pp]          = 0.0;
+                gt_rhs01[pp]          = 0.0;
+                gt_rhs02[pp]          = 0.0;
+                gt_rhs11[pp]          = 0.0;
+                gt_rhs12[pp]          = 0.0;
+                gt_rhs22[pp]          = 0.0;
+                b_rhs0[pp]            = 0.0;
+                b_rhs1[pp]            = 0.0;
+                b_rhs2[pp]            = 0.0;
+                At_rhs00[pp]          = 0.0;
+                At_rhs01[pp]          = 0.0;
+                At_rhs02[pp]          = 0.0;
+                At_rhs11[pp]          = 0.0;
+                At_rhs12[pp]          = 0.0;
+                At_rhs22[pp]          = 0.0;
+                Gt_rhs0[pp]           = 0.0;
+                Gt_rhs1[pp]           = 0.0;
+                Gt_rhs2[pp]           = 0.0;
+                B_rhs0[pp]            = 0.0;
+                B_rhs1[pp]            = 0.0;
+                B_rhs2[pp]            = 0.0;
+            }
+        }
+    }
 }
 
 }  // namespace rhs

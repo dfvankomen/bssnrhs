@@ -1,6 +1,7 @@
 #include "bssnrhstests.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <ios>
@@ -11,6 +12,7 @@
 #include <string>
 
 #include "cli.hpp"
+#include "dendrogr_data.hpp"
 
 namespace bssnrhstests {
 
@@ -19,16 +21,19 @@ unsigned int numBlocks  = 50;
 unsigned int iterations = 1;
 std::string baselineRHSName;
 std::string testRHSName;
-unsigned int max_block_size = 1;
-unsigned int rng_seed       = std::numeric_limits<unsigned int>::max();
-unsigned int max_depth      = 9;
-unsigned int min_depth      = 3;
+unsigned int max_block_size     = 1;
+unsigned int rng_seed           = std::numeric_limits<unsigned int>::max();
+unsigned int max_depth          = 9;
+unsigned int min_depth          = 3;
+std::string block_data_filename = "";
+bool verify_data                = false;
 
-DendroScalar domain_max[3]  = {500.0, 500.0, 500.0};
-DendroScalar domain_min[3]  = {-500.0, -500.0, -500.0};
+DendroScalar domain_max[3]      = {500.0, 500.0, 500.0};
+DendroScalar domain_min[3]      = {-500.0, -500.0, -500.0};
 
 std::vector<DendroScalar> vars;
 std::vector<DendroScalar> vars_rhs;
+std::vector<DendroScalar> vars_rhs_truth;
 std::vector<DendroScalar> deriv_workspace;
 std::vector<Block> block_list;
 unsigned int npoints_1d;
@@ -39,6 +44,32 @@ unsigned int total_pts_per_var = 0;
 std::mt19937 rng;
 
 void prep_data_structures() {
+    if (verify_data) {
+        read_from_file(block_data_filename);
+        // and set up the derivative workspace
+        unsigned int largest_block_size = 0;
+
+        for (auto& blk : block_list) {
+            unsigned int blksz = blk.nx * blk.ny * blk.nz;
+            if (blksz > largest_block_size) {
+                largest_block_size = blksz;
+            }
+        }
+        std::cout << "Calculated largest blocksize: " << largest_block_size
+                  << std::endl;
+
+        // TODO: deriv workspace is currently set to just the largest block size
+        // times the number of total derivatives, so if we're going to process
+        // them as *part* of this experiment, we'll need to modify this
+        deriv_workspace =
+            std::vector<DendroScalar>(bssn_num_grad * largest_block_size);
+
+        // and set the number of blocks!
+        bssnrhstests::numBlocks = block_list.size();
+
+        return;
+    }
+
     // first start by building up our block list, somewhat realistic to BSSN
     total_pts_per_var               = 0;
     unsigned int largest_block_size = 0;
@@ -173,6 +204,13 @@ void read_from_cli(int argc, char** argv) {
         max_block_size =
             bssnrhstests::get_arg(args, "max-block-size", max_block_size);
 
+        block_data_filename =
+            bssnrhstests::get_arg(args, "block-file", block_data_filename);
+
+        if (block_data_filename != "") {
+            verify_data = true;
+        }
+
         // otherwise we need a random seed that's time based, probably
         if (rng_seed == std::numeric_limits<unsigned int>::max()) {
             rng_seed = static_cast<unsigned int>(
@@ -212,12 +250,132 @@ void dump_args() {
     print_parameter("Maximum Block Size", max_block_size);
     print_parameter("RNG Seeded to", rng_seed);
 
+    if (verify_data) {
+        print_parameter("Loading block data from: ", block_data_filename);
+    }
+
     // then helpers that are calculated on read from cli
     std::cout << std::endl << "----------" << std::endl;
     std::cout << "  Calculated Values  " << std::endl;
     print_parameter("NPoints 1d", npoints_1d);
     print_parameter("NPoints 3d", npoints_3d);
     print_parameter("PW", pw);
+    print_parameter("Num BSSN Variables", bssn_num_vars);
+}
+
+void read_from_file(std::string& filename) {
+    size_t fileoffset = 0;
+    bool success      = bssnrhstests::get_block_data_and_information(
+        block_list, vars, vars_rhs_truth, filename);
+
+    // and make sure vars_rhs is set to the same size as vars_rhs_truth
+    vars_rhs.resize(vars_rhs_truth.size());
+
+    if (!success) {
+        exit(EXIT_FAILURE);
+    }
+
+#if 0
+    // TEMP code for if we need to debug the bin data
+    DendroScalar* unzipVars_truth[bssnrhstests::bssn_num_vars];
+    DendroScalar* unzipVarsRHS_truth[bssnrhstests::bssn_num_vars];
+
+    to_2d(vars, unzipVars_truth, (size_t)bssnrhstests::total_pts_per_var,
+          (size_t)bssnrhstests::bssn_num_vars);
+    to_2d(vars_rhs_truth, unzipVarsRHS_truth,
+          (size_t)bssnrhstests::total_pts_per_var,
+          (size_t)bssnrhstests::bssn_num_vars);
+
+    size_t blkid = 0;
+
+    // check the data structures to make sure the data is good enough
+    for (auto& blk : block_list) {
+        std::cout << "FOR BLOCK: " << blkid << std::endl;
+        for (size_t var = 0; var < bssnrhstests::bssn_num_vars; var++) {
+            double total_var       = 0.0;
+            double total_rhs       = 0.0;
+            size_t total_pts_blk   = 0;
+
+            double* const var_temp = &unzipVars_truth[var][blk.offset];
+            double* const rhs_temp = &unzipVarsRHS_truth[var][blk.offset];
+            for (size_t k = pw; k < blk.nz - pw; ++k) {
+                for (size_t j = pw; j < blk.ny - pw; ++j) {
+                    for (size_t i = pw; i < blk.nx - pw; ++i) {
+                        const unsigned int pp = i + blk.nx * (j + blk.ny * k);
+
+                        total_var += var_temp[pp];
+                        total_rhs += rhs_temp[pp];
+
+                        total_pts_blk++;
+                    }
+                }
+            }
+
+            std::cout << "    VAR: " << var
+                      << "\tvar_avg: " << total_var / (double)total_pts_blk
+                      << "\trhs_avg: " << total_rhs / (double)total_pts_blk
+                      << "\t(" << total_pts_blk << " total pts)" << std::endl;
+        }
+        blkid++;
+    }
+#endif
+
+    // then we allocate any other vectors
+}
+
+void verify_data_integrity() {
+    double total_sqr_err = 0.0;
+    double total_err     = 0.0;
+
+    size_t total_pts     = 0;
+
+    DendroScalar* unzipVarsRHS[bssnrhstests::bssn_num_vars];
+    DendroScalar* unzipVarsRHS_truth[bssnrhstests::bssn_num_vars];
+
+    to_2d(bssnrhstests::vars_rhs, unzipVarsRHS,
+          (size_t)bssnrhstests::total_pts_per_var,
+          (size_t)bssnrhstests::bssn_num_vars);
+    to_2d(bssnrhstests::vars_rhs_truth, unzipVarsRHS_truth,
+          (size_t)bssnrhstests::total_pts_per_var,
+          (size_t)bssnrhstests::bssn_num_vars);
+
+    for (unsigned int iblk = 0; iblk < bssnrhstests::numBlocks; iblk++) {
+        const auto& blk       = bssnrhstests::block_list[iblk];
+        const unsigned int nx = blk.nx;
+        const unsigned int ny = blk.ny;
+        const unsigned int nz = blk.nz;
+
+        for (size_t var = 0; var < bssnrhstests::bssn_num_vars; var++) {
+            double* const input_temp = &unzipVarsRHS[var][blk.offset];
+            double* const truth_temp = &unzipVarsRHS_truth[var][blk.offset];
+            for (unsigned int k = pw; k < nz - pw; k++) {
+                for (unsigned int j = pw; j < ny - pw; j++) {
+                    for (unsigned int i = pw; i < nx - pw; i++) {
+                        const unsigned int pp = i + blk.nx * (j + blk.ny * k);
+
+                        double diff           = input_temp[pp] - truth_temp[pp];
+
+                        double absdiff        = std::abs(diff);
+                        total_err += absdiff;
+
+                        double sqr_err = absdiff * absdiff;
+                        total_sqr_err += sqr_err;
+
+                        total_pts++;
+                    }
+                }
+            }
+        }
+    }
+
+    std::cout << "TOTAL SQ ERROR: " << total_sqr_err << std::endl;
+
+    // calculate mean squared error
+    std::cout << "TOTAL MEAN SQUARED ERROR: "
+              << total_sqr_err / (double)total_pts << std::endl;
+    std::cout << "ROOT MEAN SQUARED ERROR: "
+              << std::sqrt(total_sqr_err / (double)total_pts) << std::endl;
+    std::cout << "MEAN ERROR: " << total_err / (double)total_pts << std::endl;
 }
 
 }  // namespace bssnrhstests

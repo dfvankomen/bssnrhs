@@ -81,6 +81,8 @@ void default_original_rhs(const RHSFunctionInputs& v) {
         }
     }
 
+    // NOTE: these todo's were moved into the rhs_runner so these functions
+    // could focus on rhs only (for now)
     // TODO: KO Diss
     // TODO: Boundary calculation
 }

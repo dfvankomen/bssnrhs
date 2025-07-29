@@ -4,6 +4,7 @@ project(BSSNRHSTests CXX)
 set(ADDITIONAL_SOURCES
   src/bssnrhstests.cpp
   src/rhs_runner.cpp
+  src/derivs.cpp
 )
 
 file(GLOB RHS_FUNCTION_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/rhsfuncs/*.cpp")
