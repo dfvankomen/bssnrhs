@@ -70,9 +70,9 @@ enum VAR_CONSTRAINT {
     C_MOM2,
     C_PSI4_REAL,
     C_PSI4_IMG,
-    C_RIEM_SQRD,
-    C_PONTRYAGIN,
-    C_EXPANSION
+
+    // final to know how many there are
+    C_TOTAL_NUM
 };
 
 static const char* BSSN_VAR_NAMES[] = {
@@ -82,18 +82,25 @@ static const char* BSSN_VAR_NAMES[] = {
     "U_SYMAT0", "U_SYMAT1", "U_SYMAT2", "U_SYMAT3", "U_SYMAT4", "U_SYMAT5"};
 
 static const char* BSSN_CONSTRAINT_VAR_NAMES[] = {
-    "C_HAM",      "C_MOM0",      "C_MOM1",       "C_MOM2",     "C_PSI4_REAL",
-    "C_PSI4_IMG", "C_RIEM_SQRD", "C_PONTRYAGIN", "C_EXPANSION"};
+    "C_HAM", "C_MOM0", "C_MOM1", "C_MOM2", "C_PSI4_REAL", "C_PSI4_IMG"};
 
-const unsigned int bssn_num_vars  = VAR::U_TOTAL_NUM;
-const unsigned int bssn_num_grad  = bssn_num_vars * 9;
-const unsigned int BSSN_LAMBDA[4] = {1, 1, 1, 1};
-const double BSSN_A_LAMBDA[3]     = {0.0, 2.0, 0.0};
-const double BSSN_LAMBDA_F[3]     = {1.0, 0.0};
+const unsigned int bssn_num_vars   = VAR::U_TOTAL_NUM;
+const unsigned int bssn_num_grad   = bssn_num_vars * 9;
+const unsigned int bssn_num_consts = VAR_CONSTRAINT::C_TOTAL_NUM;
+extern unsigned int BSSN_LAMBDA[4];
+extern double BSSN_A_LAMBDA[3];
+extern double BSSN_LAMBDA_F[2];
+extern double KO_DISS_SIGMA;
 
-const double RIT_ETA_OUTER        = 0.25;
-const double RIT_ETA_CENTRAL      = 2.0;
-const double RIT_ETA_WIDTH        = 40.0;
+extern double RIT_ETA_OUTER;
+extern double RIT_ETA_CENTRAL;
+extern double RIT_ETA_WIDTH;
+extern double BSSN_SSL_H;
+extern double BSSN_SSL_SIGMA;
+
+extern double BSSN_EPSILON_CAKO_GAUGE;
+extern double BSSN_EPSILON_CAKO_OTHER;
+extern bool BSSN_CAKO_ENABLED;
 
 inline std::ostream& operator<<(std::ostream& os, const Block& blk) {
     os << "Block<sz=(" << blk.nx << ", " << blk.ny << ", " << blk.nz
@@ -118,13 +125,30 @@ extern std::string block_data_filename;
 extern std::vector<DendroScalar> vars;
 extern std::vector<DendroScalar> vars_rhs;
 extern std::vector<DendroScalar> vars_rhs_truth;
+extern std::vector<DendroScalar> constraints_vec;
+extern std::vector<DendroScalar> constraints_truth;
 extern std::vector<DendroScalar> deriv_workspace;
 extern std::vector<Block> block_list;
 extern unsigned int pw;
 extern bool verify_data;
+extern double curr_time;
+
+extern double bhMass1;
+extern double bhMass2;
+extern double bh1x;
+extern double bh1y;
+extern double bh1z;
+extern double bh2x;
+extern double bh2y;
+extern double bh2z;
+extern double dx_min;
+extern double dt;
+// TODO: this might need to be read in or something
+const double BSSN_CAHD_C = 0.0;
 
 // @brief The total number of points across all blocks for each variable
 extern unsigned int total_pts_per_var;
+extern unsigned int total_pts_per_const;
 
 void read_from_cli(int argc, char** argv);
 void dump_args();

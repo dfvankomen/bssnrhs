@@ -1,12 +1,15 @@
+#include "rhsfuncs/ssl_cahd_rhs.hpp"
 
-#include "rhsfuncs/nothing_rhs.hpp"
+#include <cmath>
+#include <iostream>
 
+#include "bssnrhstests.hpp"
 #include "rhs_runner.hpp"
 
 namespace bssnrhstests {
 namespace rhs {
 
-void do_nothing_rhs(const RHSFunctionInputs& v) {
+void ssl_cahd_original_rhs(const RHSFunctionInputs& v) {
     auto& [alpha, chi, K, gt0, gt1, gt2, gt3, gt4, gt5, beta0, beta1, beta2,
            At0, At1, At2, At3, At4, At5, Gt0, Gt1, Gt2, B0, B1, B2,
 
@@ -48,41 +51,40 @@ void do_nothing_rhs(const RHSFunctionInputs& v) {
            grad2_0_2_beta1, grad2_1_1_beta1, grad2_1_2_beta1, grad2_2_2_beta1,
            grad2_0_0_beta2, grad2_0_1_beta2, grad2_0_2_beta2, grad2_1_1_beta2,
            grad2_1_2_beta2, grad2_2_2_beta2, bflag, nx, ny, nz, hx, hy, hz,
-           pmin] = v;
+           pmin]                 = v;
 
-    // make sure everything is set to 0.0, this would be the "worst" state
-    // TODO: might be worthwhile to make these low-amplitude random or some
-    // other non-zero number
+    // some constants that are needed
+    const unsigned int lambda[4] = {BSSN_LAMBDA[0], BSSN_LAMBDA[1],
+                                    BSSN_LAMBDA[2], BSSN_LAMBDA[3]};
+    const double A_lambda[3]     = {BSSN_A_LAMBDA[0], BSSN_A_LAMBDA[1],
+                                    BSSN_A_LAMBDA[2]};
+    const double lambda_f[2]     = {BSSN_LAMBDA_F[0], BSSN_LAMBDA_F[1]};
+
+    const double dx_i            = hx;
+    const double t               = curr_time;
+
+    const double h_ssl           = BSSN_SSL_H;
+    const double sig_ssl         = BSSN_SSL_SIGMA;
+
     for (unsigned int k = bssnrhstests::pw; k < nz - bssnrhstests::pw; k++) {
         for (unsigned int j = bssnrhstests::pw; j < ny - bssnrhstests::pw;
              j++) {
             for (unsigned int i = bssnrhstests::pw; i < nx - bssnrhstests::pw;
                  i++) {
+                const double x        = pmin[0] + i * hx;
+                const double y        = pmin[1] + j * hy;
+                const double z        = pmin[2] + k * hz;
                 const unsigned int pp = i + nx * (j + ny * k);
-                a_rhs[pp]             = 0.0;
-                chi_rhs[pp]           = 0.0;
-                K_rhs[pp]             = 0.0;
-                gt_rhs00[pp]          = 0.0;
-                gt_rhs01[pp]          = 0.0;
-                gt_rhs02[pp]          = 0.0;
-                gt_rhs11[pp]          = 0.0;
-                gt_rhs12[pp]          = 0.0;
-                gt_rhs22[pp]          = 0.0;
-                b_rhs0[pp]            = 0.0;
-                b_rhs1[pp]            = 0.0;
-                b_rhs2[pp]            = 0.0;
-                At_rhs00[pp]          = 0.0;
-                At_rhs01[pp]          = 0.0;
-                At_rhs02[pp]          = 0.0;
-                At_rhs11[pp]          = 0.0;
-                At_rhs12[pp]          = 0.0;
-                At_rhs22[pp]          = 0.0;
-                Gt_rhs0[pp]           = 0.0;
-                Gt_rhs1[pp]           = 0.0;
-                Gt_rhs2[pp]           = 0.0;
-                B_rhs0[pp]            = 0.0;
-                B_rhs1[pp]            = 0.0;
-                B_rhs2[pp]            = 0.0;
+
+                const double r_coord  = sqrt(x * x + y * y + z * z);
+
+                const double w        = r_coord / RIT_ETA_WIDTH;
+                const double arg      = -w * w * w * w;
+                const double eta =
+                    (RIT_ETA_CENTRAL - RIT_ETA_OUTER) * exp(arg) +
+                    RIT_ETA_OUTER;
+
+#include "generated/bssneqs_ssl_cahd_dxsq.cpp"
             }
         }
     }

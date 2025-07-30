@@ -12,6 +12,11 @@ int main(int argc, char *argv[]) {
     // then prep the data structures
     bssnrhstests::prep_data_structures();
 
+    std::cout << std::endl
+              << "--------------------------------------" << std::endl;
+    std::cout << "Now running baseline function" << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+
     // then run the functions
     bssnrhstests::run_rhs_function(bssnrhstests::baselineRHSName);
 

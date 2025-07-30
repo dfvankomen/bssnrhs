@@ -34,12 +34,41 @@ DendroScalar domain_min[3]      = {-500.0, -500.0, -500.0};
 std::vector<DendroScalar> vars;
 std::vector<DendroScalar> vars_rhs;
 std::vector<DendroScalar> vars_rhs_truth;
+std::vector<DendroScalar> constraints_truth;
+std::vector<DendroScalar> constraints_vec;
 std::vector<DendroScalar> deriv_workspace;
 std::vector<Block> block_list;
 unsigned int npoints_1d;
 unsigned int npoints_3d;
 unsigned int pw;
-unsigned int total_pts_per_var = 0;
+unsigned int total_pts_per_var   = 0;
+unsigned int total_pts_per_const = 0;
+double curr_time;
+
+double bhMass1;
+double bhMass2;
+double bh1x;
+double bh1y;
+double bh1z;
+double bh2x;
+double bh2y;
+double bh2z;
+double dx_min;
+double dt;
+unsigned int BSSN_LAMBDA[4]    = {1, 1, 1, 1};
+double BSSN_A_LAMBDA[3]        = {0.0, 2.0, 0.0};
+double BSSN_LAMBDA_F[2]        = {1.0, 0.0};
+double BSSN_SSL_H              = 0.0;
+double BSSN_SSL_SIGMA          = 0.0;
+double KO_DISS_SIGMA           = 0.4;
+
+double RIT_ETA_OUTER           = 0.25;
+double RIT_ETA_CENTRAL         = 2.0;
+double RIT_ETA_WIDTH           = 40.0;
+
+double BSSN_EPSILON_CAKO_GAUGE = 0.0;
+double BSSN_EPSILON_CAKO_OTHER = 0.0;
+bool BSSN_CAKO_ENABLED         = false;
 
 std::mt19937 rng;
 
@@ -266,10 +295,14 @@ void dump_args() {
 void read_from_file(std::string& filename) {
     size_t fileoffset = 0;
     bool success      = bssnrhstests::get_block_data_and_information(
-        block_list, vars, vars_rhs_truth, filename);
+        block_list, vars, vars_rhs_truth, constraints_truth, filename);
 
     // and make sure vars_rhs is set to the same size as vars_rhs_truth
     vars_rhs.resize(vars_rhs_truth.size());
+
+    // TODO: if we want to also test constraint calculation we will want to
+    // *not* directly copy
+    constraints_vec = constraints_truth;
 
     if (!success) {
         exit(EXIT_FAILURE);
@@ -323,11 +356,40 @@ void read_from_file(std::string& filename) {
     // then we allocate any other vectors
 }
 
-void verify_data_integrity() {
+struct ErrorPerVar {
+    double total_abs_err = 0.0;
     double total_sqr_err = 0.0;
-    double total_err     = 0.0;
+    size_t num_pts       = 0;
 
-    size_t total_pts     = 0;
+    void add_diff(double diff) {
+        double absdiff = std::abs(diff);
+        total_abs_err += absdiff;
+        total_sqr_err += (absdiff * absdiff);
+
+        num_pts++;
+    }
+
+    double get_mean_abs_err() const {
+        return (num_pts == 0) ? 0.0 : total_abs_err / num_pts;
+    }
+
+    double get_mean_sqr_err() const {
+        return (num_pts == 0) ? 0.0 : total_sqr_err / num_pts;
+    }
+
+    double get_rms_err() const { return std::sqrt(get_mean_sqr_err()); }
+
+    void combine_errors(const ErrorPerVar& other) {
+        total_abs_err += other.total_abs_err;
+        total_sqr_err += other.total_sqr_err;
+        num_pts += other.num_pts;
+    }
+};
+
+void verify_data_integrity() {
+    std::vector<ErrorPerVar> var_errors(bssnrhstests::bssn_num_vars);
+
+    ErrorPerVar overall_error;
 
     DendroScalar* unzipVarsRHS[bssnrhstests::bssn_num_vars];
     DendroScalar* unzipVarsRHS_truth[bssnrhstests::bssn_num_vars];
@@ -355,27 +417,37 @@ void verify_data_integrity() {
 
                         double diff           = input_temp[pp] - truth_temp[pp];
 
-                        double absdiff        = std::abs(diff);
-                        total_err += absdiff;
-
-                        double sqr_err = absdiff * absdiff;
-                        total_sqr_err += sqr_err;
-
-                        total_pts++;
+                        var_errors[var].add_diff(diff);
                     }
                 }
             }
         }
     }
 
-    std::cout << "TOTAL SQ ERROR: " << total_sqr_err << std::endl;
+    std::cout << std::endl << " --- Per Variable Errors --- " << std::endl;
+    std::cout << std::scientific << std::setprecision(8);
 
-    // calculate mean squared error
-    std::cout << "TOTAL MEAN SQUARED ERROR: "
-              << total_sqr_err / (double)total_pts << std::endl;
-    std::cout << "ROOT MEAN SQUARED ERROR: "
-              << std::sqrt(total_sqr_err / (double)total_pts) << std::endl;
-    std::cout << "MEAN ERROR: " << total_err / (double)total_pts << std::endl;
+    for (size_t var = 0; var < bssnrhstests::bssn_num_vars; var++) {
+        const auto& err = var_errors[var];
+        std::cout << BSSN_VAR_NAMES[var] << " - (" << err.num_pts
+                  << " total points)" << std::endl;
+
+        std::cout << "  MAE: " << err.get_mean_abs_err() << std::endl;
+        std::cout << "  MSE: " << err.get_mean_sqr_err() << std::endl;
+        std::cout << "  RMSE: " << err.get_rms_err() << std::endl;
+
+        // then combine the errors while we're calculting
+        overall_error.combine_errors(err);
+    }
+
+    std::cout << std::endl << " --- OVERALL Errors --- " << std::endl;
+    std::cout << std::scientific << std::setprecision(8);
+    std::cout << "  (" << overall_error.num_pts << " total points)"
+              << std::endl;
+
+    std::cout << "  MAE: " << overall_error.get_mean_abs_err() << std::endl;
+    std::cout << "  MSE: " << overall_error.get_mean_sqr_err() << std::endl;
+    std::cout << "  RMSE: " << overall_error.get_rms_err() << std::endl;
 }
 
 }  // namespace bssnrhstests

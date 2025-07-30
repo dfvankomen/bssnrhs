@@ -60,6 +60,13 @@ struct RHSFunctionInputs {
     double *const B_rhs1;
     double *const B_rhs2;
 
+    const double *const ham;
+    const double *const mom0;
+    const double *const mom1;
+    const double *const mom2;
+    const double *const psi4_real;
+    const double *const psi4_img;
+
     // all gradient/derivative pointers
     double *grad_0_alpha, *grad_1_alpha, *grad_2_alpha, *grad_0_beta0,
         *grad_1_beta0, *grad_2_beta0, *grad_0_beta1, *grad_1_beta1,
@@ -125,6 +132,9 @@ struct RHSFunctionInputs {
         double *rhs_Gt1, double *rhs_Gt2, double *rhs_B0, double *rhs_B1,
         double *rhs_B2,
 
+        const double *ham, const double *mom0, const double *mom1,
+        const double *mom2, const double *psi4_real, const double *psi4_img,
+
         // additional data
         const unsigned int bflag, const unsigned int nx, const unsigned int ny,
         const unsigned int nz, const double hx, const double hy,
@@ -154,6 +164,7 @@ struct RHSFunctionInputs {
           B1(B1),
           B2(B2),
 
+          // initialize rhs pointers
           a_rhs(rhs_alpha),
           chi_rhs(rhs_chi),
           K_rhs(rhs_K),
@@ -178,6 +189,15 @@ struct RHSFunctionInputs {
           B_rhs0(rhs_B0),
           B_rhs1(rhs_B1),
           B_rhs2(rhs_B2),
+
+          // initialize constraint pointers
+          ham(ham),
+          mom0(mom0),
+          mom1(mom1),
+          mom2(mom2),
+          psi4_real(psi4_real),
+          psi4_img(psi4_img),
+
           bflag(bflag),
           nx(nx),
           ny(ny),
@@ -346,5 +366,41 @@ void bssn_bcs(double *f_rhs, const double *f, const double *dxf,
               const double *pmax, const double f_falloff,
               const double f_asymptotic, const unsigned int *sz,
               const unsigned int &bflag);
+
+void compute_derivatives(const double *const &alpha, const double *const &chi,
+                         const double *const &K, const double *const &gt0,
+                         const double *const &gt1, const double *const &gt2,
+                         const double *const &gt3, const double *const &gt4,
+                         const double *const &gt5, const double *const &beta0,
+                         const double *const &beta1, const double *const &beta2,
+                         const double *const &At0, const double *const &At1,
+                         const double *const &At2, const double *const &At3,
+                         const double *const &At4, const double *const &At5,
+                         const double *const &Gt0, const double *const &Gt1,
+                         const double *const &Gt2, const double *const &B0,
+                         const double *const &B1, const double *const &B2,
+                         RHSFunctionInputs &rhs_inputs);
+
+void compute_boundaries_and_kodiss(
+    const double *const &alpha, const double *const &chi,
+    const double *const &K, const double *const &gt0, const double *const &gt1,
+    const double *const &gt2, const double *const &gt3,
+    const double *const &gt4, const double *const &gt5,
+    const double *const &beta0, const double *const &beta1,
+    const double *const &beta2, const double *const &At0,
+    const double *const &At1, const double *const &At2,
+    const double *const &At3, const double *const &At4,
+    const double *const &At5, const double *const &Gt0,
+    const double *const &Gt1, const double *const &Gt2, const double *const &B0,
+    const double *const &B1, const double *const &B2, double *const &a_rhs,
+    double *const &chi_rhs, double *const &K_rhs, double *const &gt_rhs00,
+    double *const &gt_rhs01, double *const &gt_rhs02, double *const &gt_rhs11,
+    double *const &gt_rhs12, double *const &gt_rhs22, double *const &b_rhs0,
+    double *const &b_rhs1, double *const &b_rhs2, double *const &At_rhs00,
+    double *const &At_rhs01, double *const &At_rhs02, double *const &At_rhs11,
+    double *const &At_rhs12, double *const &At_rhs22, double *const &Gt_rhs0,
+    double *const &Gt_rhs1, double *const &Gt_rhs2, double *const &B_rhs0,
+    double *const &B_rhs1, double *const &B_rhs2,
+    RHSFunctionInputs &rhs_inputs);
 
 }  // namespace bssnrhstests
