@@ -131,7 +131,9 @@ extern std::vector<DendroScalar> deriv_workspace;
 extern std::vector<Block> block_list;
 extern unsigned int pw;
 extern bool verify_data;
+extern bool evaluate_full_rhs_routine;
 extern double curr_time;
+extern unsigned int num_warmup_runs;
 
 extern double bhMass1;
 extern double bhMass2;

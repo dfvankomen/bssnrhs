@@ -27,6 +27,7 @@ unsigned int max_depth          = 9;
 unsigned int min_depth          = 3;
 std::string block_data_filename = "";
 bool verify_data                = false;
+bool evaluate_full_rhs_routine  = false;
 
 DendroScalar domain_max[3]      = {500.0, 500.0, 500.0};
 DendroScalar domain_min[3]      = {-500.0, -500.0, -500.0};
@@ -44,6 +45,7 @@ unsigned int pw;
 unsigned int total_pts_per_var   = 0;
 unsigned int total_pts_per_const = 0;
 double curr_time;
+unsigned int num_warmup_runs;
 
 double bhMass1;
 double bhMass2;
@@ -235,6 +237,11 @@ void read_from_cli(int argc, char** argv) {
 
         block_data_filename =
             bssnrhstests::get_arg(args, "block-file", block_data_filename);
+
+        evaluate_full_rhs_routine =
+            bssnrhstests::get_arg(args, "force-full-rhs", false);
+
+        num_warmup_runs = bssnrhstests::get_arg(args, "num-warmup", 2);
 
         if (block_data_filename != "") {
             verify_data = true;
