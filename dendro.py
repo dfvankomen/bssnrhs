@@ -826,7 +826,7 @@ def generate_cpu_preextracted(
     dtype="double",
     use_const=False,
     return_stats=False,
-    generate_for_python=True,
+    generate_for_python=False,
 ):
     custom_functions = {
         "grad": "grad",
@@ -836,65 +836,78 @@ def generate_cpu_preextracted(
     }
 
     if generate_for_python:
-        code_exporter = ccode
-    else:
         code_exporter = pycode
+        comm = "#"
+        type_decl = ""
+        ender = ""
+    else:
+        code_exporter = ccode
+        comm = "//"
+        type_decl = f"{'const ' if use_const else ''}{dtype} "
+        ender = ";"
 
-    output_str = "// Dendro: C++ Equation Code Generation {{{{ \n"
+    output_str = f"{comm} Dendro: Equation Code Generation {{{{\n"
 
     reduced_ops = 0
-    output_str += "// Dendro: TEMPORARY VARIABLES\n"
+    output_str += f"{comm} Dendro: TEMPORARY VARIABLES\n"
     for v1, v2 in cse_list[0]:
-        temp_str = f"{'const ' if use_const else ''}{dtype} "
-
         # replace powers with multiplication if possible
         v2 = replace_pow(v2)
 
         # extract the c-generated code for the expression
-        ccode_text = change_deriv_names(
-            code_exporter(v2, assign_to=v1, user_functions=custom_functions)
-        )
+        if generate_for_python:
+            rhs_text = code_exporter(v2, user_functions=custom_functions)
+            code_text = f"{v1} = {change_deriv_names(rhs_text)}"
+        else:
+            rhs_text = code_exporter(v2, user_functions=custom_functions)
+            code_text = f"{v1} = {change_deriv_names(rhs_text)}"
 
         # add add the text
-        temp_str += ccode_text
+        output_str += f"{type_decl}{code_text}{ender}\n"
 
-        output_str += temp_str + "\n"
         reduced_ops += count_ops(v2)
 
-    output_str += "// Dendro: END TEMPORARY VARIABLES\n"
-    output_str += "\n// Dendro: MAIN VARIABLES"
+    output_str += f"{comm} Dendro: END TEMPORARY VARIABLES\n"
+    output_str += f"\n{comm} Dendro: MAIN VARIABLES"
     for i, e in enumerate(cse_list[1]):
-        temp_str = "\n//--\n"
+        output_str += f"\n{comm}--\n"
 
         # replace powers with multiplication if possible
         e = replace_pow(e)
 
         # extract the c-generated code for the expression
         # ccode_text = cprinter.doprint(e, assign_to=str(rhs_var_names[i]) + idx)
-        ccode_text = code_exporter(
-            e, assign_to=str(rhs_var_names[i]) + idx, user_functions=custom_functions
-        )
+        target_var_name = str(rhs_var_names[i]) + idx
+
+        if generate_for_python:
+            rhs_text = code_exporter(e, user_functions=custom_functions)
+            code_text = f"{target_var_name} = {change_deriv_names(rhs_text)}"
+        else:
+            rhs_text = code_exporter(e, user_functions=custom_functions)
+            code_text = f"{target_var_name} = {change_deriv_names(rhs_text)}"
 
         # then we need to pass it through the changing of derivative names
-        ccode_text = change_deriv_names(ccode_text)
+        code_text = change_deriv_names(code_text)
 
         # add add the text
-        temp_str += ccode_text
+        output_str += f"{code_text}{ender}\n"
 
-        output_str += temp_str + "\n"
         reduced_ops += count_ops(e)
 
-    output_str += "// Dendro: END MAIN VARIABLES\n\n"
+    output_str += f"{comm} Dendro: END MAIN VARIABLES\n\n"
 
     if not return_stats:
-        output_str += "// Dendro: INFORMATION\n"
-        output_str += "// Dendro: number of original operations: %d \n" % (orig_ops)
-        output_str += "// Dendro: number of reduced operations: %d \n" % (reduced_ops)
-        output_str += "// Dendro: preprocessing reduced the "
+        output_str += f"{comm} Dendro: INFORMATION\n"
+        output_str += f"{comm} Dendro: number of original operations: {orig_ops} \n"
+        output_str += f"{comm} Dendro: number of reduced operations: {reduced_ops} \n"
+        output_str += f"{comm} Dendro: preprocessing reduced the "
         output_str += f"number of operations by {orig_ops - reduced_ops}\n"
-        percent_reduction = (orig_ops - reduced_ops) / orig_ops
-        output_str += f"// Dendro: a {percent_reduction:0.5%}% reduction\n"
-        output_str += "// Dendro: }}}} End Code Generation \n"
+
+        if orig_ops > 0:
+            percent_reduction = (orig_ops - reduced_ops) / orig_ops
+            output_str += f"{comm} Dendro: a {percent_reduction:0.5%} reduction\n"
+
+        output_str += f"{comm} Dendro: }}}} End Code Generation \n"
 
         return output_str
 
@@ -963,15 +976,29 @@ def generate_code_from_graph(
     graph,
     scc,
     sub_var_names,
+    generate_for_python=False,
 ) -> None:
-    out_code = "\n\n// Dendro: {{{ \n"
-    out_code += f"// Dendro: Executing {len(blocks_data)} blocks in {len(component_order)} components.\n"
+    if generate_for_python:
+        code_exporter = pycode
+        comm = "#"
+        type_prefix = ""
+        const_prefix = ""
+        ender = ""
+    else:
+        code_exporter = ccode
+        comm = "//"
+        type_prefix = "double "
+        const_prefix = "const double "
+        ender = ";"
+
+    out_code = f"\n\n{comm} Dendro: {{{{\n"
+    out_code += f"{comm} Dendro: Executing {len(blocks_data)} blocks in {len(component_order)} components.\n"
 
     printed_nodes = set()
 
     for component_index in component_order:
         component_block_ids = scc[component_index]
-        out_code += f"\n// -- DENDRO: Executing component {component_index} (Blocks: {component_block_ids}) ---\n"
+        out_code += f"\n{comm} -- DENDRO: Executing component {component_index} (Blocks: {component_block_ids}) ---\n"
 
         # get all expression node hashes from all blocks in this components
         all_node_hashes_in_component = set()
@@ -993,7 +1020,9 @@ def generate_code_from_graph(
             ):
                 expr = graph.get_expr_from_hash(node_hash)
                 if expr is None:
-                    out_code += f"// Could not find expression for hash {node_hash}\n"
+                    out_code += (
+                        f"{comm} Could not find expression for hash {node_hash}\n"
+                    )
                     continue
 
                 printed_nodes.add(node_hash)
@@ -1021,31 +1050,28 @@ def generate_code_from_graph(
 
                 if temp_var_names:
                     main_def_var = temp_var_names[0]
-                    out_code += "double "
-                    out_code += (
-                        change_deriv_names(
-                            ccode(
-                                replace_pow(expr),
-                                assign_to=main_def_var,
-                                user_functions=custom_functions,
-                            )
+
+                    rhs_text = change_deriv_names(
+                        code_exporter(
+                            replace_pow(expr),
+                            user_functions=custom_functions,
                         )
-                        + "\n"
                     )
+
+                    # Manual Assignment: type var = rhs;
+                    out_code += f"{type_prefix}{main_def_var} = {rhs_text}{ender}\n"
 
                     # print all other temp var names as aliases for this
                     for alias_temp_var in temp_var_names[1:]:
                         # alisases get const!
-                        out_code += "const double "
-                        out_code += (
-                            change_deriv_names(
-                                ccode(
-                                    Symbol(main_def_var),
-                                    assign_to=alias_temp_var,
-                                    user_functions=custom_functions,
-                                )
+                        rhs_text = change_deriv_names(
+                            code_exporter(
+                                Symbol(main_def_var),
+                                user_functions=custom_functions,
                             )
-                            + "\n"
+                        )
+                        out_code += (
+                            f"{const_prefix}{alias_temp_var} = {rhs_text}{ender}\n"
                         )
 
                 # then all of the final assignments
@@ -1053,21 +1079,19 @@ def generate_code_from_graph(
                     # assign from the main temp var if it exists (not likely, but still)
                     RHS = Symbol(main_def_var) if main_def_var else expr
 
-                    out_code += f"//--- TRUE OUTPUT VAR: {final_name} \n"
-                    out_code += (
-                        change_deriv_names(
-                            ccode(
-                                replace_pow(RHS),
-                                assign_to=final_name,
-                                user_functions=custom_functions,
-                            )
+                    out_code += f"{comm}--- TRUE OUTPUT VAR: {final_name} \n"
+
+                    rhs_text = change_deriv_names(
+                        code_exporter(
+                            replace_pow(RHS),
+                            user_functions=custom_functions,
                         )
-                        + "\n"
                     )
+                    out_code += f"{final_name} = {rhs_text}{ender}\n"
 
-        out_code += f"// --- END COMPONENT {component_index} ---\n\n"
+        out_code += f"{comm} --- END COMPONENT {component_index} ---\n\n"
 
-    out_code += "// END Dendro }}}\n"
+    out_code += f"{comm} END Dendro }}}}\n"
     return out_code
 
 
@@ -1079,9 +1103,22 @@ def generate_code_from_graph_inplace(
     graph,
     scc,
     sub_var_names,
+    generate_for_python=False,
 ):
-    out_code = "\n\n// Dendro: {{{ \n"
-    out_code += f"// Dendro: Executing {len(blocks_data)} blocks in {len(component_order)} components.\n"
+    if generate_for_python:
+        code_exporter = pycode
+        comm = "#"
+        type_prefix = ""
+        ender = ""
+        # Python doesn't declare types, so strict "reuse" logic is just assignment
+    else:
+        code_exporter = ccode
+        comm = "//"
+        type_prefix = "double "
+        ender = ";"
+
+    out_code = f"\n\n{comm} Dendro: {{{{\n"
+    out_code += f"{comm} Dendro: Executing {len(blocks_data)} blocks in {len(component_order)} components.\n"
 
     # necessary map to be able to store which code we're working with
     node_to_temp_var = {}
@@ -1112,7 +1149,7 @@ def generate_code_from_graph_inplace(
     # components need to be processed in topological order
     for component_index in component_order:
         component_block_ids = scc[component_index]
-        out_code += f"\n// -- DENDRO: Executing component {component_index} (Blocks: {component_block_ids}) ---\n"
+        out_code += f"\n{comm} -- DENDRO: Executing component {component_index} (Blocks: {component_block_ids}) ---\n"
 
         # get all expression node hashes from all blocks in this components
         all_node_hashes_in_component = set()
@@ -1134,7 +1171,7 @@ def generate_code_from_graph_inplace(
 
             expr = graph.get_expr_from_hash(node_hash)
             if expr is None:
-                out_code += f"// Could not find expression for hash {node_hash}\n"
+                out_code += f"{comm} Could not find expression for hash {node_hash}\n"
                 continue
 
             # var_names = graph._G_.nodes[node_hash]["vnames"]
@@ -1147,12 +1184,12 @@ def generate_code_from_graph_inplace(
             for d_hash in deps_hashes:
                 dep_expr = graph.get_expr_from_hash(d_hash)
                 if dep_expr is None:
-                    out_code += f"// ERROR: Couldn't find dependency expr for the hash {d_hash}\n"
+                    out_code += f"{comm} ERROR: Couldn't find dependency expr for the hash {d_hash}\n"
                     continue
 
                 if d_hash not in node_to_temp_var:
                     # this should never happen, but it's here!
-                    out_code += f"// ERROR: Dependency hash {d_hash} (expr: {dep_expr}) not found in var map\n"
+                    out_code += f"{comm} ERROR: Dependency hash {d_hash} (expr: {dep_expr}) not found in var map\n"
                     dep_temp_syms.append(Symbol(f"HASH_{d_hash}_NOT_FOUND"))
                 else:
                     dep_temp_syms.append(Symbol(node_to_temp_var[d_hash]))
@@ -1191,21 +1228,17 @@ def generate_code_from_graph_inplace(
             # add other freed vars to global pool
             available_vars.extend(freed_vars_from_this_op)
 
-            # establish whether or not we have to declare this
-            # TODO: we should *probably* just use a memory array and avoid double anyway
+            # now we finally just get the C/Py code for the substituted rhs
+            rhs_text = change_deriv_names(
+                code_exporter(substituted_expr, user_functions=custom_functions)
+            )
+
+            # establish whether or not we have to declare the var
             if lhs_var not in defined_temp_vars:
-                out_code += f"double {lhs_var} = "
+                out_code += f"{type_prefix}{lhs_var} = {rhs_text}{ender}\n"
                 defined_temp_vars.add(lhs_var)
             else:
-                out_code += f"{lhs_var} = "
-
-            # now we finally just get the C code for the substituted rhs
-            out_code += (
-                change_deriv_names(
-                    ccode(substituted_expr, user_functions=custom_functions)
-                )
-                + ";\n"
-            )
+                out_code += f"{lhs_var} = {rhs_text}{ender}\n"
 
             # map node's hash to new temp var
             node_to_temp_var[node_hash] = lhs_var
@@ -1219,13 +1252,15 @@ def generate_code_from_graph_inplace(
                         node_to_temp_var[vname_sym_hash] = lhs_var
                     else:
                         # this is a final output variable, we just assign the variable to it
-                        out_code += f"// ----- FINAL OUTPUT ASSIGNMENT {vname} ----- \n"
-                        out_code += f"{vname} = {lhs_var};\n"
+                        out_code += (
+                            f"{comm} ----- FINAL OUTPUT ASSIGNMENT {vname} ----- \n"
+                        )
+                        out_code += f"{vname} = {lhs_var}{ender}\n"
 
-        out_code += f"// --- END COMPONENT {component_index} ---\n\n"
+        out_code += f"{comm} --- END COMPONENT {component_index} ---\n\n"
 
-    out_code += f"\n// Now only allocates: {temp_var_counter + 1} total vars\n"
-    out_code += "// END Dendro }}}\n"
+    out_code += f"\n{comm} Now only allocates: {temp_var_counter + 1} total vars\n"
+    out_code += f"{comm} END Dendro }}}}\n"
     return out_code
 
 
@@ -1406,45 +1441,20 @@ def generate_cpu_blocks(
 
     # print(blocks_data)
 
-    # build dependency graph between blocks to determine the order
-    block_dag = nx.DiGraph()
+    # build dependency graph
+    block_dag = graph.build_block_graph(blocks)
 
-    output_source_map = {}
-    for block in blocks_data:
-        block_dag.add_node(block["id"])
-        for output_node in block["outputs"]:
-            output_source_map[output_node] = block["id"]
-
-    # then edges
-    for block in blocks_data:
-        for input_node in block["inputs"]:
-            if input_node in output_source_map:
-                source_block_id = output_source_map[input_node]
-                if source_block_id != block["id"]:
-                    block_dag.add_edge(source_block_id, block["id"])
-
-    # need to handle cycles
+    # compute strongly connected ocmponents
     scc = list(nx.strongly_connected_components(block_dag))
     print(f"Found {len(scc)} strongly connected components")
 
-    # now build a new graph where each node is an SCC component
-    component_graph = nx.DiGraph()
-    block_to_component = {
-        block_id: i for i, component in enumerate(scc) for block_id in component
-    }
+    # DAG of components to find execution order
+    component_graph = nx.condensation(block_dag, scc=scc)
 
-    for i, component in enumerate(scc):
-        component_graph.add_node(i)
-
-    # add edges between components
-    for u, v in block_dag.edges():
-        component_u = block_to_component[u]
-        component_v = block_to_component[v]
-        if component_u != component_v:
-            component_graph.add_edge(component_u, component_v)
-
+    # topologically sort the components
     component_order = list(nx.topological_sort(component_graph))
-    print("--- Block execution order determined by SCC topolotical sort:")
+
+    print("--- Component execution order determined by ExpressionGraph:")
     print("    -> ".join(map(str, component_order)))
 
     sub_var_names = set()

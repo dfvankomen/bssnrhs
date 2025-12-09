@@ -240,7 +240,7 @@ def bssn_puncture_gauge(
         cse_list = dendro.construct_cse(ex, vnames, "[pp]")
 
         output_code_original = dendro.generate_cpu_preextracted(
-            cse_list[0], vnames, "[pp]", cse_list[1]
+            cse_list[0], vnames, "[pp]", cse_list[1], generate_for_python=False
         )
 
         with open("bssn_ORIGINAL_OUTPUT.cpp", "w") as f:

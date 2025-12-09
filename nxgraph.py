@@ -772,6 +772,151 @@ class ExpressionGraph:
     # Top Sort Selection
     ############################################################################
 
+    def build_block_graph(
+        self, blocks: List[Tuple[nx.DiGraph, Community_Data]]
+    ) -> nx.DiGraph:
+        """
+        Build a directed graph whose nodes are block indices (0..len(blocks)-1)
+        and whose edges represent data dependencies between blocks.
+
+        There is an edge i -> j if there exists an edge u -> v in the original
+        composed graph self._G_ with u in block i and v in block j.
+
+        NOTE: This graph may have cycles even if self._G_ is a DAG, because
+        clustering can create mutual dependencies between blocks. We handle
+        that in block_traversal_order via SCC condensation.
+        """
+        B = nx.DiGraph()
+        for idx, (g, c_data) in enumerate(blocks):
+            B.add_node(
+                idx,
+                num_nodes=g.number_of_nodes(),
+                storage=c_data.storage,
+            )
+
+        # Map each original node hash to its block index
+        node_to_block = {}
+        for idx, (g, _) in enumerate(blocks):
+            for n in g.nodes():
+                if n in node_to_block:
+                    raise RuntimeError(f"Node {n!r} appears in multiple blocks.")
+                node_to_block[n] = idx
+
+        # Add edges between blocks based on edges in the original global graph
+        for u, v in self._G_.edges():
+            bu = node_to_block.get(u)
+            bv = node_to_block.get(v)
+
+            # If this happens, some node in self._G_ wasn't assigned to any block
+            if bu is None or bv is None:
+                continue
+
+            # If the edge connects two different blocks, record the dependency
+            if bu != bv:
+                B.add_edge(bu, bv)
+
+        # Optional debug: report if block graph has cycles
+        # if not nx.is_directed_acyclic_graph(B):
+        #     print("[Block Graph] Note: block graph is not a DAG; "
+        #           "will resolve via SCC condensation in block_traversal_order().")
+
+        return B
+
+    def block_traversal_order(self, blocks: List[Tuple[nx.DiGraph, Community_Data]]):
+        """
+        Returns:
+          block_order:  a list of block indices in a DAG-consistent order of
+                       *SCC components*; for multi-block SCCs, their members
+                       are appended together in that component's position.
+          global_order: a flat list of node hashes (original graph nodes) in a
+                        traversal that respects all dependencies in self._G_.
+
+        Strategy:
+          1) Build the block-level graph B (blocks as nodes, edges = deps).
+          2) Condense B into a DAG of strongly-connected components (SCCs).
+          3) Topologically sort the SCC-DAG.
+          4) For each SCC:
+             - if it has 1 block: use that block's internal ordering
+               (c_data.order if available, else topo-sort of that block).
+             - if it has multiple blocks: union all their nodes, build a
+               subgraph, and compute an ordering on that combined subgraph
+               (using optimize_storage_genetic).
+                - > May want to recurse on this later
+        """
+        if not blocks:
+            return [], []
+
+        # 1) Build block-level graph
+        B = self.build_block_graph(blocks)
+
+        # 2) Condense into SCC-DAG
+        #    C's nodes are 0..k-1, each has attribute "members" = set of block indices
+        C = nx.condensation(B)
+
+        # Topologically sort SCCs
+        scc_order = list(nx.topological_sort(C))
+
+        global_order = []
+        block_order = []
+
+        for comp in scc_order:
+            members = C.nodes[comp]["members"]  # set of block indices in this SCC
+            members_sorted = sorted(members)
+
+            if len(members_sorted) == 1:
+                # Simple case: single block SCC
+                idx = members_sorted[0]
+                block_order.append(idx)
+
+                g, c_data = blocks[idx]
+
+                # If we already computed a valid order for this block, use it
+                if (
+                    c_data.order is not None
+                    and len(c_data.order) == g.number_of_nodes()
+                ):
+                    local_order = list(c_data.order)
+                else:
+                    # Fallback: topo-sort inside the block’s subgraph
+                    local_order = list(nx.topological_sort(g))
+                    # NOTE: this might fail if we are don't have a DAG, might want a fallback?
+
+                global_order.extend(local_order)
+
+            else:
+                # Multi-block SCC: combine all their nodes and compute a joint order
+                print(
+                    f"[Block Order] SCC with {len(members_sorted)} blocks: {members_sorted}"
+                )
+
+                # Record these blocks in block_order (flat)
+                block_order.extend(members_sorted)
+
+                # Union of nodes in all these blocks
+                combined_nodes = set()
+                for idx in members_sorted:
+                    g, _ = blocks[idx]
+                    combined_nodes.update(g.nodes())
+
+                # Build subgraph of the composed graph on those nodes
+                subgraph = self._G_.subgraph(combined_nodes).copy()
+
+                # Use a fresh ExpressionGraph to run the genetic optimizer on the SCC
+                sub_expr = ExpressionGraph()
+                sub_expr._G_ = subgraph
+
+                # Re-run optimization on the fused blocks, i opted for less aggressive options, but code could do defaults
+                combined_order, combined_storage = sub_expr.optimize_storage_genetic(
+                    pop_size=50, generations=10
+                )
+
+                print(
+                    f"[Block Order] Combined SCC storage (approx): {combined_storage}"
+                )
+                global_order.extend(combined_order)
+
+        return block_order, global_order
+
     def optimize_storage_genetic(
         self, initialization_coefficient=3, pop_size=1000, generations=50
     ):
@@ -791,6 +936,9 @@ class ExpressionGraph:
         scored_pool.sort(reverse=True)
         population = [ind for _, ind in scored_pool[:pop_size]]
 
+        # precompute this so it's not calculating out degrees during each cross over
+        base_out_degrees = {n: self._G_.out_degree(n) for n in self._G_.nodes}
+
         # defining crossover
         def crossover(p1, p2):
             import heapq
@@ -800,7 +948,8 @@ class ExpressionGraph:
             index1 = {node: i for i, node in enumerate(p1)}
             index2 = {node: i for i, node in enumerate(p2)}
 
-            out_degree_counts = {n: self._G_.out_degree(n) for n in self._G_.nodes}
+            # make sure we copy it, because we don't want to edit the base version
+            out_degree_counts = base_out_degrees.copy()
 
             queue = []
             for node, out_deg in out_degree_counts.items():
