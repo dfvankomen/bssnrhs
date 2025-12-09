@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     std::cout << "--------------------------------------" << std::endl;
 
     // then run the functions
-    bssnrhstests::run_rhs_function(bssnrhstests::baselineRHSName);
+    bssnrhstests::run_rhs_function(bssnrhstests::baselineRHSName, true);
 
     std::cout << std::endl
               << "--------------------------------------" << std::endl;
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
               << std::endl;
     std::cout << "--------------------------------------" << std::endl;
 
-    bssnrhstests::run_rhs_function(bssnrhstests::testRHSName);
+    bssnrhstests::run_rhs_function(bssnrhstests::testRHSName, false);
 
     return 0;
 }

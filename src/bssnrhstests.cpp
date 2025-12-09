@@ -13,6 +13,7 @@
 
 #include "cli.hpp"
 #include "dendrogr_data.hpp"
+#include "rhs_runner.hpp"
 
 namespace bssnrhstests {
 
@@ -28,6 +29,8 @@ unsigned int min_depth          = 3;
 std::string block_data_filename = "";
 bool verify_data                = false;
 bool evaluate_full_rhs_routine  = false;
+bool psuedo_verify_data         = false;
+double noise_amp                = 1.0e-8;
 
 DendroScalar domain_max[3]      = {500.0, 500.0, 500.0};
 DendroScalar domain_min[3]      = {-500.0, -500.0, -500.0};
@@ -148,53 +151,45 @@ void prep_data_structures() {
     vars     = std::vector<DendroScalar>(total_pts_per_var * bssn_num_vars);
     vars_rhs = std::vector<DendroScalar>(total_pts_per_var * bssn_num_vars);
 
-    // set vars to flat space:
-    std::fill(vars.begin() + VAR::U_ALPHA * total_pts_per_var,
-              vars.begin() + (VAR::U_ALPHA + 1) * total_pts_per_var, 1.0);
-    std::fill(vars.begin() + VAR::U_CHI * total_pts_per_var,
-              vars.begin() + (VAR::U_CHI + 1) * total_pts_per_var, 1.0);
-    std::fill(vars.begin() + VAR::U_GT0 * total_pts_per_var,
-              vars.begin() + (VAR::U_GT0 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_GT1 * total_pts_per_var,
-              vars.begin() + (VAR::U_GT1 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_GT2 * total_pts_per_var,
-              vars.begin() + (VAR::U_GT2 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_BETA0 * total_pts_per_var,
-              vars.begin() + (VAR::U_BETA0 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_BETA1 * total_pts_per_var,
-              vars.begin() + (VAR::U_BETA1 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_BETA2 * total_pts_per_var,
-              vars.begin() + (VAR::U_BETA2 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_B0 * total_pts_per_var,
-              vars.begin() + (VAR::U_B0 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_B1 * total_pts_per_var,
-              vars.begin() + (VAR::U_B1 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_B2 * total_pts_per_var,
-              vars.begin() + (VAR::U_B2 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMGT0 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMGT0 + 1) * total_pts_per_var, 1.0);
-    std::fill(vars.begin() + VAR::U_SYMGT1 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMGT1 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMGT2 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMGT2 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMGT3 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMGT3 + 1) * total_pts_per_var, 1.0);
-    std::fill(vars.begin() + VAR::U_SYMGT4 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMGT4 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMGT5 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMGT5 + 1) * total_pts_per_var, 1.0);
-    std::fill(vars.begin() + VAR::U_SYMAT0 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMAT0 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMAT1 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMAT1 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMAT2 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMAT2 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMAT3 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMAT3 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMAT4 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMAT4 + 1) * total_pts_per_var, 0.0);
-    std::fill(vars.begin() + VAR::U_SYMAT5 * total_pts_per_var,
-              vars.begin() + (VAR::U_SYMAT5 + 1) * total_pts_per_var, 0.0);
+    // if we're doing a psuedo verification, we actually want to do minkowski
+    // random noise
+
+    auto init_var = [&](int var_enum, double base_val) {
+        size_t offset = var_enum * total_pts_per_var;
+
+        if (psuedo_verify_data) {
+            // if we're enabling some psuedo verification, then we'll want to
+            // add some noise to make things more interesting
+            for (size_t i = 0; i < total_pts_per_var; ++i) {
+                // calculate noise per path... takes a sec
+                double noise     = noise_amp * get_random_double(-1.0, 1.0);
+                vars[offset + i] = base_val + noise;
+            }
+        } else {
+            std::fill(vars.begin() + offset,
+                      vars.begin() + offset + total_pts_per_var, base_val);
+        }
+    };
+
+    init_var(VAR::U_ALPHA, 1.0);
+    init_var(VAR::U_CHI, 1.0);
+    init_var(VAR::U_SYMGT0, 1.0);
+    init_var(VAR::U_SYMGT3, 1.0);
+    init_var(VAR::U_SYMGT5, 1.0);
+
+    // then the rest are initialized to 0
+    int zero_vars[] = {
+        VAR::U_K,      VAR::U_GT0,    VAR::U_GT1,    VAR::U_GT2,
+        VAR::U_BETA0,  VAR::U_BETA1,  VAR::U_BETA2,  VAR::U_B0,
+        VAR::U_B1,     VAR::U_B2,     VAR::U_SYMGT1, VAR::U_SYMGT2,
+        VAR::U_SYMGT4, VAR::U_SYMAT0, VAR::U_SYMAT1, VAR::U_SYMAT2,
+        VAR::U_SYMAT3, VAR::U_SYMAT4, VAR::U_SYMAT5
+
+    };
+
+    for (int var : zero_vars) {
+        init_var(var, 0.0);
+    }
 
     // TODO: deriv workspace is currently set to just the largest block size
     // times the number of total derivatives, so if we're going to process them
@@ -219,6 +214,53 @@ void print_param(const std::string& name, const bool value) {
 void read_from_cli(int argc, char** argv) {
     std::map<std::string, std::string> args =
         bssnrhstests::parse_args(argc, argv);
+
+    if (args.count("help") || args.count("h")) {
+        std::cout << "Usage: " << argv[0] << " [options]" << std::endl
+                  << std::endl;
+
+        std::cout << "REQUIRED ARGUMENTS:" << std::endl;
+        std::cout << "  --eleorder <int>              Element order (e.g. 6)\n";
+        std::cout
+            << "  --numblocks <int>             Total number of blocks to "
+               "generate\n";
+        std::cout << "  --rhs <name>                  Name of the RHS function "
+                     "to test\n";
+
+        std::cout << std::endl << "OPTIONAL ARGUMENTS:" << std::endl;
+        std::cout << "  --iters <int>                 Number of iterations for "
+                     "benchmarking\n";
+        std::cout
+            << "  --baseline-rhs <name>         RHS function to use as truth "
+               "or baseline for verification and speed\n";
+        std::cout << "  --seed <uint>                 Random number "
+                     "generator seed\n";
+        std::cout << "  --max-block-size <int>        Maximum size of random "
+                     "blocks\n";
+        std::cout << "  --block-file <path>           Path to presaved data "
+                     "for verification\n";
+        std::cout << "  --num-warmup <int>            Number of warmup runs "
+                     "before timing starts\n";
+        std::cout << "  --force-full-rhs              Flag forces evalulation "
+                     "of full RHS routine\n";
+        std::cout << "  --psuedo-verify               Use baseline RHS output "
+                     "as comparison for accuracy, uses noisy flat space data "
+                     "for initial data\n";
+        std::cout << "  --random-amp                  Amplitude for random "
+                     "data on psuedo verification";
+
+        std::cout << std::endl << "AVAILABLE RHS FUNCTIONS" << std::endl;
+        if (rhs_functions_.empty()) {
+            std::cout << "  (No functions registered!)" << std::endl;
+        } else {
+            for (const auto& kv : rhs_functions_) {
+                std::cout << "  - " << kv.first << std::endl;
+            }
+        }
+        std::cout << std::endl;
+
+        exit(EXIT_SUCCESS);
+    }
 
     try {
         // required arguments
@@ -246,6 +288,10 @@ void read_from_cli(int argc, char** argv) {
         if (block_data_filename != "") {
             verify_data = true;
         }
+
+        psuedo_verify_data =
+            bssnrhstests::get_arg(args, "psuedo-verify", false);
+        noise_amp = bssnrhstests::get_arg(args, "random-amp", noise_amp);
 
         // otherwise we need a random seed that's time based, probably
         if (rng_seed == std::numeric_limits<unsigned int>::max()) {
@@ -289,6 +335,8 @@ void dump_args() {
     if (verify_data) {
         print_parameter("Loading block data from: ", block_data_filename);
     }
+
+    print_parameter("Using Psuedo Verification: ", psuedo_verify_data);
 
     // then helpers that are calculated on read from cli
     std::cout << std::endl << "----------" << std::endl;

@@ -359,7 +359,7 @@ void register_rhs_function(const std::string &name, BSSNRHSFunction func);
 
 void register_all_rhs_functions();
 
-void run_rhs_function(std::string &func_name);
+void run_rhs_function(std::string &func_name, const bool is_first_function);
 
 void bssn_bcs(double *f_rhs, const double *f, const double *dxf,
               const double *dyf, const double *dzf, const double *pmin,

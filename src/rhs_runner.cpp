@@ -25,14 +25,14 @@ void register_all_rhs_functions() {
     register_rhs_function("nothing", rhs::do_nothing_rhs);
     register_rhs_function("ssl-cahd", rhs::ssl_cahd_original_rhs);
     register_rhs_function("first-block", rhs::first_block_test_rhs);
-    register_rhs_function("first-block-true", rhs::first_block_test_rhs);
+    register_rhs_function("first-block-true", rhs::first_block_test_rhs_true);
 }
 
 void register_rhs_function(const std::string &name, BSSNRHSFunction func) {
     rhs_functions_[name] = func;
 }
 
-void run_rhs_function(std::string &func_name) {
+void run_rhs_function(std::string &func_name, const bool is_first_function) {
     // first fill the rhs vector with junk
     bssnrhstests::fill_vector_with_random_junk(bssnrhstests::vars_rhs);
 
@@ -143,7 +143,8 @@ void run_rhs_function(std::string &func_name) {
 
             // then we need to compute all of the derivatives if we're
             // validating the data
-            if (verify_data || evaluate_full_rhs_routine) {
+            if (verify_data || psuedo_verify_data ||
+                evaluate_full_rhs_routine) {
                 compute_derivatives(alpha, chi, K, gt0, gt1, gt2, gt3, gt4, gt5,
                                     beta0, beta1, beta2, At0, At1, At2, At3,
                                     At4, At5, Gt0, Gt1, Gt2, B0, B1, B2,
@@ -157,7 +158,8 @@ void run_rhs_function(std::string &func_name) {
             // then on verify we have to modify with the KO diss and
             // boundaries
 
-            if (verify_data || evaluate_full_rhs_routine) {
+            if (verify_data || psuedo_verify_data ||
+                evaluate_full_rhs_routine) {
                 compute_boundaries_and_kodiss(
                     alpha, chi, K, gt0, gt1, gt2, gt3, gt4, gt5, beta0, beta1,
                     beta2, At0, At1, At2, At3, At4, At5, Gt0, Gt1, Gt2, B0, B1,
@@ -206,6 +208,14 @@ void run_rhs_function(std::string &func_name) {
 
     if (verify_data) {
         // do full data verification with rhs outputs
+        verify_data_integrity();
+    }
+
+    if (psuedo_verify_data && is_first_function) {
+        // copy the outputs of the rhs function into our truth vector
+        vars_rhs_truth = vars_rhs;
+    } else if (psuedo_verify_data && !is_first_function) {
+        // then run the verification on the integrity
         verify_data_integrity();
     }
 }

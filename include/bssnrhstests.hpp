@@ -132,6 +132,9 @@ extern std::vector<Block> block_list;
 extern unsigned int pw;
 extern bool verify_data;
 extern bool evaluate_full_rhs_routine;
+extern bool psuedo_verify_data;
+extern double noise_amp;
+
 extern double curr_time;
 extern unsigned int num_warmup_runs;
 
@@ -187,17 +190,22 @@ inline void fill_vector_with_random_junk(
 template <typename T>
 void to_2d(std::vector<T>& vec_in, T** v2d, size_t total_points_per_dof,
            size_t dof) {
-    // make sure we have enough points
-    if (vec_in.size() != total_points_per_dof * dof) {
-        throw std::runtime_error(
-            "Error when converting vector to 2d! vec_in is not the same size "
-            "as dof * total_points_per_dof!");
+    size_t required_size = total_points_per_dof * dof;
+
+    // Check size mismatch
+    if (vec_in.size() != required_size) {
+        std::string err_msg =
+            "to_2d size mismatch: "
+            "Input vector size is " +
+            std::to_string(vec_in.size()) + ", but expected " +
+            std::to_string(required_size) + " (" + std::to_string(dof) +
+            " DOFs * " + std::to_string(total_points_per_dof) + " pts/DOF).";
+
+        throw std::runtime_error(err_msg);
     }
 
     for (unsigned int i = 0; i < dof; i++)
         v2d[i] = vec_in.data() + i * total_points_per_dof;
-
-    return;
 }
 
 }  // namespace bssnrhstests
