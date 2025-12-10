@@ -1274,6 +1274,7 @@ def generate_cpu_blocks(
     lexp=None,
     dont_read_cache=True,
     use_inplace_temporaries=True,
+    generate_for_python=False,
 ):
     """
     Generate the C++ code by simplifying the expressions.
@@ -1476,6 +1477,7 @@ def generate_cpu_blocks(
             graph,
             scc,
             sub_var_names,
+            generate_for_python=generate_for_python,
         )
     else:
         out_code = generate_code_from_graph(
@@ -1486,6 +1488,7 @@ def generate_cpu_blocks(
             graph,
             scc,
             sub_var_names,
+            generate_for_python=generate_for_python,
         )
 
     return out_code
