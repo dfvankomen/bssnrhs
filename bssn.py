@@ -234,11 +234,14 @@ def compute_bssn_rhs(
     }
 
 
-def generate_code(staged_type, gauge, eta_damp, prefix, enable_ssl, enable_cahd):
+def generate_code(
+    staged_type, gauge, eta_damp, prefix, enable_ssl, enable_cahd, generate_for_python
+):
     eta_val = eta_func if eta_damp == "func" else eta
+    file_end = "py" if generate_for_python else "cpp"
 
     print(
-        f"//Codgen: gauge={gauge}, eta={eta_damp}, ssl={enable_ssl}, cahd={enable_cahd}"
+        f"//Codgen: gauge={gauge}, eta={eta_damp}, ssl={enable_ssl}, cahd={enable_cahd}, python={generate_for_python}"
     )
 
     # compute everything
@@ -279,10 +282,14 @@ def generate_code(staged_type, gauge, eta_damp, prefix, enable_ssl, enable_cahd)
     cse_list = dendro.construct_cse(ex, vnames, "[pp]")
 
     output_code_original = dendro.generate_cpu_preextracted(
-        cse_list[0], vnames, "[pp]", cse_list[1], generate_for_python=False
+        cse_list[0],
+        vnames,
+        "[pp]",
+        cse_list[1],
+        generate_for_python=generate_for_python,
     )
 
-    with open(f"{prefix}_bssn_ORIGINAL.cpp", "w") as f:
+    with open(f"{prefix}_bssn_ORIGINAL.{file_end}", "w") as f:
         f.write(output_code_original)
 
     output_code = dendro.generate_cpu_blocks(
@@ -293,9 +300,10 @@ def generate_code(staged_type, gauge, eta_damp, prefix, enable_ssl, enable_cahd)
         orig_ops=cse_list[1],
         lname=vnames,
         lexp=ex,
+        generate_for_python=generate_for_python,
     )
 
-    with open(f"{prefix}_bssn_BLOCKS.cpp", "w") as f:
+    with open(f"{prefix}_bssn_BLOCKS.{file_end}", "w") as f:
         f.write(output_code)
 
 
@@ -345,6 +353,13 @@ if __name__ == "__main__":
         "--enable_cahd",
         action="store_true",
         help="Whether or not to enable CAHD",
+    )
+
+    parser.add_argument(
+        "-py",
+        "--generate_for_python",
+        action="store_true",
+        help="If set, it generates for Python instead of C/C++",
     )
 
     args = parser.parse_args()
