@@ -406,7 +406,9 @@ def trace_free(x):
 
     # X_{ab} - 1/3 gt_{ab} X.
     # tf = Matrix([x[i, j] - 1/3*metric[i,j]*trace for i, j in e_ij])
-    tf = Matrix([x[i, j] - metric[i, j] * trace / 3 for i, j in e_ij])
+    tf = Matrix(
+        [x[i, j] - metric[i, j] * trace * sympy.Rational(1, 3) for i, j in e_ij]
+    )
 
     return tf.reshape(3, 3)
 
@@ -486,13 +488,15 @@ def get_first_christoffel():
     if inv_metric == undef:
         get_inverse_metric()
 
+    one_half = sympy.Rational(1, 2)
+
     if C1 == undef:
         C1 = MutableDenseNDimArray(range(27), (3, 3, 3))
 
         for k in e_i:
             for j in e_i:
                 for i in e_i:
-                    C1[k, i, j] = 0.5 * (
+                    C1[k, i, j] = one_half * (
                         d(j, metric[k, i]) + d(i, metric[k, j]) - d(k, metric[i, j])
                     )
 
@@ -542,6 +546,8 @@ def get_complete_christoffel(chi):
     """
     global metric, inv_metric, undef, C1, C2, C3, d
 
+    one_half = sympy.Rational(1, 2)
+
     if C3 == undef:
         C3 = MutableDenseNDimArray(range(27), (3, 3, 3))
 
@@ -551,7 +557,7 @@ def get_complete_christoffel(chi):
         for k in e_i:
             for j in e_i:
                 for i in e_i:
-                    C3[i, j, k] = C2[i, j, k] - 0.5 / (chi) * (
+                    C3[i, j, k] = C2[i, j, k] - one_half / (chi) * (
                         KroneckerDelta(i, j) * d(k, chi)
                         + KroneckerDelta(i, k) * d(j, chi)
                         - metric[j, k]
@@ -589,49 +595,57 @@ def compute_ricci(Gt, chi):
     # print('Done with Lphi') #simplify(Lchi))
 
     # ewh4 DKchiDkchi = Matrix([4*metric[i, j]*sum([sum([inv_metric[k, l]*d(l, chi) for l in e_i])*d(k, chi) for k in e_i]) for i, j in e_ij])
-    DKchiDkchi = Matrix(
-        [
-            0.25
-            / chi
-            / chi
-            * metric[i, j]
-            * sum(
-                [
-                    sum([inv_metric[k, l] * d(l, chi) for l in e_i]) * d(k, chi)
-                    for k in e_i
-                ]
-            )
-            for i, j in e_ij
+
+    one_fourth = sympy.Rational(1, 4)
+    one_half = sympy.Rational(1, 2)
+    three_halves = sympy.Rational(3, 2)
+
+    def s_sum(iterable):
+        return sympy.Add(*iterable)
+
+    DKchiDkchi_list = []
+    for i, j in e_ij:
+        inner_terms = [
+            s_sum([inv_metric[k, l] * d(l, chi) for l in e_i]) * d(k, chi) for k in e_i
         ]
-    )
+
+        full_term = (one_fourth / (chi * chi)) * metric[i, j] * s_sum(inner_terms)
+
+        DKchiDkchi_list.append(full_term)
+
+    DKchiDkchi = Matrix(DKchiDkchi_list).reshape(3, 3)
 
     # print('done with DKchi') # simplify(DKchiDkchi))
 
-    CalGt = [sum(inv_metric[k, l] * C2[i, k, l] for k, l in e_ij) for i in e_i]
+    CalGt = [s_sum(inv_metric[k, l] * C2[i, k, l] for k, l in e_ij) for i in e_i]
 
-    Rt = Matrix(
-        [
-            -0.5 * sum([inv_metric[l, m] * d2(l, m, metric[i, j]) for l, m in e_ij])
-            + 0.5
-            * sum(
-                [metric[k, i] * d(j, Gt[k]) + metric[k, j] * d(i, Gt[k]) for k in e_i]
-            )
-            + 0.5 * sum([CalGt[k] * (C1[i, j, k] + C1[j, i, k]) for k in e_i])
-            + sum(
-                [
-                    inv_metric[l, m]
-                    * (
-                        C2[k, l, i] * C1[j, k, m]
-                        + C2[k, l, j] * C1[i, k, m]
-                        + C2[k, i, m] * C1[k, l, j]
-                    )
-                    for k in e_i
-                    for l, m in e_ij
-                ]
-            )
-            for i, j in e_ij
-        ]
-    )
+    Rt_list = []
+    for i, j in e_ij:
+        term1 = -one_half * s_sum(
+            [inv_metric[l, m] * d2(l, m, metric[i, j]) for l, m in e_ij]
+        )
+
+        term2 = one_half * s_sum(
+            [metric[k, i] * d(j, Gt[k]) + metric[k, j] * d(i, Gt[k]) for k in e_i]
+        )
+
+        term3 = one_half * s_sum([CalGt[k] * (C1[i, j, k] + C1[j, i, k]) for k in e_i])
+
+        term4 = s_sum(
+            [
+                inv_metric[l, m]
+                * (
+                    C2[k, l, i] * C1[j, k, m]
+                    + C2[k, l, j] * C1[i, k, m]
+                    + C2[k, i, m] * C1[k, l, j]
+                )
+                for k in e_i
+                for l, m in e_ij
+            ]
+        )
+
+        Rt_list.append(term1 + term2 + term3 + term4)
+    Rt = sympy.Matrix(Rt_list).reshape(3, 3)
 
     # print('done with Rt') #simplify(Rt))
 
@@ -642,30 +656,32 @@ def compute_ricci(Gt, chi):
 
     # ewh6    Rphi = -2*_Di_Dj(chi) - Rphi_tmp.reshape(3, 3) - DKchiDkchi.reshape(3, 3)
     # dwn    Rphi = -0.5*_Di_Dj(chi)/chi - Rphi_tmp.reshape(3, 3) - DKchiDkchi.reshape(3, 3)
-    xRphi = Matrix(
-        [
-            1 / (2 * chi) * (d2(i, j, chi) - sum(C2[k, j, i] * d(k, chi) for k in e_i))
-            - 1 / (4 * chi * chi) * d(i, chi) * d(j, chi)
-            for i, j in e_ij
-        ]
-    ).reshape(3, 3)
+    xRphi_list = []
+    for i, j in e_ij:
+        term = one_half / chi * (
+            d2(i, j, chi) - s_sum(C2[k, j, i] * d(k, chi) for k in e_i)
+        ) - (one_fourth / (chi * chi)) * d(i, chi) * d(j, chi)
 
-    Rphi = xRphi + Matrix(
-        [
+        xRphi_list.append(term)
+    xRphi = sympy.Matrix(xRphi_list).reshape(3, 3)
+
+    Rphi_list = []
+    for i, j in e_ij:
+        term = (
             1
             / (2 * chi)
             * metric[i, j]
             * (
-                sum(
+                s_sum(
                     inv_metric[k, l]
-                    * (d2(k, l, chi) - 3 / (2 * chi) * d(k, chi) * d(l, chi))
+                    * (d2(k, l, chi) - (three_halves / chi) * d(k, chi) * d(l, chi))
                     for k, l in e_ij
                 )
-                - sum(CalGt[m] * d(m, chi) for m in e_i)
+                - s_sum(CalGt[m] * d(m, chi) for m in e_i)
             )
-            for i, j in e_ij
-        ]
-    ).reshape(3, 3)
+        )
+        Rphi_list.append(term)
+    Rphi = sympy.Matrix(Rphi_list).reshape(3, 3)
 
     return [Rt.reshape(3, 3) + Rphi, Rt.reshape(3, 3), Rphi, CalGt]
 
@@ -673,6 +689,14 @@ def compute_ricci(Gt, chi):
 ##########################################################################
 # code generation function
 ##########################################################################
+
+
+def sanitize_floats(expr):
+    if isinstance(expr, list):
+        return [sanitize_floats(e) for e in expr]
+    if isinstance(expr, sympy.Matrix):
+        return expr.applyfunc(sanitize_floats)
+    return sympy.nsimplify(expr, rational=True)
 
 
 def padded_numbered_symbols(prefix="DENDRO_", start=0, n_digits=4):
@@ -684,8 +708,28 @@ def padded_numbered_symbols(prefix="DENDRO_", start=0, n_digits=4):
         i += 1
 
 
+def clean_cse_aliases(replacements, reduced_exprs):
+    aliases = {}
+    clean_repls = []
+
+    for sym, val in replacements:
+        resolved_val = val.xreplace(aliases)
+
+        # check if the assignement is now trivial
+        if resolved_val.is_Symbol:
+            # this is a trivial assignment, we don't want it
+            aliases[sym] = resolved_val
+        else:
+            # this is a real computation and must be kept
+            clean_repls.append((sym, resolved_val))
+
+    clean_reduced = [expr.xreplace(aliases) for expr in reduced_exprs]
+
+    return clean_repls, clean_reduced
+
+
 # construct the common sub-expression ellimination tree
-def construct_cse(ex, vnames, idx):
+def construct_cse(ex, vnames, idx, do_pow_replace=False):
     mi = [0, 1, 2, 4, 5, 8]
     midx = ["00", "01", "02", "11", "12", "22"]
 
@@ -716,9 +760,68 @@ def construct_cse(ex, vnames, idx):
 
     cse_symbols = padded_numbered_symbols(prefix="DENDRO_", n_digits=4)
 
-    _v = cse(lexp, symbols=cse_symbols, optimizations="basic")
+    # small optimizations for cse before hand
+    print("// Running some lighter optimizations before hand (expand and frac cancels)")
+    # optimized = []
+    # for e in lexp:
+    #     # NOTE: DO NOT EXPAND, this makes CSE take WAY longer
+    #     new_e = e.expand()
+    #     # new_e = sympy.cancel(new_e)
+    #     optimized.append(new_e)
+    # lexp = optimized
+    print("// done!")
 
-    return [_v, count_ops(lexp)]
+    print("// NOW COMPUTING CSE")
+    repl, reduced = sympy.cse(lexp, symbols=cse_symbols, optimizations="basic")
+    print("// CSE COMPLETE")
+
+    # then we want to make sure we process the replace pow
+    if do_pow_replace:
+        print("// Now replacing pows...")
+        processed_repls = []
+        for sym, val in repl:
+            processed_repls.append((sym, replace_pow(val)))
+        processed_reduced = [replace_pow(r) for r in reduced]
+
+        repl, reduced = processed_repls, processed_reduced
+        print("// finished replacing pows!")
+
+    # make sure aliases are removed
+    print(f"// Cleaning cse aliases... orig_repl: {len(repl)}")
+    repl, reduced = clean_cse_aliases(repl, reduced)
+    print(f"// finished cleaning cse aliases... new_repl: {len(repl)}")
+
+    # filter through the CSE to remove trivial garbage
+    print(f"// Filtering Trivial CSEs (Initial count: {len(repl)})")
+    trivial_substitutions = {}
+    clean_replacements = []
+
+    for sym, expr in repl:
+        clean_expr = expr.subs(trivial_substitutions)
+        if (
+            clean_expr.is_Number
+            or isinstance(
+                clean_expr, (sympy.Integer, sympy.Float, sympy.Symbol, sympy.Rational)
+            )
+            or clean_expr == 1
+            or clean_expr == -1
+            or clean_expr == 0
+        ):
+            trivial_substitutions[sym] = clean_expr
+        else:
+            # if trivial, keep it but apply previous substitutions
+            clean_replacements.append((sym, clean_expr))
+
+    # then update the list of expressions
+    clean_reduced_exprs = [e.xreplace(trivial_substitutions) for e in reduced]
+
+    repl = clean_replacements
+    reduced = clean_reduced_exprs
+
+    print(f"// Final sanitized CSE count: {len(repl)}")
+    print(f"// Removed {len(trivial_substitutions)} trivial variables.")
+
+    return [(repl, reduced), count_ops(lexp)]
 
 
 def construct_cse_from_list(
@@ -815,6 +918,10 @@ def construct_expression_list(ex, vnames, idx="[pp]"):
             lexp.append(e)
             lname.append(vnames[i] + idx)
 
+    print("// Sanitizing floats in expressions for simplification...")
+    lexp = sanitize_floats(lexp)
+    print("// Finished sanitizing floats!")
+
     return lexp, lname, num_e
 
 
@@ -851,15 +958,12 @@ def generate_cpu_preextracted(
     reduced_ops = 0
     output_str += f"{comm} Dendro: TEMPORARY VARIABLES\n"
     for v1, v2 in cse_list[0]:
-        # replace powers with multiplication if possible
-        v2 = replace_pow(v2)
-
         # extract the c-generated code for the expression
         if generate_for_python:
-            rhs_text = code_exporter(v2, user_functions=custom_functions)
+            rhs_text = code_exporter(replace_pow(v2), user_functions=custom_functions)
             code_text = f"{v1} = {change_deriv_names(rhs_text)}"
         else:
-            rhs_text = code_exporter(v2, user_functions=custom_functions)
+            rhs_text = code_exporter(replace_pow(v2), user_functions=custom_functions)
             code_text = f"{v1} = {change_deriv_names(rhs_text)}"
 
         # add add the text
@@ -872,18 +976,15 @@ def generate_cpu_preextracted(
     for i, e in enumerate(cse_list[1]):
         output_str += f"\n{comm}--\n"
 
-        # replace powers with multiplication if possible
-        e = replace_pow(e)
-
         # extract the c-generated code for the expression
         # ccode_text = cprinter.doprint(e, assign_to=str(rhs_var_names[i]) + idx)
         target_var_name = str(rhs_var_names[i]) + idx
 
         if generate_for_python:
-            rhs_text = code_exporter(e, user_functions=custom_functions)
+            rhs_text = code_exporter(replace_pow(e), user_functions=custom_functions)
             code_text = f"{target_var_name} = {change_deriv_names(rhs_text)}"
         else:
-            rhs_text = code_exporter(e, user_functions=custom_functions)
+            rhs_text = code_exporter(replace_pow(e), user_functions=custom_functions)
             code_text = f"{target_var_name} = {change_deriv_names(rhs_text)}"
 
         # then we need to pass it through the changing of derivative names
@@ -1103,6 +1204,7 @@ def generate_code_from_graph_inplace(
     graph,
     scc,
     sub_var_names,
+    cse_defs=None,
     generate_for_python=False,
 ):
     if generate_for_python:
@@ -1137,14 +1239,16 @@ def generate_code_from_graph_inplace(
     defined_temp_vars = set()
 
     # seed map with input symbols
-    for node_hash in graph._G_.nodes:
+    for node_hash, data in graph._G_.nodes(data=True):
+        expr = graph.get_expr_from_hash(node_hash)
         # nodes with no dependencies!
-        if graph._G_.out_degree(node_hash) == 0:
-            expr = graph.get_expr_from_hash(node_hash)
-            if expr is not None and (expr.is_Symbol or expr.is_Number):
-                # map hash of x to string x
-                var_name = str(expr)
-                node_to_temp_var[node_hash] = var_name
+        if expr is not None:
+            if expr.is_Number:
+                node_to_temp_var[node_hash] = (
+                    str(float(expr)) if not expr.is_Integer else str(expr)
+                )
+            elif expr.is_Symbol and not str(expr).startswith("DENDRO_"):
+                node_to_temp_var[node_hash] = str(expr)
 
     # components need to be processed in topological order
     for component_index in component_order:
@@ -1174,31 +1278,57 @@ def generate_code_from_graph_inplace(
                 out_code += f"{comm} Could not find expression for hash {node_hash}\n"
                 continue
 
-            # var_names = graph._G_.nodes[node_hash]["vnames"]
-
             # build our substituted expression for the RHS
             deps_hashes = list(graph._G_.successors(node_hash))
-            dep_exprs = []
-            dep_temp_syms = []
 
+            def resolve_dep(d_hash):
+                if d_hash in node_to_temp_var:
+                    return node_to_temp_var[d_hash]
+
+                # simple fallback
+                d_expr = graph.get_expr_from_hash(d_hash)
+                if d_expr is not None:
+                    if d_expr.is_Number:
+                        val = (
+                            str(float(d_expr)) if not d_expr.is_Integer else str(d_expr)
+                        )
+                        node_to_temp_var[d_hash] = val
+                        return val
+                    elif d_expr.is_Symbol:
+                        val = str(d_expr)
+                        node_to_temp_var[d_hash] = val
+                        return val
+
+                return None
+
+            subs_dict = {}
+
+            # do a standard substutition: expression to tempvar
             for d_hash in deps_hashes:
-                dep_expr = graph.get_expr_from_hash(d_hash)
-                if dep_expr is None:
-                    out_code += f"{comm} ERROR: Couldn't find dependency expr for the hash {d_hash}\n"
-                    continue
+                d_var_name = resolve_dep(d_hash)
+                if d_var_name is None:
+                    # this really only happens if there's a broken graph or cross-component bug
+                    d_expr_obj = graph.get_expr_from_hash(d_hash)
+                    out_code += f"{comm} ERROR: Dep {d_hash} ({d_expr_obj}) missing for Node {node_hash}\n"
+                    d_var_name = str(d_expr_obj)
 
-                if d_hash not in node_to_temp_var:
-                    # this should never happen, but it's here!
-                    out_code += f"{comm} ERROR: Dependency hash {d_hash} (expr: {dep_expr}) not found in var map\n"
-                    dep_temp_syms.append(Symbol(f"HASH_{d_hash}_NOT_FOUND"))
-                else:
-                    dep_temp_syms.append(Symbol(node_to_temp_var[d_hash]))
+                d_expr_obj = graph.get_expr_from_hash(d_hash)
+                subs_dict[d_expr_obj] = sympy.Symbol(d_var_name)
 
-                dep_exprs.append(dep_expr)
+            # then a CSE symbol substitution: symbol to tempvar
+            if cse_defs:
+                # look for atoms in the expression that are DENDRO_ symbols
+                for atom in expr.atoms(sympy.Symbol):
+                    atom_str = str(atom)
+                    if atom_str in cse_defs:
+                        rhs_hash = cse_defs[atom_str]
 
-            # create the rhs expression:
-            # e.g. _dendro_tmp_0 + a instead of DENDRO_0000 + a
-            substituted_expr = expr.subs(list(zip(dep_exprs, dep_temp_syms)))
+                        # if there's a temp var allocated for the RHS of this CSE symbol...
+                        if rhs_hash in node_to_temp_var:
+                            target_var = node_to_temp_var[rhs_hash]
+                            subs_dict[atom] = sympy.Symbol(target_var)
+
+            substituted_expr = expr.subs(subs_dict)
 
             # find a temporary variable (lhs) for this expression
             lhs_var = None
@@ -1230,7 +1360,9 @@ def generate_code_from_graph_inplace(
 
             # now we finally just get the C/Py code for the substituted rhs
             rhs_text = change_deriv_names(
-                code_exporter(substituted_expr, user_functions=custom_functions)
+                code_exporter(
+                    replace_pow(substituted_expr), user_functions=custom_functions
+                )
             )
 
             # establish whether or not we have to declare the var
@@ -1275,6 +1407,7 @@ def generate_cpu_blocks(
     dont_read_cache=True,
     use_inplace_temporaries=True,
     generate_for_python=False,
+    return_inplace_and_non_inplace=False,
 ):
     """
     Generate the C++ code by simplifying the expressions.
@@ -1337,6 +1470,12 @@ def generate_cpu_blocks(
             with open(cse_cache_file, "wb") as f:
                 pickle.dump(cse_data_to_cache, f)
 
+    cse_defs = {}
+    if cse_data:
+        substitutions, _ = cse_data
+        for var_sym, expr in substitutions:
+            cse_defs[str(var_sym)] = hash(expr)
+
     if os.path.exists(graph_cache_file) and not dont_read_cache:
         print("--- Cached graph found, loading from file...")
         with open(graph_cache_file, "rb") as f:
@@ -1378,16 +1517,44 @@ def generate_cpu_blocks(
 
         # now we link together CSE symbols to their expressions
         print("--- Linking CSE symbols to their expressions")
+
+        # look up for definitions
+        cse_defs = {}
         substitutions, _ = cse_data
         for var_sym, expr in substitutions:
-            # add the edge for var_sym -> expr
-            var_hash = hash(var_sym)
-            expr_hash = hash(expr)
+            cse_defs[str(var_sym)] = hash(expr)
 
-            if G.has_node(var_hash) and G.has_node(expr_hash):
-                G.add_edge(var_hash, expr_hash)
-            else:
-                print(f"WARNING: Couldn't link CSE for {var_sym}")
+        count_linked = 0
+        for node, data in G.nodes(data=True):
+            sym_name = None
+
+            func = data.get("func")
+            is_symbol_node = False
+
+            if func is not None:
+                if (isinstance(func, type) and func.__name__ == "Symbol") or (
+                    isinstance(func, sympy.Symbol)
+                ):
+                    is_symbol_node = True
+
+            if is_symbol_node or func is None:
+                expr_obj = graph.get_expr_from_hash(node)
+                if expr_obj is not None:
+                    if isinstance(expr_obj, sympy.Symbol):
+                        sym_name = str(expr_obj)
+
+            # add edge if we found everything
+            if sym_name and sym_name in cse_defs:
+                rhs_hash = cse_defs[sym_name]
+
+                # make sure we have the  hash in the graph
+                if G.has_node(rhs_hash):
+                    # also then don't create self-loops or edges, so we get the definition before usage
+                    if node != rhs_hash and not G.has_edge(node, rhs_hash):
+                        G.add_edge(node, rhs_hash)
+                        count_linked += 1
+
+        print(f"--- Linked {count_linked} CSE usages to their definitions.")
 
         print("--- Saving graph object to pickle file")
         with open(graph_cache_file, "wb") as f:
@@ -1468,6 +1635,31 @@ def generate_cpu_blocks(
     # get main expression graph for compent-wide subgraphs
     main_expression_graph = graph._G_
 
+    if return_inplace_and_non_inplace:
+        out_code_inplace = generate_code_from_graph_inplace(
+            block_data_map,
+            blocks_data,
+            component_order,
+            custom_functions,
+            graph,
+            scc,
+            sub_var_names,
+            cse_defs=cse_defs,
+            generate_for_python=generate_for_python,
+        )
+
+        out_code_graph = generate_code_from_graph(
+            block_data_map,
+            blocks_data,
+            component_order,
+            custom_functions,
+            graph,
+            scc,
+            sub_var_names,
+            generate_for_python=generate_for_python,
+        )
+
+        return out_code_inplace, out_code_graph
     if use_inplace_temporaries:
         out_code = generate_code_from_graph_inplace(
             block_data_map,
@@ -1477,6 +1669,7 @@ def generate_cpu_blocks(
             graph,
             scc,
             sub_var_names,
+            cse_defs=cse_defs,
             generate_for_python=generate_for_python,
         )
     else:
@@ -1986,20 +2179,41 @@ def generate_separate(ex, vnames, idx, prefix=""):
     print("generating code for " + vnames[0] + " completed")
 
 
-def replace_pow(exp_in):
+def replace_pow(exp_in, max_expansion=15):
     """
     Convert integer powers in an expression to Muls, like a**2 => a*a
     :param exp_in: the input expression,
     :return: the output expression with only Muls
     """
-    pows = list(exp_in.atoms(Pow))
-    if any(not e.is_Integer for b, e in (i.as_base_exp() for i in pows)):
-        raise ValueError("Dendro: Non integer power encountered.")
-    repl = zip(
-        pows,
-        (Mul(*[b] * e, evaluate=False) for b, e in (i.as_base_exp() for i in pows)),
-    )
-    return exp_in.xreplace(dict(repl))
+
+    # NOTE: this replacement probably shouldn't be called before CSE, but it does force the optimization
+    def visit(node):
+        if not node.is_Pow:
+            return node
+
+        base, exp = node.as_base_exp()
+
+        if not exp.is_Integer:
+            print(f"// DENDRO: Skipping a non-integer pow: base={base} exp={exp}")
+            return node
+
+        if abs(exp) > max_expansion:
+            print(f"// DENDRO: Skipping large integer pow: base={base} exp={exp}")
+            return node
+
+        # expand a small positive integer
+        if exp > 0:
+            print(f"//    expanding pow... {base} -> {exp}")
+            expanded_mul = Mul(*[base] * int(exp), evaluate=False)
+            return sympy.UnevaluatedExpr(expanded_mul)
+
+        # expand small negative integer
+        elif exp < 0:
+            print(f"//    expanding negative pow... {base} -> {exp}")
+            denom = Mul(*[base] * int(-exp), evaluate=False)
+            return S.One / sympy.UnevaluatedExpr(denom)
+
+    return sympy.bottom_up(exp_in, visit)
 
 
 def generate_debug(ex, vnames):

@@ -88,7 +88,9 @@ def compute_bssn_rhs(
 
     if enable_ssl:
         # enable slow-start lapse
-        W = chi**0.5
+
+        # W = chi ** Rational(1, 2)
+        W = sqrt(chi)
 
         h = symbols("h_ssl")
         sig = symbols("sig_ssl")
