@@ -61,6 +61,9 @@ class ExpressionGraph:
         self._hash_to_expr: Dict[int, sympy.Expr] = dict()
         self._output_expr_map: Dict[str, sympy.Expr] = dict()
 
+        # this maps expression objects to node ids
+        self._expr_to_id: Dict[sympy.Expr, int] = dict()
+
     def get_expr_from_hash(self, node_hash: int) -> Optional[sympy.Expr]:
         """
         Retrieves the original SymPy expression from the hash. Returns None if it isn't found
@@ -124,13 +127,23 @@ class ExpressionGraph:
         """
         Keep undefined function references as it is pruning but not renaming.
         """
+        if expr in self._expr_to_id:
+            return self._expr_to_id[expr]
+
         expr_hash = hash(expr)
 
-        # add node to local node list and global hash map if new
-        if expr_hash in self._hash_to_expr:
-            return expr_hash
+        while expr_hash in self._hash_to_expr:
+            if self._hash_to_expr[expr_hash] == expr:
+                break
 
+            # otherwise it's a collision and we'll perturb it to work
+            expr_hash += 1
+
+        # fix up the mappings
+        self._expr_to_id[expr] = expr_hash
         self._hash_to_expr[expr_hash] = expr
+
+        # then add to graph
         self._G_.add_node(expr_hash, func=expr.func, args=expr.args, eval=False)
 
         # recurse on children and add edges
@@ -163,6 +176,8 @@ class ExpressionGraph:
             self._G_.nodes[expr_hash]["vnames"] = []
 
         self._G_.nodes[expr_hash]["vnames"].append(str(expr_name))
+
+        return expr_hash
 
     # WHOLE SET
 

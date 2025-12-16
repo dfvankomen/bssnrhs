@@ -294,7 +294,20 @@ def generate_code(
     with open(f"{prefix}_bssn_ORIGINAL.{file_end}", "w") as f:
         f.write(output_code_original)
 
-    output_code = dendro.generate_cpu_blocks(
+    # output_code = dendro.generate_cpu_blocks(
+    #     outs,
+    #     vnames,
+    #     "[pp]",
+    #     cse_data=cse_list[0],
+    #     orig_ops=cse_list[1],
+    #     lname=vnames,
+    #     lexp=ex,
+    #     generate_for_python=generate_for_python,
+    # )
+    # with open(f"{prefix}_bssn_BLOCKS.{file_end}", "w") as f:
+    #     f.write(output_code)
+
+    output_code_inplace, output_code_graph = dendro.generate_cpu_blocks(
         outs,
         vnames,
         "[pp]",
@@ -303,10 +316,14 @@ def generate_code(
         lname=vnames,
         lexp=ex,
         generate_for_python=generate_for_python,
+        return_inplace_and_non_inplace=True,
     )
 
-    with open(f"{prefix}_bssn_BLOCKS.{file_end}", "w") as f:
-        f.write(output_code)
+    with open(f"{prefix}_bssn_BLOCKS_INPLACE.{file_end}", "w") as f:
+        f.write(output_code_inplace)
+
+    with open(f"{prefix}_bssn_BLOCKS_NOTINPLACE.{file_end}", "w") as f:
+        f.write(output_code_graph)
 
 
 # choices...

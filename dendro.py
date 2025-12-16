@@ -1481,7 +1481,7 @@ def generate_cpu_blocks(
         with open(graph_cache_file, "rb") as f:
             graph = pickle.load(f)
     else:
-        print("--- converting csv to graph")
+        print("--- converting cse to graph")
         graph = ExpressionGraph()
         substitutions, reduced_exprs = cse_data
 
@@ -1495,7 +1495,8 @@ def generate_cpu_blocks(
 
         print("--- Adding CSE substitutions to the graph")
         for var, expr in substitutions:
-            graph.add_expression(expr, str(var))
+            node_id = graph.add_expression(expr, str(var))
+            cse_defs[str(var)] = node_id
 
         print("--- Adding CSE final expressions to graph")
         for name, expr in zip(lname, reduced_exprs):
@@ -1517,12 +1518,6 @@ def generate_cpu_blocks(
 
         # now we link together CSE symbols to their expressions
         print("--- Linking CSE symbols to their expressions")
-
-        # look up for definitions
-        cse_defs = {}
-        substitutions, _ = cse_data
-        for var_sym, expr in substitutions:
-            cse_defs[str(var_sym)] = hash(expr)
 
         count_linked = 0
         for node, data in G.nodes(data=True):
