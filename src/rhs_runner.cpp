@@ -12,6 +12,7 @@
 // rhs function includes
 #include "rhsfuncs/default_rhs.hpp"
 #include "rhsfuncs/first_block_test_rhs.hpp"
+#include "rhsfuncs/first_block_test_rhs_inplace.hpp"
 #include "rhsfuncs/first_block_test_rhs_true.hpp"
 #include "rhsfuncs/nothing_rhs.hpp"
 #include "rhsfuncs/ssl_cahd_rhs.hpp"
@@ -26,6 +27,8 @@ void register_all_rhs_functions() {
     register_rhs_function("ssl-cahd", rhs::ssl_cahd_original_rhs);
     register_rhs_function("first-block", rhs::first_block_test_rhs);
     register_rhs_function("first-block-true", rhs::first_block_test_rhs_true);
+    register_rhs_function("first-block-inplace",
+                          rhs::first_block_test_rhs_inplace);
 }
 
 void register_rhs_function(const std::string &name, BSSNRHSFunction func) {

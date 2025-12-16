@@ -59,12 +59,12 @@ double bh2x;
 double bh2y;
 double bh2z;
 double dx_min;
-double dt;
+double dt                      = 0.01;
 unsigned int BSSN_LAMBDA[4]    = {1, 1, 1, 1};
 double BSSN_A_LAMBDA[3]        = {0.0, 2.0, 0.0};
 double BSSN_LAMBDA_F[2]        = {1.0, 0.0};
 double BSSN_SSL_H              = 0.0;
-double BSSN_SSL_SIGMA          = 0.0;
+double BSSN_SSL_SIGMA          = 1.0;
 double KO_DISS_SIGMA           = 0.4;
 
 double RIT_ETA_OUTER           = 0.25;
