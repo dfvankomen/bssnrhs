@@ -1,123 +1,99 @@
+
+
 // Dendro: {{
-// Dendro: Executing 81 blocks in 1 components.
+// Dendro: Executing 105 blocks in 2 components.
 
 // -- DENDRO: Executing component 0 (Blocks: {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 // 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-// 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
-// 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
-// 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80}) ---
+// 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+// 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
+// 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87,
+// 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104}) ---
 double DENDRO_0019 = gt4[pp] * gt4[pp];
-double DENDRO_0022 = gt3[pp] * gt5[pp];
-double DENDRO_0023 = gt2[pp] * gt4[pp];
-double DENDRO_0004 = 2 * gt1[pp];
-double DENDRO_0020 = gt1[pp] * gt1[pp];
 double DENDRO_0021 = gt2[pp] * gt2[pp];
+double DENDRO_0022 = gt3[pp] * gt5[pp];
+double DENDRO_0020 = gt1[pp] * gt1[pp];
+double DENDRO_0004 = 2 * gt1[pp];
+double DENDRO_0023 = gt2[pp] * gt4[pp];
 double DENDRO_0024 = -DENDRO_0004 * DENDRO_0023 + DENDRO_0019 * gt0[pp] +
                      DENDRO_0020 * gt5[pp] + DENDRO_0021 * gt3[pp] -
                      DENDRO_0022 * gt0[pp];
-double DENDRO_0191 = 1.0 / DENDRO_0024;
-double DENDRO_0041 = -DENDRO_0021 + gt0[pp] * gt5[pp];
-double DENDRO_0658 = -DENDRO_0041;
-double DENDRO_0668 = DENDRO_0191 * DENDRO_0658;
-double DENDRO_0083 = -grad_2_gt1[pp];
-double DENDRO_0084 = DENDRO_0083 + grad_0_gt4[pp];
-double DENDRO_0085 = DENDRO_0084 + grad_1_gt2[pp];
-double DENDRO_0039 = gt0[pp] * gt4[pp] - gt1[pp] * gt2[pp];
-double DENDRO_0125 = DENDRO_0039 * DENDRO_0085;
-double DENDRO_0027 = -DENDRO_0023 + gt1[pp] * gt5[pp];
-double DENDRO_0123 = DENDRO_0027 * grad_1_gt0[pp];
-double DENDRO_0671 = DENDRO_0191 * gt1[pp];
-double DENDRO_0524 =
-    DENDRO_0027 * grad_0_chi[pp] + DENDRO_0039 * grad_2_chi[pp];
-double DENDRO_0659 = DENDRO_0524 + DENDRO_0658 * grad_1_chi[pp];
-double DENDRO_0189 = 1.0 / chi[pp];
-double DENDRO_0029 = gt1[pp] * gt4[pp] - gt2[pp] * gt3[pp];
-double DENDRO_0652 = -DENDRO_0029;
-double DENDRO_0504 = DENDRO_0189 * gt1[pp];
+double DENDRO_0025 = 1.0 / (DENDRO_0024 * DENDRO_0024);
 double DENDRO_0047 = -DENDRO_0020 + gt0[pp] * gt3[pp];
-double DENDRO_0661 = -DENDRO_0047;
-double DENDRO_0664 = DENDRO_0039 * grad_1_chi[pp] +
-                     DENDRO_0652 * grad_0_chi[pp] +
-                     DENDRO_0661 * grad_2_chi[pp];
-double DENDRO_0583 = DENDRO_0039 * grad_0_gt3[pp];
-double DENDRO_0667 = DENDRO_0191 * grad_2_alpha[pp];
-double DENDRO_0031 = -DENDRO_0019 + DENDRO_0022;
-double DENDRO_0654 = -DENDRO_0031;
-double DENDRO_0656 = DENDRO_0027 * grad_1_chi[pp] +
-                     DENDRO_0652 * grad_2_chi[pp] +
-                     DENDRO_0654 * grad_0_chi[pp];
-double DENDRO_0663 = DENDRO_0191 * DENDRO_0652;
-double DENDRO_0669 = DENDRO_0191 * DENDRO_0654;
-double DENDRO_0222 = DENDRO_0027 * DENDRO_0191;
-double DENDRO_0507 = DENDRO_0222 * chi[pp];
+double DENDRO_0039 = gt0[pp] * gt4[pp] - gt1[pp] * gt2[pp];
+double DENDRO_0127 = DENDRO_0039 * grad_2_gt5[pp];
+double DENDRO_0091 = 2 * grad_2_gt2[pp];
+double DENDRO_0092 = -DENDRO_0091 + grad_0_gt5[pp];
+double DENDRO_0027 = -DENDRO_0023 + gt1[pp] * gt5[pp];
+double DENDRO_0089 = 2 * grad_2_gt4[pp];
+double DENDRO_0090 = -DENDRO_0089 + grad_1_gt5[pp];
+double DENDRO_0041 = -DENDRO_0021 + gt0[pp] * gt5[pp];
+double DENDRO_0128 =
+    -DENDRO_0027 * DENDRO_0092 + DENDRO_0041 * DENDRO_0090 + DENDRO_0127;
+double DENDRO_0129 = DENDRO_0047 * DENDRO_0128;
+double DENDRO_0029 = gt1[pp] * gt4[pp] - gt2[pp] * gt3[pp];
+double DENDRO_0049 = 2 * DENDRO_0029;
+double DENDRO_0077 = -grad_1_gt2[pp];
+double DENDRO_0078 = DENDRO_0077 + grad_0_gt4[pp];
+double DENDRO_0079 = DENDRO_0078 + grad_2_gt1[pp];
+double DENDRO_0121 =
+    DENDRO_0027 * grad_2_gt0[pp] + DENDRO_0039 * grad_0_gt5[pp];
+double DENDRO_0122 = -DENDRO_0041 * DENDRO_0079 + DENDRO_0121;
+double DENDRO_0117 = DENDRO_0039 * grad_1_gt5[pp];
 double DENDRO_0070 = -grad_0_gt4[pp];
 double DENDRO_0071 = DENDRO_0070 + grad_1_gt2[pp];
 double DENDRO_0072 = DENDRO_0071 + grad_2_gt1[pp];
-double DENDRO_0670 = DENDRO_0191 * gt4[pp];
-double DENDRO_0662 = DENDRO_0191 * DENDRO_0661;
-double DENDRO_0117 = DENDRO_0039 * grad_1_gt5[pp];
 double DENDRO_0119 = DENDRO_0027 * DENDRO_0072;
-double DENDRO_0572 = DENDRO_0117 * DENDRO_0191 + DENDRO_0119 * DENDRO_0191;
-double DENDRO_0657 = DENDRO_0191 * grad_0_alpha[pp];
-double DENDRO_0396 = DENDRO_0189 * gt4[pp];
-double DENDRO_0224 = DENDRO_0039 * DENDRO_0191;
-double DENDRO_0399 = DENDRO_0224 * chi[pp];
-double DENDRO_0674 = (1.0 / 3.0) * alpha[pp];
-double DENDRO_0025 = 1.0 / (DENDRO_0024 * DENDRO_0024);
-double DENDRO_0209 = 3 * DENDRO_0025;
-double DENDRO_0033 = 2 * DENDRO_0027;
-double DENDRO_0042 = At2[pp] * DENDRO_0039;
-double DENDRO_0040 = DENDRO_0039 * DENDRO_0039;
-double DENDRO_0034 = At1[pp] * DENDRO_0027;
-double DENDRO_0043 = 2 * DENDRO_0041;
-double DENDRO_0044 = At4[pp] * DENDRO_0039;
-double DENDRO_0028 = DENDRO_0027 * DENDRO_0027;
-double DENDRO_0045 = At0[pp] * DENDRO_0028 +
-                     At3[pp] * (DENDRO_0041 * DENDRO_0041) +
-                     At5[pp] * DENDRO_0040 + DENDRO_0033 * DENDRO_0042 -
-                     DENDRO_0034 * DENDRO_0043 - DENDRO_0043 * DENDRO_0044;
-double DENDRO_0046 = At3[pp] * DENDRO_0045;
-double DENDRO_0673 = 6 * DENDRO_0025;
-double DENDRO_0055 = At0[pp] * DENDRO_0031;
-double DENDRO_0057 = At2[pp] * DENDRO_0047;
-double DENDRO_0054 = At3[pp] * DENDRO_0027;
-double DENDRO_0032 = At4[pp] * DENDRO_0029;
-double DENDRO_0058 = At4[pp] * DENDRO_0047;
-double DENDRO_0030 = DENDRO_0029 * DENDRO_0029;
-double DENDRO_0048 = At1[pp] * DENDRO_0039;
-double DENDRO_0056 = At5[pp] * DENDRO_0029;
-double DENDRO_0059 = At2[pp] * DENDRO_0030 - DENDRO_0027 * DENDRO_0058 -
-                     DENDRO_0029 * DENDRO_0034 + DENDRO_0029 * DENDRO_0055 -
-                     DENDRO_0031 * DENDRO_0048 + DENDRO_0031 * DENDRO_0057 -
-                     DENDRO_0032 * DENDRO_0039 + DENDRO_0039 * DENDRO_0054 +
-                     DENDRO_0047 * DENDRO_0056;
-double DENDRO_0060 = At2[pp] * DENDRO_0059;
-double DENDRO_0036 = At2[pp] * DENDRO_0029;
-double DENDRO_0061 =
-    -At1[pp] * DENDRO_0028 - At1[pp] * DENDRO_0031 * DENDRO_0041 -
-    At4[pp] * DENDRO_0027 * DENDRO_0039 - At4[pp] * DENDRO_0029 * DENDRO_0041 +
-    DENDRO_0027 * DENDRO_0036 + DENDRO_0027 * DENDRO_0055 +
-    DENDRO_0031 * DENDRO_0042 + DENDRO_0039 * DENDRO_0056 +
-    DENDRO_0041 * DENDRO_0054;
-double DENDRO_0062 = -DENDRO_0061;
-double DENDRO_0063 = At1[pp] * DENDRO_0062;
-double DENDRO_0018 = K[pp] * K[pp];
-double DENDRO_0035 = 2 * DENDRO_0031;
-double DENDRO_0037 = At0[pp] * (DENDRO_0031 * DENDRO_0031) +
-                     At3[pp] * DENDRO_0028 + At5[pp] * DENDRO_0030 -
-                     DENDRO_0032 * DENDRO_0033 - DENDRO_0034 * DENDRO_0035 +
-                     DENDRO_0035 * DENDRO_0036;
-double DENDRO_0038 = At0[pp] * DENDRO_0037;
+double DENDRO_0118 = DENDRO_0041 * grad_2_gt3[pp];
+double DENDRO_0120 = DENDRO_0117 - DENDRO_0118 + DENDRO_0119;
+double DENDRO_0031 = -DENDRO_0019 + DENDRO_0022;
+double DENDRO_0109 = 2 * grad_0_gt1[pp];
+double DENDRO_0110 = -grad_1_gt0[pp];
+double DENDRO_0111 = DENDRO_0109 + DENDRO_0110;
+double DENDRO_0106 = -grad_2_gt0[pp];
+double DENDRO_0105 = 2 * grad_0_gt2[pp];
+double DENDRO_0107 = DENDRO_0105 + DENDRO_0106;
+double DENDRO_0134 = DENDRO_0027 * grad_0_gt0[pp] + DENDRO_0039 * DENDRO_0107;
+double DENDRO_0135 = -DENDRO_0041 * DENDRO_0111 + DENDRO_0134;
+double DENDRO_0136 = DENDRO_0031 * DENDRO_0135;
+double DENDRO_0097 = 2 * grad_1_gt1[pp];
+double DENDRO_0098 = -DENDRO_0097 + grad_0_gt3[pp];
+double DENDRO_0131 = DENDRO_0027 * DENDRO_0098;
+double DENDRO_0130 = DENDRO_0041 * grad_1_gt3[pp];
+double DENDRO_0099 = 2 * grad_1_gt4[pp];
+double DENDRO_0100 = -grad_2_gt3[pp];
+double DENDRO_0101 = DENDRO_0099 + DENDRO_0100;
+double DENDRO_0132 = -DENDRO_0039 * DENDRO_0101 + DENDRO_0130 + DENDRO_0131;
+double DENDRO_0133 = -DENDRO_0132;
+double DENDRO_0124 = DENDRO_0041 * grad_0_gt3[pp];
+double DENDRO_0083 = -grad_2_gt1[pp];
+double DENDRO_0084 = DENDRO_0083 + grad_0_gt4[pp];
+double DENDRO_0085 = DENDRO_0084 + grad_1_gt2[pp];
+double DENDRO_0125 = DENDRO_0039 * DENDRO_0085;
+double DENDRO_0123 = DENDRO_0027 * grad_1_gt0[pp];
+double DENDRO_0126 = DENDRO_0123 - DENDRO_0124 + DENDRO_0125;
+double DENDRO_0137 = -2 * DENDRO_0027 * DENDRO_0126 -
+                     2 * DENDRO_0039 * DENDRO_0120 + DENDRO_0041 * DENDRO_0133 +
+                     DENDRO_0049 * DENDRO_0122 + DENDRO_0129 + DENDRO_0136;
+double DENDRO_0138 = -DENDRO_0137;
+double DENDRO_0139 = DENDRO_0025 * DENDRO_0138;
+double DENDRO_0688 = (1.0 / 2.0) * DENDRO_0139;
 double DENDRO_0050 = 2 * DENDRO_0047;
-double DENDRO_0049 = 2 * DENDRO_0029;
+double DENDRO_0044 = At4[pp] * DENDRO_0039;
+double DENDRO_0036 = At2[pp] * DENDRO_0029;
+double DENDRO_0048 = At1[pp] * DENDRO_0039;
+double DENDRO_0030 = DENDRO_0029 * DENDRO_0029;
+double DENDRO_0040 = DENDRO_0039 * DENDRO_0039;
 double DENDRO_0051 = At0[pp] * DENDRO_0030 + At3[pp] * DENDRO_0040 +
                      At5[pp] * (DENDRO_0047 * DENDRO_0047) +
                      DENDRO_0036 * DENDRO_0050 - DENDRO_0044 * DENDRO_0050 -
                      DENDRO_0048 * DENDRO_0049;
-double DENDRO_0052 = At5[pp] * DENDRO_0051;
-double DENDRO_0065 = At3[pp] * DENDRO_0041;
+double DENDRO_0567 = 2 * grad_2_alpha[pp];
+double DENDRO_0682 = DENDRO_0025 * DENDRO_0567;
 double DENDRO_0066 = At5[pp] * DENDRO_0039;
 double DENDRO_0064 = At0[pp] * DENDRO_0027;
+double DENDRO_0057 = At2[pp] * DENDRO_0047;
+double DENDRO_0065 = At3[pp] * DENDRO_0041;
 double DENDRO_0067 =
     -At1[pp] * DENDRO_0027 * DENDRO_0039 - At1[pp] * DENDRO_0029 * DENDRO_0041 -
     At4[pp] * DENDRO_0040 - At4[pp] * DENDRO_0041 * DENDRO_0047 +
@@ -125,50 +101,223 @@ double DENDRO_0067 =
     DENDRO_0036 * DENDRO_0039 + DENDRO_0039 * DENDRO_0065 +
     DENDRO_0047 * DENDRO_0066;
 double DENDRO_0068 = -DENDRO_0067;
-double DENDRO_0069 = At4[pp] * DENDRO_0068;
-double DENDRO_0099 = 2 * grad_1_gt4[pp];
-double DENDRO_0100 = -grad_2_gt3[pp];
-double DENDRO_0101 = DENDRO_0099 + DENDRO_0100;
-double DENDRO_0097 = 2 * grad_1_gt1[pp];
-double DENDRO_0098 = -DENDRO_0097 + grad_0_gt3[pp];
-double DENDRO_0666 = -DENDRO_0098;
-double DENDRO_0269 = DENDRO_0189 * gt3[pp];
+double DENDRO_0679 = 1.0 / (DENDRO_0024 * DENDRO_0024 * DENDRO_0024);
+double DENDRO_0141 = DENDRO_0029 * DENDRO_0072;
+double DENDRO_0140 = DENDRO_0047 * grad_1_gt5[pp];
+double DENDRO_0142 = -DENDRO_0039 * grad_2_gt3[pp] + DENDRO_0140 + DENDRO_0141;
+double DENDRO_0143 = -DENDRO_0142;
+double DENDRO_0191 = 1.0 / DENDRO_0024;
+double DENDRO_0058 = At4[pp] * DENDRO_0047;
+double DENDRO_0034 = At1[pp] * DENDRO_0027;
+double DENDRO_0054 = At3[pp] * DENDRO_0027;
+double DENDRO_0056 = At5[pp] * DENDRO_0029;
+double DENDRO_0055 = At0[pp] * DENDRO_0031;
+double DENDRO_0032 = At4[pp] * DENDRO_0029;
+double DENDRO_0059 = At2[pp] * DENDRO_0030 - DENDRO_0027 * DENDRO_0058 -
+                     DENDRO_0029 * DENDRO_0034 + DENDRO_0029 * DENDRO_0055 -
+                     DENDRO_0031 * DENDRO_0048 + DENDRO_0031 * DENDRO_0057 -
+                     DENDRO_0032 * DENDRO_0039 + DENDRO_0039 * DENDRO_0054 +
+                     DENDRO_0047 * DENDRO_0056;
+double DENDRO_0145 = DENDRO_0047 * grad_0_gt5[pp];
+double DENDRO_0144 = DENDRO_0029 * grad_2_gt0[pp];
+double DENDRO_0146 = -DENDRO_0039 * DENDRO_0079 + DENDRO_0144 + DENDRO_0145;
+double DENDRO_0147 = -DENDRO_0146;
+double DENDRO_0232 = DENDRO_0029 * DENDRO_0191;
+double DENDRO_0676 = (1.0 / 3.0) * DENDRO_0232;
+double DENDRO_0153 = DENDRO_0039 * DENDRO_0090;
+double DENDRO_0152 = DENDRO_0047 * grad_2_gt5[pp];
+double DENDRO_0154 = -DENDRO_0029 * DENDRO_0092 + DENDRO_0152 + DENDRO_0153;
+double DENDRO_0155 = -DENDRO_0154;
 double DENDRO_0156 = DENDRO_0039 * grad_1_gt3[pp];
-double DENDRO_0569 = 2 * grad_1_chi[pp];
-double DENDRO_0096 = DENDRO_0027 * grad_1_gt3[pp];
-double DENDRO_0665 = (1.0 / 2.0) * chi[pp];
+double DENDRO_0157 =
+    DENDRO_0029 * DENDRO_0098 - DENDRO_0047 * DENDRO_0101 + DENDRO_0156;
+double DENDRO_0158 = DENDRO_0041 * DENDRO_0157;
+double DENDRO_0159 = DENDRO_0029 * grad_0_gt0[pp] - DENDRO_0039 * DENDRO_0111 +
+                     DENDRO_0047 * DENDRO_0107;
+double DENDRO_0160 = -DENDRO_0159;
+double DENDRO_0161 = DENDRO_0031 * DENDRO_0160;
+double DENDRO_0148 = DENDRO_0029 * grad_1_gt0[pp];
+double DENDRO_0149 = DENDRO_0047 * DENDRO_0085;
+double DENDRO_0150 = -DENDRO_0039 * grad_0_gt3[pp] + DENDRO_0148 + DENDRO_0149;
+double DENDRO_0151 = -DENDRO_0150;
+double DENDRO_0162 = -2 * DENDRO_0027 * DENDRO_0151 -
+                     2 * DENDRO_0039 * DENDRO_0143 + DENDRO_0047 * DENDRO_0155 +
+                     DENDRO_0049 * DENDRO_0147 + DENDRO_0158 + DENDRO_0161;
+double DENDRO_0163 = -DENDRO_0162;
+double DENDRO_0017 = grad_0_beta0[pp] + grad_1_beta1[pp] + grad_2_beta2[pp];
+double DENDRO_0226 = DENDRO_0031 * DENDRO_0191;
+double DENDRO_0674 = (1.0 / 3.0) * alpha[pp];
+double DENDRO_0681 = DENDRO_0191 * DENDRO_0674;
+double DENDRO_0685 = 4 * grad_1_K[pp];
+double DENDRO_0194 = DENDRO_0191 * grad_1_chi[pp];
+double DENDRO_0189 = 1.0 / chi[pp];
+double DENDRO_0686 = 9 * DENDRO_0189;
+double DENDRO_0687 = DENDRO_0194 * DENDRO_0686;
+double DENDRO_0164 = DENDRO_0025 * DENDRO_0163;
+double DENDRO_0690 = (1.0 / 2.0) * DENDRO_0164;
+double DENDRO_0230 = DENDRO_0047 * DENDRO_0191;
+double DENDRO_0710 = (1.0 / 3.0) * DENDRO_0230;
+double DENDRO_0559 = 2 * grad_1_alpha[pp];
+double DENDRO_0683 = DENDRO_0025 * DENDRO_0559;
+double DENDRO_0035 = 2 * DENDRO_0031;
+double DENDRO_0033 = 2 * DENDRO_0027;
+double DENDRO_0028 = DENDRO_0027 * DENDRO_0027;
+double DENDRO_0037 = At0[pp] * (DENDRO_0031 * DENDRO_0031) +
+                     At3[pp] * DENDRO_0028 + At5[pp] * DENDRO_0030 -
+                     DENDRO_0032 * DENDRO_0033 - DENDRO_0034 * DENDRO_0035 +
+                     DENDRO_0035 * DENDRO_0036;
+double DENDRO_0684 = 4 * grad_2_K[pp];
 double DENDRO_0228 = DENDRO_0041 * DENDRO_0191;
-double DENDRO_0660 = DENDRO_0191 * grad_1_alpha[pp];
-double DENDRO_0190 = DENDRO_0189 * gt5[pp];
-double DENDRO_0089 = 2 * grad_2_gt4[pp];
-double DENDRO_0090 = -DENDRO_0089 + grad_1_gt5[pp];
-double DENDRO_0655 = -DENDRO_0090;
-double DENDRO_0127 = DENDRO_0039 * grad_2_gt5[pp];
-double DENDRO_0091 = 2 * grad_2_gt2[pp];
-double DENDRO_0092 = -DENDRO_0091 + grad_0_gt5[pp];
+double DENDRO_0093 = DENDRO_0027 * DENDRO_0090 + DENDRO_0029 * grad_2_gt5[pp] -
+                     DENDRO_0031 * DENDRO_0092;
+double DENDRO_0094 = -DENDRO_0093;
+double DENDRO_0095 = DENDRO_0047 * DENDRO_0094;
+double DENDRO_0086 = DENDRO_0029 * DENDRO_0085;
+double DENDRO_0082 = DENDRO_0031 * grad_1_gt0[pp];
+double DENDRO_0087 = -DENDRO_0027 * grad_0_gt3[pp] + DENDRO_0082 + DENDRO_0086;
+double DENDRO_0088 = -DENDRO_0087;
+double DENDRO_0104 = DENDRO_0031 * grad_0_gt0[pp];
+double DENDRO_0108 = DENDRO_0029 * DENDRO_0107;
+double DENDRO_0112 = -DENDRO_0027 * DENDRO_0111 + DENDRO_0104 + DENDRO_0108;
+double DENDRO_0113 = -DENDRO_0112;
+double DENDRO_0073 = -DENDRO_0027 * grad_2_gt3[pp] +
+                     DENDRO_0029 * grad_1_gt5[pp] + DENDRO_0031 * DENDRO_0072;
+double DENDRO_0074 = -DENDRO_0073;
+double DENDRO_0096 = DENDRO_0027 * grad_1_gt3[pp];
+double DENDRO_0102 =
+    -DENDRO_0029 * DENDRO_0101 + DENDRO_0031 * DENDRO_0098 + DENDRO_0096;
+double DENDRO_0103 = DENDRO_0041 * DENDRO_0102;
+double DENDRO_0075 = DENDRO_0029 * grad_0_gt5[pp];
+double DENDRO_0076 = DENDRO_0031 * grad_2_gt0[pp];
+double DENDRO_0080 = -DENDRO_0027 * DENDRO_0079 + DENDRO_0075 + DENDRO_0076;
+double DENDRO_0081 = -DENDRO_0080;
+double DENDRO_0114 = -2 * DENDRO_0027 * DENDRO_0088 +
+                     DENDRO_0031 * DENDRO_0113 - 2 * DENDRO_0039 * DENDRO_0074 +
+                     DENDRO_0049 * DENDRO_0081 + DENDRO_0095 + DENDRO_0103;
+double DENDRO_0115 = -DENDRO_0114;
+double DENDRO_0116 = DENDRO_0025 * DENDRO_0115;
+double DENDRO_0689 = (1.0 / 2.0) * DENDRO_0116;
+double DENDRO_0042 = At2[pp] * DENDRO_0039;
+double DENDRO_0061 =
+    -At1[pp] * DENDRO_0028 - At1[pp] * DENDRO_0031 * DENDRO_0041 -
+    At4[pp] * DENDRO_0027 * DENDRO_0039 - At4[pp] * DENDRO_0029 * DENDRO_0041 +
+    DENDRO_0027 * DENDRO_0036 + DENDRO_0027 * DENDRO_0055 +
+    DENDRO_0031 * DENDRO_0042 + DENDRO_0039 * DENDRO_0056 +
+    DENDRO_0041 * DENDRO_0054;
+double DENDRO_0062 = -DENDRO_0061;
+double DENDRO_0675 = (7.0 / 3.0) * DENDRO_0232;
+double DENDRO_0680 = 4 * grad_0_K[pp];
+double DENDRO_0043 = 2 * DENDRO_0041;
+double DENDRO_0045 = At0[pp] * DENDRO_0028 +
+                     At3[pp] * (DENDRO_0041 * DENDRO_0041) +
+                     At5[pp] * DENDRO_0040 + DENDRO_0033 * DENDRO_0042 -
+                     DENDRO_0034 * DENDRO_0043 - DENDRO_0043 * DENDRO_0044;
+double DENDRO_0562 = 2 * grad_0_alpha[pp];
+double DENDRO_0678 = DENDRO_0025 * DENDRO_0562;
+double DENDRO_0711 =
+    -1.0 / 3.0 * DENDRO_0017 * DENDRO_0025 * DENDRO_0163 -
+    2 * DENDRO_0027 * DENDRO_0191 * grad2_0_1_beta2[pp] -
+    DENDRO_0037 * DENDRO_0160 * DENDRO_0679 * alpha[pp] -
+    1.0 / 3.0 * DENDRO_0039 * DENDRO_0191 * grad2_0_1_beta0[pp] -
+    1.0 / 3.0 * DENDRO_0039 * DENDRO_0191 * grad2_1_1_beta1[pp] -
+    7.0 / 3.0 * DENDRO_0039 * DENDRO_0191 * grad2_1_2_beta2[pp] -
+    DENDRO_0045 * DENDRO_0157 * DENDRO_0679 * alpha[pp] -
+    DENDRO_0051 * DENDRO_0155 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0051 * DENDRO_0682 -
+    2 * DENDRO_0059 * DENDRO_0147 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0059 * DENDRO_0678 -
+    2 * DENDRO_0062 * DENDRO_0151 * DENDRO_0679 * alpha[pp] -
+    2 * DENDRO_0068 * DENDRO_0143 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0068 * DENDRO_0683 + DENDRO_0226 * grad2_0_0_beta2[pp] +
+    DENDRO_0228 * grad2_1_1_beta2[pp] +
+    (4.0 / 3.0) * DENDRO_0230 * grad2_2_2_beta2[pp] +
+    DENDRO_0675 * grad2_0_2_beta2[pp] + DENDRO_0676 * grad2_0_0_beta0[pp] +
+    DENDRO_0676 * grad2_0_1_beta1[pp] +
+    DENDRO_0681 *
+        (-DENDRO_0029 * DENDRO_0680 +
+         9 * DENDRO_0059 * DENDRO_0189 * DENDRO_0191 * grad_0_chi[pp]) +
+    DENDRO_0681 * (DENDRO_0039 * DENDRO_0685 + DENDRO_0068 * DENDRO_0687) +
+    DENDRO_0681 *
+        (-DENDRO_0047 * DENDRO_0684 +
+         9 * DENDRO_0051 * DENDRO_0189 * DENDRO_0191 * grad_2_chi[pp]) +
+    DENDRO_0688 * grad_1_beta2[pp] + DENDRO_0689 * grad_0_beta2[pp] +
+    DENDRO_0690 * grad_2_beta2[pp] + DENDRO_0710 * grad2_0_2_beta0[pp] +
+    DENDRO_0710 * grad2_1_2_beta1[pp] - beta0[pp] * grad_0_Gt2[pp] -
+    beta1[pp] * grad_1_Gt2[pp] - beta2[pp] * grad_2_Gt2[pp];
+//--- TRUE OUTPUT VAR: Gt_rhs2[pp]
+Gt_rhs2[pp] = -DENDRO_0711;
+//--- TRUE OUTPUT VAR: B_rhs2[pp]
+B_rhs2[pp] =
+    -B2[pp] * eta - DENDRO_0711 +
+    lambda[2] * (beta0[pp] * grad_0_B2[pp] + beta1[pp] * grad_1_B2[pp] +
+                 beta2[pp] * grad_2_B2[pp]) -
+    lambda[3] * (beta0[pp] * grad_0_Gt2[pp] + beta1[pp] * grad_1_Gt2[pp] +
+                 beta2[pp] * grad_2_Gt2[pp]);
+double DENDRO_0010 = (2.0 / 3.0) * grad_1_beta1[pp];
+double DENDRO_0005 = 2 * gt2[pp];
+double DENDRO_0015 = (4.0 / 3.0) * grad_2_beta2[pp];
+double DENDRO_0011 = (2.0 / 3.0) * grad_0_beta0[pp];
+double DENDRO_0013 = 2 * gt4[pp];
+double DENDRO_0000 = 2 * alpha[pp];
+//--- TRUE OUTPUT VAR: gt_rhs22[pp]
+gt_rhs22[pp]       = -At5[pp] * DENDRO_0000 + DENDRO_0005 * grad_2_beta0[pp] -
+               DENDRO_0010 * gt5[pp] - DENDRO_0011 * gt5[pp] +
+               DENDRO_0013 * grad_2_beta1[pp] + DENDRO_0015 * gt5[pp] +
+               beta0[pp] * grad_0_gt5[pp] + beta1[pp] * grad_1_gt5[pp] +
+               beta2[pp] * grad_2_gt5[pp];
+double DENDRO_0658 = -DENDRO_0041;
+double DENDRO_0668 = DENDRO_0191 * DENDRO_0658;
+double DENDRO_0524 =
+    DENDRO_0027 * grad_0_chi[pp] + DENDRO_0039 * grad_2_chi[pp];
+double DENDRO_0659 = DENDRO_0524 + DENDRO_0658 * grad_1_chi[pp];
+double DENDRO_0671 = DENDRO_0191 * gt1[pp];
+double DENDRO_0667 = DENDRO_0191 * grad_2_alpha[pp];
+double DENDRO_0652 = -DENDRO_0029;
+double DENDRO_0504 = DENDRO_0189 * gt1[pp];
+double DENDRO_0661 = -DENDRO_0047;
+double DENDRO_0664 = DENDRO_0039 * grad_1_chi[pp] +
+                     DENDRO_0652 * grad_0_chi[pp] +
+                     DENDRO_0661 * grad_2_chi[pp];
+double DENDRO_0583 = DENDRO_0039 * grad_0_gt3[pp];
+double DENDRO_0654 = -DENDRO_0031;
+double DENDRO_0669 = DENDRO_0191 * DENDRO_0654;
+double DENDRO_0663 = DENDRO_0191 * DENDRO_0652;
+double DENDRO_0656 = DENDRO_0027 * grad_1_chi[pp] +
+                     DENDRO_0652 * grad_2_chi[pp] +
+                     DENDRO_0654 * grad_0_chi[pp];
+double DENDRO_0222 = DENDRO_0027 * DENDRO_0191;
+double DENDRO_0507 = DENDRO_0222 * chi[pp];
+double DENDRO_0665 = (1.0 / 2.0) * chi[pp];
+double DENDRO_0662 = DENDRO_0191 * DENDRO_0661;
 double DENDRO_0653 = -DENDRO_0092;
 double DENDRO_0564 = 2 * grad_2_chi[pp];
-double DENDRO_0230 = DENDRO_0047 * DENDRO_0191;
-double DENDRO_0232 = DENDRO_0029 * DENDRO_0191;
-double DENDRO_0453 = DENDRO_0232 * chi[pp];
-double DENDRO_0077 = -grad_1_gt2[pp];
-double DENDRO_0078 = DENDRO_0077 + grad_0_gt4[pp];
-double DENDRO_0079 = DENDRO_0078 + grad_2_gt1[pp];
+double DENDRO_0224 = DENDRO_0039 * DENDRO_0191;
+double DENDRO_0655 = -DENDRO_0090;
+double DENDRO_0657 = DENDRO_0191 * grad_0_alpha[pp];
+double DENDRO_0190 = DENDRO_0189 * gt5[pp];
+double DENDRO_0660 = DENDRO_0191 * grad_1_alpha[pp];
 double DENDRO_0672 = DENDRO_0191 * gt2[pp];
 double DENDRO_0450 = DENDRO_0189 * gt2[pp];
-double DENDRO_0121 =
-    DENDRO_0027 * grad_2_gt0[pp] + DENDRO_0039 * grad_0_gt5[pp];
-double DENDRO_0226 = DENDRO_0031 * DENDRO_0191;
-double DENDRO_0106 = -grad_2_gt0[pp];
-double DENDRO_0105 = 2 * grad_0_gt2[pp];
-double DENDRO_0107 = DENDRO_0105 + DENDRO_0106;
+double DENDRO_0453 = DENDRO_0232 * chi[pp];
+double DENDRO_0569 = 2 * grad_1_chi[pp];
+double DENDRO_0666 = -DENDRO_0098;
+double DENDRO_0269 = DENDRO_0189 * gt3[pp];
 double DENDRO_0535 = 2 * grad_0_chi[pp];
-double DENDRO_0110 = -grad_1_gt0[pp];
-double DENDRO_0109 = 2 * grad_0_gt1[pp];
-double DENDRO_0111 = DENDRO_0109 + DENDRO_0110;
 double DENDRO_0534 = DENDRO_0027 * DENDRO_0111 * DENDRO_0191;
 double DENDRO_0331 = DENDRO_0189 * gt0[pp];
-double DENDRO_0134 = DENDRO_0027 * grad_0_gt0[pp] + DENDRO_0039 * DENDRO_0107;
+double DENDRO_0399 = DENDRO_0224 * chi[pp];
+double DENDRO_0396 = DENDRO_0189 * gt4[pp];
+double DENDRO_0670 = DENDRO_0191 * gt4[pp];
+double DENDRO_0572 = DENDRO_0117 * DENDRO_0191 + DENDRO_0119 * DENDRO_0191;
+double DENDRO_0209 = 3 * DENDRO_0025;
+double DENDRO_0052 = At5[pp] * DENDRO_0051;
+double DENDRO_0063 = At1[pp] * DENDRO_0062;
+double DENDRO_0673 = 6 * DENDRO_0025;
+double DENDRO_0046 = At3[pp] * DENDRO_0045;
+double DENDRO_0018 = K[pp] * K[pp];
+double DENDRO_0069 = At4[pp] * DENDRO_0068;
+double DENDRO_0038 = At0[pp] * DENDRO_0037;
+double DENDRO_0060 = At2[pp] * DENDRO_0059;
 //--- TRUE OUTPUT VAR: K_rhs[pp]
 K_rhs[pp] =
     -DENDRO_0226 * DENDRO_0665 *
@@ -250,9 +399,68 @@ K_rhs[pp] =
          DENDRO_0063 * DENDRO_0673 + DENDRO_0069 * DENDRO_0673) +
     beta0[pp] * grad_0_K[pp] + beta1[pp] * grad_1_K[pp] +
     beta2[pp] * grad_2_K[pp];
-double DENDRO_0008 = (2.0 / 3.0) * grad_2_beta2[pp];
+double DENDRO_0701 = (1.0 / 3.0) * DENDRO_0228;
+double DENDRO_0703 = DENDRO_0701 * grad2_1_2_beta2[pp];
+double DENDRO_0705 = (1.0 / 3.0) * DENDRO_0222;
+double DENDRO_0707 = DENDRO_0679 * alpha[pp];
+double DENDRO_0696 = (4.0 / 3.0) * DENDRO_0228 * grad2_1_1_beta1[pp];
+double DENDRO_0708 = DENDRO_0000 * DENDRO_0679;
+double DENDRO_0692 = DENDRO_0226 * grad2_0_0_beta1[pp];
+double DENDRO_0553 = DENDRO_0025 * DENDRO_0137;
+double DENDRO_0706 = (1.0 / 3.0) * DENDRO_0224;
+double DENDRO_0704 = DENDRO_0041 * DENDRO_0685 - DENDRO_0045 * DENDRO_0687;
+double DENDRO_0699 = DENDRO_0039 * DENDRO_0684;
+double DENDRO_0196 = DENDRO_0191 * grad_2_chi[pp];
+double DENDRO_0700 = DENDRO_0196 * DENDRO_0686;
+double DENDRO_0554 = DENDRO_0025 * DENDRO_0114;
+double DENDRO_0694 = DENDRO_0049 * DENDRO_0191 * grad2_0_2_beta1[pp];
+double DENDRO_0695 = DENDRO_0045 * DENDRO_0683;
+double DENDRO_0693 = DENDRO_0230 * grad2_2_2_beta1[pp];
+double DENDRO_0555 = DENDRO_0025 * DENDRO_0162;
+double DENDRO_0697 = DENDRO_0027 * DENDRO_0680;
+double DENDRO_0195 = DENDRO_0191 * grad_0_chi[pp];
+double DENDRO_0698 = DENDRO_0195 * DENDRO_0686;
+double DENDRO_0709 = beta0[pp] * grad_0_Gt1[pp] + beta1[pp] * grad_1_Gt1[pp] +
+                     beta2[pp] * grad_2_Gt1[pp];
+double DENDRO_0702 = DENDRO_0701 * grad2_0_1_beta0[pp];
+//--- TRUE OUTPUT VAR: Gt_rhs1[pp]
+Gt_rhs1[pp] =
+    -1.0 / 3.0 * DENDRO_0017 * DENDRO_0553 +
+    DENDRO_0037 * DENDRO_0135 * DENDRO_0707 -
+    DENDRO_0045 * DENDRO_0132 * DENDRO_0707 +
+    DENDRO_0051 * DENDRO_0128 * DENDRO_0707 +
+    DENDRO_0059 * DENDRO_0122 * DENDRO_0708 -
+    DENDRO_0061 * DENDRO_0126 * DENDRO_0708 + DENDRO_0061 * DENDRO_0678 -
+    DENDRO_0067 * DENDRO_0120 * DENDRO_0708 + DENDRO_0067 * DENDRO_0682 +
+    (7.0 / 3.0) * DENDRO_0222 * grad2_0_1_beta1[pp] +
+    (7.0 / 3.0) * DENDRO_0224 * grad2_1_2_beta1[pp] +
+    (1.0 / 2.0) * DENDRO_0553 * grad_1_beta1[pp] +
+    (1.0 / 2.0) * DENDRO_0554 * grad_0_beta1[pp] +
+    (1.0 / 2.0) * DENDRO_0555 * grad_2_beta1[pp] + DENDRO_0681 * DENDRO_0704 -
+    DENDRO_0681 * (-DENDRO_0061 * DENDRO_0698 + DENDRO_0697) -
+    DENDRO_0681 * (-DENDRO_0067 * DENDRO_0700 + DENDRO_0699) - DENDRO_0692 -
+    DENDRO_0693 - DENDRO_0694 - DENDRO_0695 - DENDRO_0696 - DENDRO_0702 -
+    DENDRO_0703 + DENDRO_0705 * grad2_0_0_beta0[pp] +
+    DENDRO_0705 * grad2_0_2_beta2[pp] + DENDRO_0706 * grad2_0_2_beta0[pp] +
+    DENDRO_0706 * grad2_2_2_beta2[pp] + DENDRO_0709;
+double DENDRO_0001 = sqrt(chi[pp]);
+//--- TRUE OUTPUT VAR: a_rhs[pp]
+a_rhs[pp] =
+    -DENDRO_0000 * K[pp] -
+    DENDRO_0001 * h_ssl * (-DENDRO_0001 + alpha[pp]) *
+        exp(-1.0 / 2.0 * 1.0 / (sig_ssl * sig_ssl) * t * t) +
+    lambda[0] * (beta0[pp] * grad_0_alpha[pp] + beta1[pp] * grad_1_alpha[pp] +
+                 beta2[pp] * grad_2_alpha[pp]);
+double DENDRO_0014 = (1.0 / 3.0) * gt4[pp];
+//--- TRUE OUTPUT VAR: gt_rhs12[pp]
+gt_rhs12[pp]       = -At4[pp] * DENDRO_0000 - DENDRO_0011 * gt4[pp] +
+               DENDRO_0014 * grad_1_beta1[pp] + DENDRO_0014 * grad_2_beta2[pp] +
+               beta0[pp] * grad_0_gt4[pp] + beta1[pp] * grad_1_gt4[pp] +
+               beta2[pp] * grad_2_gt4[pp] + grad_1_beta0[pp] * gt2[pp] +
+               grad_1_beta2[pp] * gt5[pp] + grad_2_beta0[pp] * gt1[pp] +
+               grad_2_beta1[pp] * gt3[pp];
 double DENDRO_0007 = (1.0 / 3.0) * gt1[pp];
-double DENDRO_0000 = 2 * alpha[pp];
+double DENDRO_0008 = (2.0 / 3.0) * grad_2_beta2[pp];
 //--- TRUE OUTPUT VAR: gt_rhs01[pp]
 gt_rhs01[pp]       = -At1[pp] * DENDRO_0000 + DENDRO_0007 * grad_0_beta0[pp] +
                DENDRO_0007 * grad_1_beta1[pp] - DENDRO_0008 * gt1[pp] +
@@ -260,160 +468,103 @@ gt_rhs01[pp]       = -At1[pp] * DENDRO_0000 + DENDRO_0007 * grad_0_beta0[pp] +
                beta2[pp] * grad_2_gt1[pp] + grad_0_beta1[pp] * gt3[pp] +
                grad_0_beta2[pp] * gt4[pp] + grad_1_beta0[pp] * gt0[pp] +
                grad_1_beta2[pp] * gt2[pp];
-double DENDRO_0009 = (1.0 / 3.0) * gt2[pp];
-double DENDRO_0010 = (2.0 / 3.0) * grad_1_beta1[pp];
-//--- TRUE OUTPUT VAR: gt_rhs02[pp]
-gt_rhs02[pp]       = -At2[pp] * DENDRO_0000 + DENDRO_0009 * grad_0_beta0[pp] +
-               DENDRO_0009 * grad_2_beta2[pp] - DENDRO_0010 * gt2[pp] +
-               beta0[pp] * grad_0_gt2[pp] + beta1[pp] * grad_1_gt2[pp] +
-               beta2[pp] * grad_2_gt2[pp] + grad_0_beta1[pp] * gt4[pp] +
-               grad_0_beta2[pp] * gt5[pp] + grad_2_beta0[pp] * gt0[pp] +
-               grad_2_beta1[pp] * gt1[pp];
+double DENDRO_0588 =
+    -At1[pp] * DENDRO_0031 + At3[pp] * DENDRO_0027 - DENDRO_0032;
+double DENDRO_0521 = 2 * DENDRO_0191;
+double DENDRO_0522 = At0[pp] * DENDRO_0521;
+double DENDRO_0589 =
+    -At1[pp] * DENDRO_0029 + At3[pp] * DENDRO_0039 - DENDRO_0058;
+double DENDRO_0519 = 2 * At2[pp];
+double DENDRO_0523 = DENDRO_0191 * DENDRO_0519;
+double DENDRO_0587 = DENDRO_0034 + DENDRO_0044 - DENDRO_0065;
+double DENDRO_0518 = 2 * At1[pp];
+double DENDRO_0520 = DENDRO_0191 * DENDRO_0518;
+double DENDRO_0586 = (1.0 / 3.0) * At1[pp];
 double DENDRO_0517 = (1.0 / 12.0) * chi[pp];
-double DENDRO_0557 = 3 * alpha[pp];
-double DENDRO_0086 = DENDRO_0029 * DENDRO_0085;
-double DENDRO_0082 = DENDRO_0031 * grad_1_gt0[pp];
-double DENDRO_0087 = -DENDRO_0027 * grad_0_gt3[pp] + DENDRO_0082 + DENDRO_0086;
-double DENDRO_0200 = DENDRO_0025 * DENDRO_0031;
-double DENDRO_0270 = DENDRO_0200 * (DENDRO_0110 + 4 * grad_0_gt1[pp]);
-double DENDRO_0234 = 3 * grad_0_gt4[pp];
-double DENDRO_0275 = DENDRO_0200 * (DENDRO_0077 + DENDRO_0234 + grad_2_gt1[pp]);
-double DENDRO_0148 = DENDRO_0029 * grad_1_gt0[pp];
-double DENDRO_0149 = DENDRO_0047 * DENDRO_0085;
-double DENDRO_0150 = -DENDRO_0039 * grad_0_gt3[pp] + DENDRO_0148 + DENDRO_0149;
-double DENDRO_0141 = DENDRO_0029 * DENDRO_0072;
-double DENDRO_0140 = DENDRO_0047 * grad_1_gt5[pp];
-double DENDRO_0142 = -DENDRO_0039 * grad_2_gt3[pp] + DENDRO_0140 + DENDRO_0141;
-double DENDRO_0637 = DENDRO_0079 * DENDRO_0142;
-double DENDRO_0610 = DENDRO_0150 * grad_1_gt5[pp];
-double DENDRO_0183 = DENDRO_0025 * DENDRO_0029;
-double DENDRO_0073 = -DENDRO_0027 * grad_2_gt3[pp] +
-                     DENDRO_0029 * grad_1_gt5[pp] + DENDRO_0031 * DENDRO_0072;
-double DENDRO_0606 = DENDRO_0073 * grad_1_gt0[pp];
-double DENDRO_0594 = DENDRO_0079 * DENDRO_0087;
-double DENDRO_0167 = DENDRO_0025 * DENDRO_0027;
-double DENDRO_0602 = DENDRO_0087 * DENDRO_0098;
-double DENDRO_0102 =
-    -DENDRO_0029 * DENDRO_0101 + DENDRO_0031 * DENDRO_0098 + DENDRO_0096;
-double DENDRO_0259 = 2 * DENDRO_0102 * DENDRO_0111;
-double DENDRO_0604 = DENDRO_0101 * DENDRO_0150;
-double DENDRO_0157 =
-    DENDRO_0029 * DENDRO_0098 - DENDRO_0047 * DENDRO_0101 + DENDRO_0156;
-double DENDRO_0124 = DENDRO_0041 * grad_0_gt3[pp];
-double DENDRO_0126 = DENDRO_0123 - DENDRO_0124 + DENDRO_0125;
-double DENDRO_0238 = DENDRO_0126 * grad_1_gt3[pp];
-double DENDRO_0130 = DENDRO_0041 * grad_1_gt3[pp];
-double DENDRO_0131 = DENDRO_0027 * DENDRO_0098;
-double DENDRO_0132 = -DENDRO_0039 * DENDRO_0101 + DENDRO_0130 + DENDRO_0131;
-double DENDRO_0635 = DENDRO_0132 * grad_0_gt3[pp];
-double DENDRO_0171 = DENDRO_0025 * DENDRO_0039;
-double DENDRO_0252 = DENDRO_0072 * DENDRO_0102;
-double DENDRO_0639 = DENDRO_0073 * grad_0_gt3[pp];
-double DENDRO_0151 = -DENDRO_0150;
-double DENDRO_0264 = DENDRO_0090 * DENDRO_0151;
-double DENDRO_0143 = -DENDRO_0142;
-double DENDRO_0265 = -DENDRO_0085 * DENDRO_0143;
-double DENDRO_0266 = 2 * DENDRO_0264 + DENDRO_0265;
-double DENDRO_0257 = DENDRO_0085 * DENDRO_0157;
-double DENDRO_0603 = DENDRO_0150 * grad_2_gt3[pp];
-double DENDRO_0638 = DENDRO_0142 * grad_2_gt3[pp];
-double DENDRO_0246 = DENDRO_0157 * grad_1_gt5[pp];
-double DENDRO_0249 = 2 * DENDRO_0157;
-double DENDRO_0250 = DENDRO_0090 * DENDRO_0249;
-double DENDRO_0276 = DENDRO_0130 * DENDRO_0209;
-double DENDRO_0152 = DENDRO_0047 * grad_2_gt5[pp];
-double DENDRO_0153 = DENDRO_0039 * DENDRO_0090;
-double DENDRO_0154 = -DENDRO_0029 * DENDRO_0092 + DENDRO_0152 + DENDRO_0153;
-double DENDRO_0155 = -DENDRO_0154;
-double DENDRO_0144 = DENDRO_0029 * grad_2_gt0[pp];
-double DENDRO_0145 = DENDRO_0047 * grad_0_gt5[pp];
-double DENDRO_0146 = -DENDRO_0039 * DENDRO_0079 + DENDRO_0144 + DENDRO_0145;
-double DENDRO_0147 = -DENDRO_0146;
-double DENDRO_0158 = DENDRO_0041 * DENDRO_0157;
-double DENDRO_0159 = DENDRO_0029 * grad_0_gt0[pp] - DENDRO_0039 * DENDRO_0111 +
-                     DENDRO_0047 * DENDRO_0107;
-double DENDRO_0160 = -DENDRO_0159;
-double DENDRO_0161 = DENDRO_0031 * DENDRO_0160;
-double DENDRO_0162 = -2 * DENDRO_0027 * DENDRO_0151 -
-                     2 * DENDRO_0039 * DENDRO_0143 + DENDRO_0047 * DENDRO_0155 +
-                     DENDRO_0049 * DENDRO_0147 + DENDRO_0158 + DENDRO_0161;
-double DENDRO_0555 = DENDRO_0025 * DENDRO_0162;
-double DENDRO_0273 = 3 * grad_2_gt1[pp];
+double DENDRO_0536 = -DENDRO_0027 * grad_1_chi[pp] +
+                     DENDRO_0029 * grad_2_chi[pp] +
+                     DENDRO_0031 * grad_0_chi[pp];
+double DENDRO_0537 = -DENDRO_0536;
+double DENDRO_0538 = DENDRO_0191 * DENDRO_0537;
+double DENDRO_0581 = -DENDRO_0027 * DENDRO_0191 * grad_0_gt3[pp] +
+                     DENDRO_0082 * DENDRO_0191 + DENDRO_0086 * DENDRO_0191 +
+                     DENDRO_0189 * (-DENDRO_0538 * gt1[pp] + grad_1_chi[pp]);
+double DENDRO_0568 = DENDRO_0191 * DENDRO_0567;
+double DENDRO_0529 = DENDRO_0029 * grad_0_chi[pp] -
+                     DENDRO_0039 * grad_1_chi[pp] +
+                     DENDRO_0047 * grad_2_chi[pp];
+double DENDRO_0530 = -DENDRO_0529;
+double DENDRO_0525 = -DENDRO_0041 * grad_1_chi[pp] + DENDRO_0524;
+double DENDRO_0570 = DENDRO_0191 * DENDRO_0525;
+double DENDRO_0582 = -DENDRO_0027 * DENDRO_0191 * grad_1_gt0[pp] -
+                     DENDRO_0039 * DENDRO_0085 * DENDRO_0191 +
+                     DENDRO_0124 * DENDRO_0191 +
+                     DENDRO_0189 * (-DENDRO_0570 * gt1[pp] + grad_0_chi[pp]);
+double DENDRO_0584 = -DENDRO_0559 * DENDRO_0582 - DENDRO_0562 * DENDRO_0581 +
+                     DENDRO_0568 * (-DENDRO_0148 - DENDRO_0149 +
+                                    DENDRO_0504 * DENDRO_0530 + DENDRO_0583) -
+                     4 * grad2_0_1_alpha[pp];
 double DENDRO_0272 = DENDRO_0025 * DENDRO_0047;
-double DENDRO_0274 = DENDRO_0272 * (DENDRO_0078 + DENDRO_0273);
-double DENDRO_0074 = -DENDRO_0073;
-double DENDRO_0253 = DENDRO_0074 * DENDRO_0098;
-double DENDRO_0254 = -2 * DENDRO_0079 * DENDRO_0102 + DENDRO_0253;
-double DENDRO_0271 = grad_1_gt5[pp] - 4 * grad_2_gt4[pp];
-double DENDRO_0128 =
-    -DENDRO_0027 * DENDRO_0092 + DENDRO_0041 * DENDRO_0090 + DENDRO_0127;
-double DENDRO_0129 = DENDRO_0047 * DENDRO_0128;
-double DENDRO_0135 = -DENDRO_0041 * DENDRO_0111 + DENDRO_0134;
-double DENDRO_0136 = DENDRO_0031 * DENDRO_0135;
-double DENDRO_0133 = -DENDRO_0132;
-double DENDRO_0118 = DENDRO_0041 * grad_2_gt3[pp];
-double DENDRO_0120 = DENDRO_0117 - DENDRO_0118 + DENDRO_0119;
-double DENDRO_0122 = -DENDRO_0041 * DENDRO_0079 + DENDRO_0121;
-double DENDRO_0137 = -2 * DENDRO_0027 * DENDRO_0126 -
-                     2 * DENDRO_0039 * DENDRO_0120 + DENDRO_0041 * DENDRO_0133 +
-                     DENDRO_0049 * DENDRO_0122 + DENDRO_0129 + DENDRO_0136;
-double DENDRO_0553 = DENDRO_0025 * DENDRO_0137;
-double DENDRO_0229 = 2 * DENDRO_0228;
-double DENDRO_0279 = DENDRO_0126 * grad_2_gt3[pp];
-double DENDRO_0278 = DENDRO_0120 * grad_0_gt3[pp];
-double DENDRO_0206 = 3 * DENDRO_0200;
-double DENDRO_0280 = DENDRO_0126 * grad_0_gt3[pp];
-double DENDRO_0277 = 4 * gt1[pp];
-double DENDRO_0227 = 2 * DENDRO_0226;
-double DENDRO_0212 = 4 * gt4[pp];
-double DENDRO_0103 = DENDRO_0041 * DENDRO_0102;
-double DENDRO_0223 = 4 * DENDRO_0222;
-double DENDRO_0233 = 4 * DENDRO_0232;
-double DENDRO_0282 = 3 * DENDRO_0272;
-double DENDRO_0281 = DENDRO_0120 * grad_2_gt3[pp];
-double DENDRO_0231 = 2 * DENDRO_0230;
-double DENDRO_0225 = 4 * DENDRO_0224;
-double DENDRO_0283 =
-    -DENDRO_0025 * DENDRO_0103 * (DENDRO_0097 + grad_0_gt3[pp]) -
-    DENDRO_0025 * DENDRO_0158 * (DENDRO_0099 + grad_2_gt3[pp]) -
-    DENDRO_0183 * (DENDRO_0278 + 2 * DENDRO_0279) -
-    DENDRO_0183 * (2 * DENDRO_0278 + DENDRO_0279) - DENDRO_0206 * DENDRO_0280 +
-    DENDRO_0212 * grad_1_Gt2[pp] - DENDRO_0223 * grad2_0_1_gt3[pp] -
-    DENDRO_0225 * grad2_1_2_gt3[pp] + DENDRO_0227 * grad2_0_0_gt3[pp] +
-    DENDRO_0229 * grad2_1_1_gt3[pp] + DENDRO_0231 * grad2_2_2_gt3[pp] +
-    DENDRO_0233 * grad2_0_2_gt3[pp] + DENDRO_0277 * grad_1_Gt0[pp] -
-    DENDRO_0281 * DENDRO_0282 + 4 * grad_1_Gt1[pp] * gt3[pp];
-double DENDRO_0636 = DENDRO_0132 * grad_2_gt3[pp];
-double DENDRO_0243 = DENDRO_0120 * grad_1_gt3[pp];
-double DENDRO_0247 = 2 * DENDRO_0243;
-double DENDRO_0088 = -DENDRO_0087;
-double DENDRO_0075 = DENDRO_0029 * grad_0_gt5[pp];
-double DENDRO_0076 = DENDRO_0031 * grad_2_gt0[pp];
-double DENDRO_0080 = -DENDRO_0027 * DENDRO_0079 + DENDRO_0075 + DENDRO_0076;
-double DENDRO_0081 = -DENDRO_0080;
-double DENDRO_0104 = DENDRO_0031 * grad_0_gt0[pp];
-double DENDRO_0108 = DENDRO_0029 * DENDRO_0107;
-double DENDRO_0112 = -DENDRO_0027 * DENDRO_0111 + DENDRO_0104 + DENDRO_0108;
-double DENDRO_0113 = -DENDRO_0112;
-double DENDRO_0093 = DENDRO_0027 * DENDRO_0090 + DENDRO_0029 * grad_2_gt5[pp] -
-                     DENDRO_0031 * DENDRO_0092;
-double DENDRO_0094 = -DENDRO_0093;
-double DENDRO_0095 = DENDRO_0047 * DENDRO_0094;
-double DENDRO_0114 = -2 * DENDRO_0027 * DENDRO_0088 +
-                     DENDRO_0031 * DENDRO_0113 - 2 * DENDRO_0039 * DENDRO_0074 +
-                     DENDRO_0049 * DENDRO_0081 + DENDRO_0095 + DENDRO_0103;
-double DENDRO_0554 = DENDRO_0025 * DENDRO_0114;
-double DENDRO_0607 = DENDRO_0072 * DENDRO_0087;
-double DENDRO_0640 = DENDRO_0073 * DENDRO_0111;
-double DENDRO_0601 = DENDRO_0087 * grad_0_gt3[pp];
+double DENDRO_0372 = DENDRO_0079 * DENDRO_0081;
+double DENDRO_0172 = DENDRO_0074 * grad_2_gt0[pp];
+double DENDRO_0287 = DENDRO_0088 * grad_1_gt0[pp];
+double DENDRO_0476 = DENDRO_0102 * grad_0_gt0[pp];
+double DENDRO_0478 = DENDRO_0088 * DENDRO_0111 + DENDRO_0476;
+double DENDRO_0167 = DENDRO_0025 * DENDRO_0027;
+double DENDRO_0203 = DENDRO_0025 * DENDRO_0041;
+double DENDRO_0256 = DENDRO_0151 * grad_2_gt3[pp];
+double DENDRO_0486 = DENDRO_0072 * DENDRO_0157 + DENDRO_0256;
+double DENDRO_0257 = DENDRO_0085 * DENDRO_0157;
+double DENDRO_0481 = DENDRO_0085 * DENDRO_0151;
+double DENDRO_0482 = DENDRO_0079 * DENDRO_0151 + DENDRO_0157 * grad_2_gt0[pp];
+double DENDRO_0428 = DENDRO_0111 * DENDRO_0120;
+double DENDRO_0298 = DENDRO_0072 * DENDRO_0126;
+double DENDRO_0461 = DENDRO_0135 * grad_2_gt3[pp];
+double DENDRO_0183 = DENDRO_0025 * DENDRO_0029;
+double DENDRO_0315 = DENDRO_0092 * DENDRO_0151;
+double DENDRO_0491 = DENDRO_0090 * DENDRO_0160 + DENDRO_0315;
+double DENDRO_0417 = DENDRO_0092 * DENDRO_0143;
+double DENDRO_0377 = DENDRO_0090 * DENDRO_0147;
+double DENDRO_0484 = DENDRO_0377 + DENDRO_0417;
+double DENDRO_0165 = DENDRO_0143 * grad_0_gt5[pp];
+double DENDRO_0347 = DENDRO_0081 * grad_0_gt3[pp];
+double DENDRO_0260 = DENDRO_0074 * grad_1_gt0[pp];
+double DENDRO_0473 = DENDRO_0260 + DENDRO_0347;
+double DENDRO_0403 = DENDRO_0102 * grad_2_gt0[pp];
+double DENDRO_0171 = DENDRO_0025 * DENDRO_0039;
+double DENDRO_0264 = DENDRO_0090 * DENDRO_0151;
+double DENDRO_0475 = DENDRO_0092 * DENDRO_0157 + DENDRO_0264;
+double DENDRO_0265 = -DENDRO_0085 * DENDRO_0143;
+double DENDRO_0241 = DENDRO_0088 * grad_0_gt3[pp];
 double DENDRO_0242 = DENDRO_0102 * grad_1_gt0[pp];
-double DENDRO_0115 = -DENDRO_0114;
-double DENDRO_0195 = DENDRO_0191 * grad_0_chi[pp];
+double DENDRO_0297 = DENDRO_0122 * grad_0_gt3[pp];
+double DENDRO_0409 = DENDRO_0079 * DENDRO_0126;
+double DENDRO_0410 = DENDRO_0297 + DENDRO_0409;
+double DENDRO_0423 = DENDRO_0120 * grad_1_gt0[pp];
+double DENDRO_0342 = DENDRO_0122 * grad_1_gt3[pp];
+double DENDRO_0432 = -DENDRO_0098 * DENDRO_0120;
+double DENDRO_0405 = DENDRO_0079 * DENDRO_0133;
+double DENDRO_0278 = DENDRO_0120 * grad_0_gt3[pp];
+double DENDRO_0279 = DENDRO_0126 * grad_2_gt3[pp];
+double DENDRO_0472 = DENDRO_0278 + DENDRO_0279;
+double DENDRO_0471 = DENDRO_0072 * DENDRO_0133;
+double DENDRO_0296 = DENDRO_0088 * grad_2_gt0[pp];
+double DENDRO_0490 = DENDRO_0079 * DENDRO_0113 + DENDRO_0296;
+double DENDRO_0420 = DENDRO_0074 * grad_0_gt0[pp];
+double DENDRO_0218 = DENDRO_0079 * DENDRO_0120;
+double DENDRO_0414 = DENDRO_0072 * DENDRO_0120;
+double DENDRO_0213 = DENDRO_0122 * grad_2_gt3[pp];
+double DENDRO_0477 = DENDRO_0113 * grad_0_gt3[pp];
+double DENDRO_0364 = DENDRO_0081 * DENDRO_0111;
+double DENDRO_0489 = DENDRO_0364 + DENDRO_0420;
+double DENDRO_0200 = DENDRO_0025 * DENDRO_0031;
+double DENDRO_0487 = DENDRO_0111 * DENDRO_0113;
+double DENDRO_0305 = DENDRO_0088 * grad_0_gt0[pp];
+double DENDRO_0307 = 2 * DENDRO_0305;
+double DENDRO_0300 = DENDRO_0126 * grad_1_gt0[pp];
+double DENDRO_0323 = DENDRO_0111 * DENDRO_0126;
+double DENDRO_0301 = DENDRO_0135 * grad_0_gt3[pp];
 double DENDRO_0192 = 3 * DENDRO_0189;
-double DENDRO_0138 = -DENDRO_0137;
-double DENDRO_0194 = DENDRO_0191 * grad_1_chi[pp];
-double DENDRO_0196 = DENDRO_0191 * grad_2_chi[pp];
-double DENDRO_0163 = -DENDRO_0162;
 double DENDRO_0193 = DENDRO_0192 * grad_0_chi[pp];
 double DENDRO_0197 =
     -2 * DENDRO_0027 * (-DENDRO_0193 * grad_1_chi[pp] + 2 * grad2_0_1_chi[pp]) +
@@ -429,424 +580,53 @@ double DENDRO_0197 =
     DENDRO_0049 * (-DENDRO_0193 * grad_2_chi[pp] + 2 * grad2_0_2_chi[pp]) +
     DENDRO_0115 * DENDRO_0195 + DENDRO_0138 * DENDRO_0194 +
     DENDRO_0163 * DENDRO_0196;
-double DENDRO_0556 = DENDRO_0191 * DENDRO_0197;
-double DENDRO_0525 = -DENDRO_0041 * grad_1_chi[pp] + DENDRO_0524;
-double DENDRO_0570 = DENDRO_0191 * DENDRO_0525;
-double DENDRO_0571 = -DENDRO_0039 * DENDRO_0101 * DENDRO_0191 +
-                     DENDRO_0130 * DENDRO_0191 + DENDRO_0131 * DENDRO_0191 +
-                     DENDRO_0189 * (DENDRO_0569 - DENDRO_0570 * gt3[pp]);
-double DENDRO_0527 = 6 * grad_1_alpha[pp];
-double DENDRO_0532 = 6 * grad_2_alpha[pp];
-double DENDRO_0533 = DENDRO_0191 * DENDRO_0532;
-double DENDRO_0529 = DENDRO_0029 * grad_0_chi[pp] -
-                     DENDRO_0039 * grad_1_chi[pp] +
-                     DENDRO_0047 * grad_2_chi[pp];
-double DENDRO_0540 = 6 * grad_0_alpha[pp];
-double DENDRO_0634 = DENDRO_0191 * DENDRO_0540;
-double DENDRO_0536 = -DENDRO_0027 * grad_1_chi[pp] +
-                     DENDRO_0029 * grad_2_chi[pp] +
-                     DENDRO_0031 * grad_0_chi[pp];
-double DENDRO_0430 = -DENDRO_0092 * DENDRO_0155;
-double DENDRO_0182 = DENDRO_0155 * grad_0_gt5[pp];
-double DENDRO_0180 = DENDRO_0147 * grad_2_gt5[pp];
-double DENDRO_0184 = DENDRO_0081 * grad_0_gt5[pp];
-double DENDRO_0185 = DENDRO_0094 * grad_2_gt0[pp];
-double DENDRO_0379 = DENDRO_0151 * grad_2_gt5[pp];
-double DENDRO_0380 = DENDRO_0085 * DENDRO_0155 + DENDRO_0379;
-double DENDRO_0417 = DENDRO_0092 * DENDRO_0143;
-double DENDRO_0418 = -DENDRO_0417;
-double DENDRO_0173 = DENDRO_0081 * DENDRO_0085;
-double DENDRO_0172 = DENDRO_0074 * grad_2_gt0[pp];
-double DENDRO_0371 = DENDRO_0094 * grad_1_gt0[pp];
-double DENDRO_0415 = DENDRO_0172 + DENDRO_0371;
-double DENDRO_0445 = DENDRO_0160 * grad_2_gt5[pp];
-double DENDRO_0446 = -DENDRO_0092 * DENDRO_0147 + DENDRO_0445;
-double DENDRO_0368 = DENDRO_0126 * grad_1_gt5[pp];
-double DENDRO_0367 = DENDRO_0128 * grad_0_gt3[pp];
-double DENDRO_0414 = DENDRO_0072 * DENDRO_0120;
-double DENDRO_0361 = DENDRO_0085 * DENDRO_0147;
-double DENDRO_0303 = DENDRO_0151 * grad_0_gt5[pp];
-double DENDRO_0425 = DENDRO_0143 * grad_2_gt0[pp];
-double DENDRO_0420 = DENDRO_0074 * grad_0_gt0[pp];
-double DENDRO_0295 = DENDRO_0081 * grad_1_gt0[pp];
-double DENDRO_0421 = DENDRO_0295 + DENDRO_0420;
-double DENDRO_0422 = DENDRO_0085 * DENDRO_0113;
-double DENDRO_0435 = DENDRO_0107 * DENDRO_0113;
-double DENDRO_0310 = DENDRO_0081 * grad_0_gt0[pp];
-double DENDRO_0312 = 2 * DENDRO_0310;
-double DENDRO_0203 = DENDRO_0025 * DENDRO_0041;
-double DENDRO_0432 = -DENDRO_0098 * DENDRO_0120;
-double DENDRO_0343 = DENDRO_0101 * DENDRO_0126;
-double DENDRO_0433 = DENDRO_0343 + DENDRO_0432;
-double DENDRO_0423 = DENDRO_0120 * grad_1_gt0[pp];
-double DENDRO_0360 = DENDRO_0085 * DENDRO_0126;
-double DENDRO_0424 = DENDRO_0360 + DENDRO_0423;
-double DENDRO_0297 = DENDRO_0122 * grad_0_gt3[pp];
-double DENDRO_0313 = DENDRO_0147 * grad_2_gt0[pp];
-double DENDRO_0314 = DENDRO_0160 * grad_0_gt5[pp];
-double DENDRO_0328 = DENDRO_0107 * DENDRO_0147;
-double DENDRO_0365 = DENDRO_0088 * DENDRO_0107;
-double DENDRO_0219 = DENDRO_0101 * DENDRO_0122;
-double DENDRO_0419 = DENDRO_0098 * DENDRO_0128;
-double DENDRO_0218 = DENDRO_0079 * DENDRO_0120;
-double DENDRO_0373 = DENDRO_0088 * grad_0_gt5[pp];
-double DENDRO_0443 = DENDRO_0085 * DENDRO_0122 + DENDRO_0128 * grad_1_gt0[pp];
-double DENDRO_0442 = DENDRO_0079 * DENDRO_0122;
-double DENDRO_0439 = DENDRO_0094 * grad_0_gt0[pp];
-double DENDRO_0288 = DENDRO_0081 * grad_2_gt0[pp];
-double DENDRO_0440 = DENDRO_0288 + DENDRO_0439;
-double DENDRO_0438 = DENDRO_0113 * grad_0_gt5[pp];
-double DENDRO_0304 = DENDRO_0072 * DENDRO_0147;
-double DENDRO_0426 = DENDRO_0160 * grad_1_gt5[pp];
-double DENDRO_0427 = DENDRO_0304 + DENDRO_0426;
-double DENDRO_0416 = DENDRO_0072 * DENDRO_0155;
-double DENDRO_0166 = DENDRO_0147 * grad_1_gt5[pp];
-double DENDRO_0165 = DENDRO_0143 * grad_0_gt5[pp];
-double DENDRO_0376 = DENDRO_0165 + DENDRO_0166;
-double DENDRO_0260 = DENDRO_0074 * grad_1_gt0[pp];
-double DENDRO_0346 = DENDRO_0085 * DENDRO_0088;
-double DENDRO_0326 = DENDRO_0111 * DENDRO_0122;
-double DENDRO_0318 = DENDRO_0122 * grad_1_gt0[pp];
-double DENDRO_0436 = DENDRO_0085 * DENDRO_0135 + DENDRO_0318;
-double DENDRO_0444 = DENDRO_0072 * DENDRO_0122 + DENDRO_0135 * grad_1_gt5[pp];
-double DENDRO_0441 = DENDRO_0081 * DENDRO_0107;
-double DENDRO_0164 = DENDRO_0025 * DENDRO_0163;
-double DENDRO_0447 = 2 * gt0[pp];
-double DENDRO_0013 = 2 * gt4[pp];
-double DENDRO_0116 = DENDRO_0025 * DENDRO_0115;
-double DENDRO_0384 = 2 * gt5[pp];
-double DENDRO_0448 = DENDRO_0223 * grad2_0_1_gt2[pp];
 double DENDRO_0198 = -DENDRO_0191 * DENDRO_0197;
-double DENDRO_0005 = 2 * gt2[pp];
-double DENDRO_0139 = DENDRO_0025 * DENDRO_0138;
-double DENDRO_0449 = DENDRO_0225 * grad2_1_2_gt2[pp];
-double DENDRO_0451 =
-    DENDRO_0004 * grad_2_Gt1[pp] + DENDRO_0005 * grad_0_Gt0[pp] +
-    DENDRO_0005 * grad_2_Gt2[pp] + DENDRO_0013 * grad_0_Gt1[pp] +
-    DENDRO_0116 * grad_0_gt2[pp] + DENDRO_0139 * grad_1_gt2[pp] +
-    DENDRO_0164 * grad_2_gt2[pp] + DENDRO_0198 * DENDRO_0450 +
-    DENDRO_0227 * grad2_0_0_gt2[pp] + DENDRO_0229 * grad2_1_1_gt2[pp] +
-    DENDRO_0231 * grad2_2_2_gt2[pp] + DENDRO_0233 * grad2_0_2_gt2[pp] +
-    DENDRO_0384 * grad_0_Gt2[pp] + DENDRO_0447 * grad_2_Gt0[pp] - DENDRO_0448 -
-    DENDRO_0449;
-double DENDRO_0437 = DENDRO_0155 * grad_2_gt0[pp];
-double DENDRO_0205 = DENDRO_0147 * grad_0_gt5[pp];
-double DENDRO_0350 = DENDRO_0085 * DENDRO_0143;
-double DENDRO_0262 = DENDRO_0151 * grad_1_gt5[pp];
-double DENDRO_0434 = DENDRO_0072 * DENDRO_0143;
-double DENDRO_0221 = DENDRO_0079 * DENDRO_0128;
-double DENDRO_0220 = DENDRO_0122 * grad_1_gt5[pp];
-double DENDRO_0431 = DENDRO_0072 * DENDRO_0128 + DENDRO_0220;
-double DENDRO_0428 = DENDRO_0111 * DENDRO_0120;
-double DENDRO_0308 = DENDRO_0098 * DENDRO_0122;
-double DENDRO_0429 = DENDRO_0101 * DENDRO_0135 - DENDRO_0308;
-double DENDRO_0452 = DENDRO_0167 * (DENDRO_0297 + DENDRO_0424) +
-                     DENDRO_0167 * (DENDRO_0365 + DENDRO_0421) +
-                     DENDRO_0167 * (DENDRO_0421 + DENDRO_0422) +
-                     DENDRO_0167 * (DENDRO_0428 + DENDRO_0429) +
-                     DENDRO_0167 * (DENDRO_0107 * DENDRO_0143 + DENDRO_0427) +
-                     DENDRO_0167 * (DENDRO_0303 + DENDRO_0361 + DENDRO_0425) +
-                     DENDRO_0171 * (DENDRO_0173 + DENDRO_0415) +
-                     DENDRO_0171 * (DENDRO_0373 + DENDRO_0415) +
-                     DENDRO_0171 * (DENDRO_0376 + DENDRO_0416) +
-                     DENDRO_0171 * (DENDRO_0380 + DENDRO_0418) +
-                     DENDRO_0171 * (DENDRO_0218 + DENDRO_0219 - DENDRO_0419) +
-                     DENDRO_0171 * (DENDRO_0367 + DENDRO_0368 + DENDRO_0414) -
-                     DENDRO_0183 * (2 * DENDRO_0205 + DENDRO_0437) -
-                     DENDRO_0183 * (DENDRO_0438 + DENDRO_0440) -
-                     DENDRO_0183 * (DENDRO_0440 + DENDRO_0441) -
-                     DENDRO_0183 * (DENDRO_0442 + DENDRO_0443) -
-                     DENDRO_0183 * (DENDRO_0107 * DENDRO_0155 + DENDRO_0446) -
-                     DENDRO_0183 * (DENDRO_0111 * DENDRO_0128 + DENDRO_0444) -
-                     DENDRO_0200 * (DENDRO_0312 + DENDRO_0435) -
-                     DENDRO_0200 * (DENDRO_0326 + DENDRO_0436) -
-                     DENDRO_0200 * (DENDRO_0313 + DENDRO_0314 + DENDRO_0328) -
-                     DENDRO_0203 * (2 * DENDRO_0260 + DENDRO_0346) -
-                     DENDRO_0203 * (DENDRO_0278 + DENDRO_0433) -
-                     DENDRO_0203 * (DENDRO_0262 + DENDRO_0350 + DENDRO_0434) -
-                     DENDRO_0272 * (DENDRO_0184 + 2 * DENDRO_0185) -
-                     DENDRO_0272 * (DENDRO_0221 + DENDRO_0431) -
-                     DENDRO_0272 * (DENDRO_0180 + DENDRO_0182 + DENDRO_0430) +
-                     DENDRO_0451;
-double DENDRO_0530 = -DENDRO_0529;
-double DENDRO_0565 = DENDRO_0191 * DENDRO_0530;
-double DENDRO_0578 = -DENDRO_0039 * DENDRO_0079 * DENDRO_0191 +
-                     DENDRO_0144 * DENDRO_0191 + DENDRO_0145 * DENDRO_0191 +
-                     DENDRO_0189 * (-DENDRO_0565 * gt2[pp] + grad_0_chi[pp]);
-double DENDRO_0567 = 2 * grad_2_alpha[pp];
-double DENDRO_0537 = -DENDRO_0536;
-double DENDRO_0538 = DENDRO_0191 * DENDRO_0537;
-double DENDRO_0577 = -DENDRO_0027 * DENDRO_0079 * DENDRO_0191 +
-                     DENDRO_0075 * DENDRO_0191 + DENDRO_0076 * DENDRO_0191 +
-                     DENDRO_0189 * (-DENDRO_0538 * gt2[pp] + grad_2_chi[pp]);
-double DENDRO_0562 = 2 * grad_0_alpha[pp];
-double DENDRO_0559 = 2 * grad_1_alpha[pp];
-double DENDRO_0560 = DENDRO_0191 * DENDRO_0559;
-double DENDRO_0579 = DENDRO_0122 + DENDRO_0450 * DENDRO_0525;
-double DENDRO_0580 = DENDRO_0560 * DENDRO_0579 - DENDRO_0562 * DENDRO_0577 -
-                     DENDRO_0567 * DENDRO_0578 - 4 * grad2_0_2_alpha[pp];
-double DENDRO_0267 = DENDRO_0072 * DENDRO_0088;
-double DENDRO_0347 = DENDRO_0081 * grad_0_gt3[pp];
-double DENDRO_0473 = DENDRO_0260 + DENDRO_0347;
-double DENDRO_0502 = DENDRO_0231 * grad2_2_2_gt1[pp];
-double DENDRO_0494 = DENDRO_0013 * grad_0_Gt2[pp];
-double DENDRO_0500 = DENDRO_0227 * grad2_0_0_gt1[pp];
-double DENDRO_0498 = -DENDRO_0223 * grad2_0_1_gt1[pp];
 double DENDRO_0497 = DENDRO_0005 * grad_1_Gt2[pp];
-double DENDRO_0492 = DENDRO_0004 * grad_0_Gt0[pp];
-double DENDRO_0501 = DENDRO_0229 * grad2_1_1_gt1[pp];
+double DENDRO_0494 = DENDRO_0013 * grad_0_Gt2[pp];
 double DENDRO_0387 = 2 * gt3[pp];
 double DENDRO_0493 = DENDRO_0387 * grad_0_Gt1[pp];
-double DENDRO_0496 = DENDRO_0004 * grad_1_Gt1[pp];
-double DENDRO_0495 = DENDRO_0447 * grad_1_Gt0[pp];
+double DENDRO_0492 = DENDRO_0004 * grad_0_Gt0[pp];
+double DENDRO_0223 = 4 * DENDRO_0222;
+double DENDRO_0498 = -DENDRO_0223 * grad2_0_1_gt1[pp];
+double DENDRO_0233 = 4 * DENDRO_0232;
 double DENDRO_0503 = DENDRO_0233 * grad2_0_2_gt1[pp];
+double DENDRO_0496 = DENDRO_0004 * grad_1_Gt1[pp];
+double DENDRO_0227 = 2 * DENDRO_0226;
+double DENDRO_0500 = DENDRO_0227 * grad2_0_0_gt1[pp];
+double DENDRO_0229 = 2 * DENDRO_0228;
+double DENDRO_0501 = DENDRO_0229 * grad2_1_1_gt1[pp];
+double DENDRO_0225 = 4 * DENDRO_0224;
 double DENDRO_0499 = -DENDRO_0225 * grad2_1_2_gt1[pp];
+double DENDRO_0231 = 2 * DENDRO_0230;
+double DENDRO_0502 = DENDRO_0231 * grad2_2_2_gt1[pp];
+double DENDRO_0447 = 2 * gt0[pp];
+double DENDRO_0495 = DENDRO_0447 * grad_1_Gt0[pp];
 double DENDRO_0505 = DENDRO_0116 * grad_0_gt1[pp] +
                      DENDRO_0139 * grad_1_gt1[pp] +
                      DENDRO_0164 * grad_2_gt1[pp] + DENDRO_0198 * DENDRO_0504 +
                      DENDRO_0492 + DENDRO_0493 + DENDRO_0494 + DENDRO_0495 +
                      DENDRO_0496 + DENDRO_0497 + DENDRO_0498 + DENDRO_0499 +
                      DENDRO_0500 + DENDRO_0501 + DENDRO_0502 + DENDRO_0503;
+double DENDRO_0485 = -DENDRO_0098 * DENDRO_0133;
+double DENDRO_0238 = DENDRO_0126 * grad_1_gt3[pp];
+double DENDRO_0240 = DENDRO_0133 * grad_0_gt3[pp];
+double DENDRO_0434 = DENDRO_0072 * DENDRO_0143;
+double DENDRO_0351 = DENDRO_0147 * grad_2_gt3[pp];
+double DENDRO_0349 = DENDRO_0157 * grad_0_gt5[pp];
+double DENDRO_0330 = DENDRO_0107 * DENDRO_0151;
 double DENDRO_0321 = DENDRO_0151 * grad_2_gt0[pp];
 double DENDRO_0488 = DENDRO_0079 * DENDRO_0160 + DENDRO_0321;
-double DENDRO_0322 = DENDRO_0085 * DENDRO_0160;
-double DENDRO_0239 = 2 * DENDRO_0238;
-double DENDRO_0485 = -DENDRO_0098 * DENDRO_0133;
-double DENDRO_0178 = DENDRO_0072 * DENDRO_0081;
-double DENDRO_0455 = DENDRO_0172 + DENDRO_0178;
-double DENDRO_0372 = DENDRO_0079 * DENDRO_0081;
-double DENDRO_0316 = -DENDRO_0085 * DENDRO_0147;
-double DENDRO_0315 = DENDRO_0092 * DENDRO_0151;
-double DENDRO_0491 = DENDRO_0090 * DENDRO_0160 + DENDRO_0315;
-double DENDRO_0513 = DENDRO_0316 + DENDRO_0491;
-double DENDRO_0481 = DENDRO_0085 * DENDRO_0151;
-double DENDRO_0483 = DENDRO_0072 * DENDRO_0151 + DENDRO_0160 * grad_2_gt3[pp];
-double DENDRO_0477 = DENDRO_0113 * grad_0_gt3[pp];
-double DENDRO_0287 = DENDRO_0088 * grad_1_gt0[pp];
-double DENDRO_0362 = DENDRO_0079 * DENDRO_0147;
-double DENDRO_0460 = DENDRO_0425 + DENDRO_0426;
-double DENDRO_0480 = DENDRO_0135 * grad_1_gt3[pp];
-double DENDRO_0511 = DENDRO_0280 + DENDRO_0480;
-double DENDRO_0470 = DENDRO_0133 * grad_1_gt0[pp];
-double DENDRO_0353 = -DENDRO_0081 * DENDRO_0098;
 double DENDRO_0261 = DENDRO_0079 * DENDRO_0088;
-double DENDRO_0403 = DENDRO_0102 * grad_2_gt0[pp];
 double DENDRO_0474 = DENDRO_0261 + DENDRO_0403;
-double DENDRO_0342 = DENDRO_0122 * grad_1_gt3[pp];
-double DENDRO_0509 = DENDRO_0279 + DENDRO_0342;
-double DENDRO_0471 = DENDRO_0072 * DENDRO_0133;
-double DENDRO_0306 = DENDRO_0113 * grad_1_gt0[pp];
-double DENDRO_0487 = DENDRO_0111 * DENDRO_0113;
-double DENDRO_0305 = DENDRO_0088 * grad_0_gt0[pp];
-double DENDRO_0482 = DENDRO_0079 * DENDRO_0151 + DENDRO_0157 * grad_2_gt0[pp];
-double DENDRO_0296 = DENDRO_0088 * grad_2_gt0[pp];
-double DENDRO_0490 = DENDRO_0079 * DENDRO_0113 + DENDRO_0296;
-double DENDRO_0256 = DENDRO_0151 * grad_2_gt3[pp];
-double DENDRO_0486 = DENDRO_0072 * DENDRO_0157 + DENDRO_0256;
-double DENDRO_0255 = DENDRO_0101 * DENDRO_0151;
-double DENDRO_0364 = DENDRO_0081 * DENDRO_0111;
-double DENDRO_0489 = DENDRO_0364 + DENDRO_0420;
-double DENDRO_0459 = DENDRO_0072 * DENDRO_0113;
-double DENDRO_0461 = DENDRO_0135 * grad_2_gt3[pp];
-double DENDRO_0514 = DENDRO_0297 + DENDRO_0461;
-double DENDRO_0298 = DENDRO_0072 * DENDRO_0126;
-double DENDRO_0479 = -DENDRO_0098 * DENDRO_0126;
-double DENDRO_0213 = DENDRO_0122 * grad_2_gt3[pp];
-double DENDRO_0300 = DENDRO_0126 * grad_1_gt0[pp];
-double DENDRO_0301 = DENDRO_0135 * grad_0_gt3[pp];
-double DENDRO_0515 = DENDRO_0167 * (DENDRO_0479 + DENDRO_0511) +
-                     DENDRO_0171 * (DENDRO_0432 + DENDRO_0509) -
-                     DENDRO_0183 * (DENDRO_0298 + DENDRO_0514) -
-                     DENDRO_0183 * (DENDRO_0423 + DENDRO_0514) -
-                     DENDRO_0200 * (DENDRO_0300 + 2 * DENDRO_0301) -
-                     DENDRO_0272 * (2 * DENDRO_0213 + DENDRO_0414);
-double DENDRO_0351 = DENDRO_0147 * grad_2_gt3[pp];
-double DENDRO_0352 = DENDRO_0262 + DENDRO_0351;
-double DENDRO_0475 = DENDRO_0092 * DENDRO_0157 + DENDRO_0264;
-double DENDRO_0510 = -DENDRO_0101 * DENDRO_0147 + DENDRO_0475;
-double DENDRO_0241 = DENDRO_0088 * grad_0_gt3[pp];
-double DENDRO_0258 = -DENDRO_0088 * DENDRO_0098;
-double DENDRO_0476 = DENDRO_0102 * grad_0_gt0[pp];
-double DENDRO_0478 = DENDRO_0088 * DENDRO_0111 + DENDRO_0476;
-double DENDRO_0377 = DENDRO_0090 * DENDRO_0147;
-double DENDRO_0484 = DENDRO_0377 + DENDRO_0417;
-double DENDRO_0512 = -DENDRO_0147 * grad_1_gt5[pp] + DENDRO_0484;
-double DENDRO_0516 =
-    DENDRO_0167 * (2 * DENDRO_0287 + DENDRO_0477) +
-    DENDRO_0167 * (DENDRO_0470 + DENDRO_0511) +
-    DENDRO_0167 * (DENDRO_0481 + DENDRO_0483) +
-    DENDRO_0167 * (-DENDRO_0098 * DENDRO_0113 + DENDRO_0478) +
-    DENDRO_0167 * (DENDRO_0101 * DENDRO_0160 + DENDRO_0482) -
-    DENDRO_0171 * DENDRO_0510 + DENDRO_0171 * (DENDRO_0267 + DENDRO_0473) +
-    DENDRO_0171 * (DENDRO_0352 + DENDRO_0434) +
-    DENDRO_0171 * (DENDRO_0353 + DENDRO_0474) +
-    DENDRO_0171 * (DENDRO_0471 + DENDRO_0509) + DENDRO_0183 * DENDRO_0513 -
-    DENDRO_0183 * (DENDRO_0295 + DENDRO_0490) -
-    DENDRO_0183 * (DENDRO_0362 + DENDRO_0460) -
-    DENDRO_0183 * (DENDRO_0459 + DENDRO_0489) -
-    DENDRO_0200 * (DENDRO_0322 + DENDRO_0488) -
-    DENDRO_0200 * (DENDRO_0305 + DENDRO_0306 + DENDRO_0487) -
-    DENDRO_0203 * (DENDRO_0239 + DENDRO_0485) -
-    DENDRO_0203 * (DENDRO_0255 + DENDRO_0486) -
-    DENDRO_0203 * (DENDRO_0241 + DENDRO_0242 + DENDRO_0258) +
-    DENDRO_0272 * DENDRO_0512 - DENDRO_0272 * (DENDRO_0372 + DENDRO_0455) +
-    DENDRO_0505 + DENDRO_0515;
-double DENDRO_0581 = -DENDRO_0027 * DENDRO_0191 * grad_0_gt3[pp] +
-                     DENDRO_0082 * DENDRO_0191 + DENDRO_0086 * DENDRO_0191 +
-                     DENDRO_0189 * (-DENDRO_0538 * gt1[pp] + grad_1_chi[pp]);
-double DENDRO_0568 = DENDRO_0191 * DENDRO_0567;
-double DENDRO_0582 = -DENDRO_0027 * DENDRO_0191 * grad_1_gt0[pp] -
-                     DENDRO_0039 * DENDRO_0085 * DENDRO_0191 +
-                     DENDRO_0124 * DENDRO_0191 +
-                     DENDRO_0189 * (-DENDRO_0570 * gt1[pp] + grad_0_chi[pp]);
-double DENDRO_0584 = -DENDRO_0559 * DENDRO_0582 - DENDRO_0562 * DENDRO_0581 +
-                     DENDRO_0568 * (-DENDRO_0148 - DENDRO_0149 +
-                                    DENDRO_0504 * DENDRO_0530 + DENDRO_0583) -
-                     4 * grad2_0_1_alpha[pp];
-double DENDRO_0573 = -DENDRO_0118 * DENDRO_0191 -
-                     DENDRO_0189 * (-DENDRO_0570 * gt4[pp] + grad_2_chi[pp]) +
-                     DENDRO_0572;
-double DENDRO_0574 = -DENDRO_0039 * DENDRO_0191 * grad_2_gt3[pp] +
-                     DENDRO_0140 * DENDRO_0191 + DENDRO_0141 * DENDRO_0191 +
-                     DENDRO_0189 * (-DENDRO_0565 * gt4[pp] + grad_1_chi[pp]);
-double DENDRO_0575 = DENDRO_0073 - DENDRO_0189 * DENDRO_0537 * gt4[pp];
-double DENDRO_0563 = DENDRO_0191 * DENDRO_0562;
-double DENDRO_0576 = DENDRO_0559 * DENDRO_0573 - DENDRO_0563 * DENDRO_0575 -
-                     DENDRO_0567 * DENDRO_0574 - 4 * grad2_1_2_alpha[pp];
-double DENDRO_0337 = DENDRO_0128 * grad_1_gt3[pp];
-double DENDRO_0339 = DENDRO_0101 * DENDRO_0120 + DENDRO_0337;
-double DENDRO_0366 = DENDRO_0364 + DENDRO_0365;
-double DENDRO_0358 = DENDRO_0085 * DENDRO_0102;
-double DENDRO_0251 = DENDRO_0074 * grad_0_gt3[pp];
-double DENDRO_0359 = DENDRO_0251 + DENDRO_0358;
-double DENDRO_0214 = DENDRO_0085 * DENDRO_0120;
-double DENDRO_0370 = DENDRO_0214 + DENDRO_0367;
-double DENDRO_0344 = DENDRO_0342 + DENDRO_0343;
-double DENDRO_0345 = DENDRO_0085 * DENDRO_0133 + DENDRO_0278;
-double DENDRO_0263 = DENDRO_0079 * DENDRO_0143;
-double DENDRO_0349 = DENDRO_0157 * grad_0_gt5[pp];
-double DENDRO_0333 = DENDRO_0155 * grad_2_gt3[pp];
-double DENDRO_0207 = DENDRO_0143 * grad_1_gt5[pp];
-double DENDRO_0215 = DENDRO_0120 * grad_1_gt5[pp];
-double DENDRO_0216 = DENDRO_0128 * grad_2_gt3[pp];
+double DENDRO_0280 = DENDRO_0126 * grad_0_gt3[pp];
+double DENDRO_0470 = DENDRO_0133 * grad_1_gt0[pp];
+double DENDRO_0303 = DENDRO_0151 * grad_0_gt5[pp];
+double DENDRO_0362 = DENDRO_0079 * DENDRO_0147;
 double DENDRO_0363 = DENDRO_0303 + DENDRO_0362;
-double DENDRO_0335 = DENDRO_0074 * DENDRO_0085 + DENDRO_0094 * grad_0_gt3[pp];
-double DENDRO_0334 = DENDRO_0072 * DENDRO_0074;
-double DENDRO_0357 = DENDRO_0101 * DENDRO_0133;
-double DENDRO_0378 = -DENDRO_0377;
-double DENDRO_0374 = DENDRO_0372 + DENDRO_0373;
-double DENDRO_0395 = DENDRO_0233 * grad2_0_2_gt4[pp];
-double DENDRO_0390 = -DENDRO_0223 * grad2_0_1_gt4[pp];
-double DENDRO_0391 = -DENDRO_0225 * grad2_1_2_gt4[pp];
-double DENDRO_0382 = DENDRO_0005 * grad_1_Gt0[pp];
-double DENDRO_0394 = DENDRO_0231 * grad2_2_2_gt4[pp];
-double DENDRO_0388 = DENDRO_0387 * grad_2_Gt1[pp];
-double DENDRO_0385 = DENDRO_0384 * grad_1_Gt2[pp];
-double DENDRO_0383 = DENDRO_0013 * grad_1_Gt1[pp];
-double DENDRO_0393 = DENDRO_0229 * grad2_1_1_gt4[pp];
-double DENDRO_0392 = DENDRO_0227 * grad2_0_0_gt4[pp];
-double DENDRO_0386 = DENDRO_0004 * grad_2_Gt0[pp];
-double DENDRO_0389 = DENDRO_0013 * grad_2_Gt2[pp];
-double DENDRO_0397 = DENDRO_0116 * grad_0_gt4[pp] +
-                     DENDRO_0139 * grad_1_gt4[pp] +
-                     DENDRO_0164 * grad_2_gt4[pp] + DENDRO_0198 * DENDRO_0396 +
-                     DENDRO_0382 + DENDRO_0383 + DENDRO_0385 + DENDRO_0386 +
-                     DENDRO_0388 + DENDRO_0389 + DENDRO_0390 + DENDRO_0391 +
-                     DENDRO_0392 + DENDRO_0393 + DENDRO_0394 + DENDRO_0395;
-double DENDRO_0375 = DENDRO_0079 * DENDRO_0155;
-double DENDRO_0248 = DENDRO_0101 * DENDRO_0143;
-double DENDRO_0245 = DENDRO_0143 * grad_2_gt3[pp];
-double DENDRO_0348 = DENDRO_0346 + DENDRO_0347;
-double DENDRO_0340 = DENDRO_0157 * grad_2_gt5[pp];
-double DENDRO_0341 = -DENDRO_0090 * DENDRO_0143;
-double DENDRO_0179 = DENDRO_0074 * DENDRO_0107;
-double DENDRO_0381 = DENDRO_0094 * DENDRO_0111 + DENDRO_0179;
-double DENDRO_0369 = DENDRO_0213 + DENDRO_0368;
-double DENDRO_0336 = DENDRO_0074 * DENDRO_0079 + DENDRO_0102 * grad_0_gt5[pp];
-double DENDRO_0356 = -DENDRO_0090 * DENDRO_0155;
-double DENDRO_0170 = DENDRO_0155 * grad_1_gt5[pp];
-double DENDRO_0168 = DENDRO_0143 * grad_2_gt5[pp];
-double DENDRO_0338 = DENDRO_0133 * grad_1_gt5[pp];
-double DENDRO_0174 = DENDRO_0074 * grad_0_gt5[pp];
-double DENDRO_0355 = DENDRO_0079 * DENDRO_0094 + DENDRO_0174;
-double DENDRO_0175 = DENDRO_0072 * DENDRO_0094;
-double DENDRO_0268 = DENDRO_0074 * DENDRO_0111;
-double DENDRO_0354 = DENDRO_0102 * DENDRO_0107 + DENDRO_0268;
-double DENDRO_0398 =
-    DENDRO_0167 * (DENDRO_0260 + DENDRO_0348) +
-    DENDRO_0167 * (DENDRO_0278 + DENDRO_0344) +
-    DENDRO_0167 * (DENDRO_0342 + DENDRO_0345) +
-    DENDRO_0167 * (DENDRO_0350 + DENDRO_0352) +
-    DENDRO_0167 * (DENDRO_0353 + DENDRO_0354) +
-    DENDRO_0167 * (DENDRO_0101 * DENDRO_0147 + DENDRO_0263 + DENDRO_0349) +
-    DENDRO_0171 * (2 * DENDRO_0207 + DENDRO_0333) +
-    DENDRO_0171 * (DENDRO_0281 + DENDRO_0339) +
-    DENDRO_0171 * (DENDRO_0334 + DENDRO_0335) +
-    DENDRO_0171 * (-DENDRO_0094 * DENDRO_0098 + DENDRO_0336) +
-    DENDRO_0171 * (DENDRO_0281 + DENDRO_0337 + DENDRO_0338) +
-    DENDRO_0171 * (DENDRO_0101 * DENDRO_0155 + DENDRO_0340 + DENDRO_0341) -
-    DENDRO_0183 * (DENDRO_0178 + DENDRO_0381) -
-    DENDRO_0183 * (DENDRO_0213 + DENDRO_0370) -
-    DENDRO_0183 * (DENDRO_0367 + DENDRO_0369) -
-    DENDRO_0183 * (DENDRO_0371 + DENDRO_0374) -
-    DENDRO_0183 * (DENDRO_0375 + DENDRO_0376) -
-    DENDRO_0183 * (DENDRO_0378 + DENDRO_0380) -
-    DENDRO_0200 * (DENDRO_0295 + DENDRO_0366) -
-    DENDRO_0200 * (2 * DENDRO_0297 + DENDRO_0360) -
-    DENDRO_0200 * (DENDRO_0361 + DENDRO_0363) -
-    DENDRO_0203 * (DENDRO_0247 + DENDRO_0357) -
-    DENDRO_0203 * (-DENDRO_0253 + DENDRO_0359) -
-    DENDRO_0203 * (DENDRO_0245 + DENDRO_0246 + DENDRO_0248) -
-    DENDRO_0272 * (DENDRO_0175 + DENDRO_0355) -
-    DENDRO_0272 * (DENDRO_0215 + 2 * DENDRO_0216) -
-    DENDRO_0272 * (DENDRO_0168 + DENDRO_0170 + DENDRO_0356) + DENDRO_0397;
-double DENDRO_0244 = DENDRO_0133 * grad_2_gt3[pp];
-double DENDRO_0402 = DENDRO_0207 + DENDRO_0340;
-double DENDRO_0405 = DENDRO_0079 * DENDRO_0133;
-double DENDRO_0407 = DENDRO_0165 + DENDRO_0379;
-double DENDRO_0401 = DENDRO_0092 * DENDRO_0102;
-double DENDRO_0169 = 2 * DENDRO_0168;
-double DENDRO_0406 = 2 * DENDRO_0246;
-double DENDRO_0404 = DENDRO_0262 + DENDRO_0349;
-double DENDRO_0176 = DENDRO_0074 * DENDRO_0092;
-double DENDRO_0408 = -DENDRO_0088 * DENDRO_0092;
-double DENDRO_0411 = DENDRO_0090 * DENDRO_0126;
-double DENDRO_0409 = DENDRO_0079 * DENDRO_0126;
-double DENDRO_0410 = DENDRO_0297 + DENDRO_0409;
-double DENDRO_0217 = -DENDRO_0090 * DENDRO_0120;
-double DENDRO_0412 = -DENDRO_0183 * (DENDRO_0218 + DENDRO_0369) -
-                     DENDRO_0183 * (DENDRO_0370 - DENDRO_0411) -
-                     DENDRO_0200 * (DENDRO_0360 + DENDRO_0410) -
-                     DENDRO_0272 * (DENDRO_0215 + DENDRO_0216 + DENDRO_0217);
-double DENDRO_0413 = DENDRO_0167 * (DENDRO_0263 + DENDRO_0404) +
-                     DENDRO_0167 * (DENDRO_0267 + DENDRO_0354) +
-                     DENDRO_0167 * (DENDRO_0279 + DENDRO_0345) +
-                     DENDRO_0167 * (DENDRO_0344 + DENDRO_0405) +
-                     DENDRO_0167 * (DENDRO_0348 + DENDRO_0403) +
-                     DENDRO_0167 * (DENDRO_0351 + DENDRO_0404) +
-                     DENDRO_0171 * (2 * DENDRO_0281 + DENDRO_0338) +
-                     DENDRO_0171 * (DENDRO_0333 + DENDRO_0402) +
-                     DENDRO_0171 * (DENDRO_0334 + DENDRO_0336) +
-                     DENDRO_0171 * (DENDRO_0335 - DENDRO_0401) +
-                     DENDRO_0171 * (DENDRO_0341 + DENDRO_0402) +
-                     DENDRO_0171 * (-DENDRO_0090 * DENDRO_0133 + DENDRO_0339) -
-                     DENDRO_0183 * (DENDRO_0172 + DENDRO_0374) -
-                     DENDRO_0183 * (DENDRO_0375 + DENDRO_0407) -
-                     DENDRO_0183 * (DENDRO_0378 + DENDRO_0407) -
-                     DENDRO_0183 * (DENDRO_0381 + DENDRO_0408) -
-                     DENDRO_0200 * (DENDRO_0296 + DENDRO_0366) -
-                     DENDRO_0200 * (2 * DENDRO_0303 + DENDRO_0362) -
-                     DENDRO_0203 * (DENDRO_0245 + DENDRO_0406) -
-                     DENDRO_0203 * (DENDRO_0252 + DENDRO_0359) -
-                     DENDRO_0203 * (DENDRO_0243 + DENDRO_0244 + DENDRO_0357) -
-                     DENDRO_0272 * (DENDRO_0169 + DENDRO_0356) -
-                     DENDRO_0272 * (-DENDRO_0176 + DENDRO_0355) + DENDRO_0397 +
-                     DENDRO_0412;
-double DENDRO_0307 = 2 * DENDRO_0305;
-double DENDRO_0240 = DENDRO_0133 * grad_0_gt3[pp];
-double DENDRO_0323 = DENDRO_0111 * DENDRO_0126;
-double DENDRO_0472 = DENDRO_0278 + DENDRO_0279;
-double DENDRO_0330 = DENDRO_0107 * DENDRO_0151;
+double DENDRO_0425 = DENDRO_0143 * grad_2_gt0[pp];
+double DENDRO_0483 = DENDRO_0072 * DENDRO_0151 + DENDRO_0160 * grad_2_gt3[pp];
+double DENDRO_0480 = DENDRO_0135 * grad_1_gt3[pp];
+double DENDRO_0479 = -DENDRO_0098 * DENDRO_0126;
 double DENDRO_0506 =
     DENDRO_0167 * (2 * DENDRO_0280 + DENDRO_0470) +
     DENDRO_0167 * (DENDRO_0287 + DENDRO_0478) +
@@ -875,31 +655,150 @@ double DENDRO_0506 =
     DENDRO_0272 * (2 * DENDRO_0172 + DENDRO_0372) -
     DENDRO_0272 * (DENDRO_0143 * grad_0_gt5[pp] - DENDRO_0484) -
     DENDRO_0272 * (DENDRO_0213 + DENDRO_0218 + DENDRO_0414) + DENDRO_0505;
-double DENDRO_0526 = DENDRO_0135 + DENDRO_0331 * DENDRO_0525;
+double DENDRO_0571 = -DENDRO_0039 * DENDRO_0101 * DENDRO_0191 +
+                     DENDRO_0130 * DENDRO_0191 + DENDRO_0131 * DENDRO_0191 +
+                     DENDRO_0189 * (DENDRO_0569 - DENDRO_0570 * gt3[pp]);
+double DENDRO_0563 = DENDRO_0191 * DENDRO_0562;
+double DENDRO_0249 = 2 * DENDRO_0157;
+double DENDRO_0255 = DENDRO_0101 * DENDRO_0151;
+double DENDRO_0244 = DENDRO_0133 * grad_2_gt3[pp];
+double DENDRO_0243 = DENDRO_0120 * grad_1_gt3[pp];
+double DENDRO_0247 = 2 * DENDRO_0243;
+double DENDRO_0276 = DENDRO_0130 * DENDRO_0209;
+double DENDRO_0253 = DENDRO_0074 * DENDRO_0098;
+double DENDRO_0254 = -2 * DENDRO_0079 * DENDRO_0102 + DENDRO_0253;
+double DENDRO_0239 = 2 * DENDRO_0238;
+double DENDRO_0263 = DENDRO_0079 * DENDRO_0143;
+double DENDRO_0262 = DENDRO_0151 * grad_1_gt5[pp];
+double DENDRO_0266 = 2 * DENDRO_0264 + DENDRO_0265;
+double DENDRO_0271 = grad_1_gt5[pp] - 4 * grad_2_gt4[pp];
+double DENDRO_0273 = 3 * grad_2_gt1[pp];
+double DENDRO_0274 = DENDRO_0272 * (DENDRO_0078 + DENDRO_0273);
+double DENDRO_0270 = DENDRO_0200 * (DENDRO_0110 + 4 * grad_0_gt1[pp]);
+double DENDRO_0268 = DENDRO_0074 * DENDRO_0111;
+double DENDRO_0267 = DENDRO_0072 * DENDRO_0088;
+double DENDRO_0259 = 2 * DENDRO_0102 * DENDRO_0111;
+double DENDRO_0258 = -DENDRO_0088 * DENDRO_0098;
+double DENDRO_0234 = 3 * grad_0_gt4[pp];
+double DENDRO_0275 = DENDRO_0200 * (DENDRO_0077 + DENDRO_0234 + grad_2_gt1[pp]);
+double DENDRO_0206 = 3 * DENDRO_0200;
+double DENDRO_0212 = 4 * gt4[pp];
+double DENDRO_0282 = 3 * DENDRO_0272;
+double DENDRO_0281 = DENDRO_0120 * grad_2_gt3[pp];
+double DENDRO_0277 = 4 * gt1[pp];
+double DENDRO_0283 =
+    -DENDRO_0025 * DENDRO_0103 * (DENDRO_0097 + grad_0_gt3[pp]) -
+    DENDRO_0025 * DENDRO_0158 * (DENDRO_0099 + grad_2_gt3[pp]) -
+    DENDRO_0183 * (DENDRO_0278 + 2 * DENDRO_0279) -
+    DENDRO_0183 * (2 * DENDRO_0278 + DENDRO_0279) - DENDRO_0206 * DENDRO_0280 +
+    DENDRO_0212 * grad_1_Gt2[pp] - DENDRO_0223 * grad2_0_1_gt3[pp] -
+    DENDRO_0225 * grad2_1_2_gt3[pp] + DENDRO_0227 * grad2_0_0_gt3[pp] +
+    DENDRO_0229 * grad2_1_1_gt3[pp] + DENDRO_0231 * grad2_2_2_gt3[pp] +
+    DENDRO_0233 * grad2_0_2_gt3[pp] + DENDRO_0277 * grad_1_Gt0[pp] -
+    DENDRO_0281 * DENDRO_0282 + 4 * grad_1_Gt1[pp] * gt3[pp];
+double DENDRO_0250 = DENDRO_0090 * DENDRO_0249;
+double DENDRO_0248 = DENDRO_0101 * DENDRO_0143;
+double DENDRO_0251 = DENDRO_0074 * grad_0_gt3[pp];
+double DENDRO_0252 = DENDRO_0072 * DENDRO_0102;
+double DENDRO_0246 = DENDRO_0157 * grad_1_gt5[pp];
+double DENDRO_0245 = DENDRO_0143 * grad_2_gt3[pp];
+double DENDRO_0284 =
+    -DENDRO_0074 * DENDRO_0274 - DENDRO_0088 * DENDRO_0270 +
+    DENDRO_0116 * grad_0_gt3[pp] - DENDRO_0133 * DENDRO_0276 +
+    DENDRO_0139 * grad_1_gt3[pp] + DENDRO_0143 * DENDRO_0271 * DENDRO_0272 -
+    DENDRO_0151 * DENDRO_0275 + DENDRO_0164 * grad_2_gt3[pp] +
+    DENDRO_0167 * (DENDRO_0238 + 2 * DENDRO_0240) +
+    DENDRO_0167 * (DENDRO_0239 + DENDRO_0240) +
+    DENDRO_0167 * (2 * DENDRO_0241 + DENDRO_0242) +
+    DENDRO_0167 * (2 * DENDRO_0256 + DENDRO_0257) +
+    DENDRO_0167 * (DENDRO_0258 + DENDRO_0259) +
+    DENDRO_0167 * (DENDRO_0079 * DENDRO_0249 + DENDRO_0255) -
+    DENDRO_0171 * DENDRO_0254 + DENDRO_0171 * (DENDRO_0243 + 2 * DENDRO_0244) +
+    DENDRO_0171 * (DENDRO_0244 + DENDRO_0247) +
+    DENDRO_0171 * (2 * DENDRO_0245 + DENDRO_0246) +
+    DENDRO_0171 * (DENDRO_0248 - DENDRO_0250) +
+    DENDRO_0171 * (2 * DENDRO_0251 + DENDRO_0252) + DENDRO_0183 * DENDRO_0266 -
+    DENDRO_0183 * (DENDRO_0260 + 2 * DENDRO_0261) -
+    DENDRO_0183 * (DENDRO_0262 + 2 * DENDRO_0263) -
+    DENDRO_0183 * (DENDRO_0267 + 2 * DENDRO_0268) + DENDRO_0198 * DENDRO_0269 +
+    DENDRO_0283;
+double DENDRO_0514 = DENDRO_0297 + DENDRO_0461;
+double DENDRO_0511 = DENDRO_0280 + DENDRO_0480;
+double DENDRO_0509 = DENDRO_0279 + DENDRO_0342;
+double DENDRO_0515 = DENDRO_0167 * (DENDRO_0479 + DENDRO_0511) +
+                     DENDRO_0171 * (DENDRO_0432 + DENDRO_0509) -
+                     DENDRO_0183 * (DENDRO_0298 + DENDRO_0514) -
+                     DENDRO_0183 * (DENDRO_0423 + DENDRO_0514) -
+                     DENDRO_0200 * (DENDRO_0300 + 2 * DENDRO_0301) -
+                     DENDRO_0272 * (2 * DENDRO_0213 + DENDRO_0414);
+double DENDRO_0352 = DENDRO_0262 + DENDRO_0351;
+double DENDRO_0178 = DENDRO_0072 * DENDRO_0081;
+double DENDRO_0455 = DENDRO_0172 + DENDRO_0178;
+double DENDRO_0322 = DENDRO_0085 * DENDRO_0160;
+double DENDRO_0316 = -DENDRO_0085 * DENDRO_0147;
+double DENDRO_0513 = DENDRO_0316 + DENDRO_0491;
+double DENDRO_0295 = DENDRO_0081 * grad_1_gt0[pp];
+double DENDRO_0512 = -DENDRO_0147 * grad_1_gt5[pp] + DENDRO_0484;
+double DENDRO_0426 = DENDRO_0160 * grad_1_gt5[pp];
+double DENDRO_0460 = DENDRO_0425 + DENDRO_0426;
+double DENDRO_0459 = DENDRO_0072 * DENDRO_0113;
+double DENDRO_0510 = -DENDRO_0101 * DENDRO_0147 + DENDRO_0475;
+double DENDRO_0353 = -DENDRO_0081 * DENDRO_0098;
+double DENDRO_0306 = DENDRO_0113 * grad_1_gt0[pp];
+double DENDRO_0516 =
+    DENDRO_0167 * (2 * DENDRO_0287 + DENDRO_0477) +
+    DENDRO_0167 * (DENDRO_0470 + DENDRO_0511) +
+    DENDRO_0167 * (DENDRO_0481 + DENDRO_0483) +
+    DENDRO_0167 * (-DENDRO_0098 * DENDRO_0113 + DENDRO_0478) +
+    DENDRO_0167 * (DENDRO_0101 * DENDRO_0160 + DENDRO_0482) -
+    DENDRO_0171 * DENDRO_0510 + DENDRO_0171 * (DENDRO_0267 + DENDRO_0473) +
+    DENDRO_0171 * (DENDRO_0352 + DENDRO_0434) +
+    DENDRO_0171 * (DENDRO_0353 + DENDRO_0474) +
+    DENDRO_0171 * (DENDRO_0471 + DENDRO_0509) + DENDRO_0183 * DENDRO_0513 -
+    DENDRO_0183 * (DENDRO_0295 + DENDRO_0490) -
+    DENDRO_0183 * (DENDRO_0362 + DENDRO_0460) -
+    DENDRO_0183 * (DENDRO_0459 + DENDRO_0489) -
+    DENDRO_0200 * (DENDRO_0322 + DENDRO_0488) -
+    DENDRO_0200 * (DENDRO_0305 + DENDRO_0306 + DENDRO_0487) -
+    DENDRO_0203 * (DENDRO_0239 + DENDRO_0485) -
+    DENDRO_0203 * (DENDRO_0255 + DENDRO_0486) -
+    DENDRO_0203 * (DENDRO_0241 + DENDRO_0242 + DENDRO_0258) +
+    DENDRO_0272 * DENDRO_0512 - DENDRO_0272 * (DENDRO_0372 + DENDRO_0455) +
+    DENDRO_0505 + DENDRO_0515;
 double DENDRO_0531 = DENDRO_0159 - DENDRO_0189 * DENDRO_0530 * gt0[pp];
-double DENDRO_0289 =
-    DENDRO_0126 * DENDRO_0203 * (-grad_0_gt3[pp] + 4 * grad_1_gt1[pp]);
-double DENDRO_0319 = DENDRO_0079 * DENDRO_0135;
-double DENDRO_0320 = DENDRO_0183 * (2 * DENDRO_0318 + DENDRO_0319);
-double DENDRO_0285 = DENDRO_0223 * grad2_0_1_gt0[pp];
-double DENDRO_0302 = 2 * DENDRO_0300 + DENDRO_0301;
-double DENDRO_0293 = DENDRO_0025 * DENDRO_0136 * (DENDRO_0109 + grad_1_gt0[pp]);
-double DENDRO_0290 = grad_0_gt5[pp] - 4 * grad_2_gt2[pp];
+double DENDRO_0304 = DENDRO_0072 * DENDRO_0147;
+double DENDRO_0310 = DENDRO_0081 * grad_0_gt0[pp];
 double DENDRO_0311 = DENDRO_0113 * grad_2_gt0[pp];
-double DENDRO_0329 = 2 * DENDRO_0160;
-double DENDRO_0309 = -DENDRO_0079 * DENDRO_0126 + 2 * DENDRO_0308;
-double DENDRO_0299 = DENDRO_0297 + 2 * DENDRO_0298;
-double DENDRO_0294 = DENDRO_0105 + grad_2_gt0[pp];
-double DENDRO_0324 = 2 * DENDRO_0135;
-double DENDRO_0325 = -DENDRO_0098 * DENDRO_0324 + DENDRO_0323;
-double DENDRO_0327 = DENDRO_0183 * (DENDRO_0072 * DENDRO_0324 + DENDRO_0326);
-double DENDRO_0286 = DENDRO_0225 * grad2_1_2_gt0[pp];
-double DENDRO_0291 = DENDRO_0122 * DENDRO_0272 * (DENDRO_0071 + DENDRO_0273);
 double DENDRO_0211 = 4 * gt2[pp];
-double DENDRO_0317 = 2 * DENDRO_0315 + DENDRO_0316;
+double DENDRO_0302 = 2 * DENDRO_0300 + DENDRO_0301;
+double DENDRO_0329 = 2 * DENDRO_0160;
+double DENDRO_0308 = DENDRO_0098 * DENDRO_0122;
+double DENDRO_0309 = -DENDRO_0079 * DENDRO_0126 + 2 * DENDRO_0308;
 double DENDRO_0202 = 3 * grad_1_gt2[pp];
 double DENDRO_0292 = DENDRO_0070 + DENDRO_0202 + grad_2_gt1[pp];
+double DENDRO_0319 = DENDRO_0079 * DENDRO_0135;
+double DENDRO_0318 = DENDRO_0122 * grad_1_gt0[pp];
+double DENDRO_0320 = DENDRO_0183 * (2 * DENDRO_0318 + DENDRO_0319);
+double DENDRO_0324 = 2 * DENDRO_0135;
+double DENDRO_0326 = DENDRO_0111 * DENDRO_0122;
+double DENDRO_0327 = DENDRO_0183 * (DENDRO_0072 * DENDRO_0324 + DENDRO_0326);
+double DENDRO_0285 = DENDRO_0223 * grad2_0_1_gt0[pp];
+double DENDRO_0312 = 2 * DENDRO_0310;
+double DENDRO_0290 = grad_0_gt5[pp] - 4 * grad_2_gt2[pp];
+double DENDRO_0314 = DENDRO_0160 * grad_0_gt5[pp];
+double DENDRO_0313 = DENDRO_0147 * grad_2_gt0[pp];
+double DENDRO_0294 = DENDRO_0105 + grad_2_gt0[pp];
+double DENDRO_0325 = -DENDRO_0098 * DENDRO_0324 + DENDRO_0323;
+double DENDRO_0291 = DENDRO_0122 * DENDRO_0272 * (DENDRO_0071 + DENDRO_0273);
+double DENDRO_0286 = DENDRO_0225 * grad2_1_2_gt0[pp];
+double DENDRO_0288 = DENDRO_0081 * grad_2_gt0[pp];
+double DENDRO_0289 =
+    DENDRO_0126 * DENDRO_0203 * (-grad_0_gt3[pp] + 4 * grad_1_gt1[pp]);
+double DENDRO_0293 = DENDRO_0025 * DENDRO_0136 * (DENDRO_0109 + grad_1_gt0[pp]);
+double DENDRO_0299 = DENDRO_0297 + 2 * DENDRO_0298;
+double DENDRO_0317 = 2 * DENDRO_0315 + DENDRO_0316;
 double DENDRO_0208 = 3 * DENDRO_0203;
+double DENDRO_0328 = DENDRO_0107 * DENDRO_0147;
 double DENDRO_0332 =
     -DENDRO_0025 * DENDRO_0161 * DENDRO_0294 -
     DENDRO_0104 * DENDRO_0113 * DENDRO_0209 + DENDRO_0116 * grad_0_gt0[pp] +
@@ -925,42 +824,218 @@ double DENDRO_0332 =
     DENDRO_0282 * DENDRO_0288 - DENDRO_0285 - DENDRO_0286 - DENDRO_0289 -
     DENDRO_0291 - DENDRO_0293 - DENDRO_0320 - DENDRO_0327 +
     4 * grad_0_Gt0[pp] * gt0[pp];
+double DENDRO_0560 = DENDRO_0191 * DENDRO_0559;
+double DENDRO_0526 = DENDRO_0135 + DENDRO_0331 * DENDRO_0525;
 double DENDRO_0539 = DENDRO_0104 * DENDRO_0191 + DENDRO_0108 * DENDRO_0191 +
                      DENDRO_0189 * (DENDRO_0535 - DENDRO_0538 * gt0[pp]) -
                      DENDRO_0534;
-double DENDRO_0284 =
-    -DENDRO_0074 * DENDRO_0274 - DENDRO_0088 * DENDRO_0270 +
-    DENDRO_0116 * grad_0_gt3[pp] - DENDRO_0133 * DENDRO_0276 +
-    DENDRO_0139 * grad_1_gt3[pp] + DENDRO_0143 * DENDRO_0271 * DENDRO_0272 -
-    DENDRO_0151 * DENDRO_0275 + DENDRO_0164 * grad_2_gt3[pp] +
-    DENDRO_0167 * (DENDRO_0238 + 2 * DENDRO_0240) +
-    DENDRO_0167 * (DENDRO_0239 + DENDRO_0240) +
-    DENDRO_0167 * (2 * DENDRO_0241 + DENDRO_0242) +
-    DENDRO_0167 * (2 * DENDRO_0256 + DENDRO_0257) +
-    DENDRO_0167 * (DENDRO_0258 + DENDRO_0259) +
-    DENDRO_0167 * (DENDRO_0079 * DENDRO_0249 + DENDRO_0255) -
-    DENDRO_0171 * DENDRO_0254 + DENDRO_0171 * (DENDRO_0243 + 2 * DENDRO_0244) +
-    DENDRO_0171 * (DENDRO_0244 + DENDRO_0247) +
-    DENDRO_0171 * (2 * DENDRO_0245 + DENDRO_0246) +
-    DENDRO_0171 * (DENDRO_0248 - DENDRO_0250) +
-    DENDRO_0171 * (2 * DENDRO_0251 + DENDRO_0252) + DENDRO_0183 * DENDRO_0266 -
-    DENDRO_0183 * (DENDRO_0260 + 2 * DENDRO_0261) -
-    DENDRO_0183 * (DENDRO_0262 + 2 * DENDRO_0263) -
-    DENDRO_0183 * (DENDRO_0267 + 2 * DENDRO_0268) + DENDRO_0198 * DENDRO_0269 +
-    DENDRO_0283;
-double DENDRO_0468 = DENDRO_0183 * (DENDRO_0442 + DENDRO_0444);
-double DENDRO_0467 = DENDRO_0183 * (-DENDRO_0090 * DENDRO_0135 + DENDRO_0443);
-double DENDRO_0463 = DENDRO_0409 + DENDRO_0429;
-double DENDRO_0181 = 2 * DENDRO_0180;
-double DENDRO_0187 = DENDRO_0090 * DENDRO_0122;
-double DENDRO_0464 = DENDRO_0272 * (-DENDRO_0187 + DENDRO_0431);
-double DENDRO_0458 = -DENDRO_0101 * DENDRO_0122 + DENDRO_0411 + DENDRO_0419;
-double DENDRO_0457 = DENDRO_0166 + DENDRO_0379;
-double DENDRO_0466 = DENDRO_0200 * (DENDRO_0319 + DENDRO_0436);
-double DENDRO_0456 = DENDRO_0369 + DENDRO_0414;
+double DENDRO_0561 = DENDRO_0093 - DENDRO_0189 * DENDRO_0537 * gt5[pp];
+double DENDRO_0558 = DENDRO_0128 + DENDRO_0190 * DENDRO_0525;
+double DENDRO_0565 = DENDRO_0191 * DENDRO_0530;
+double DENDRO_0566 = -DENDRO_0029 * DENDRO_0092 * DENDRO_0191 +
+                     DENDRO_0152 * DENDRO_0191 + DENDRO_0153 * DENDRO_0191 +
+                     DENDRO_0189 * (DENDRO_0564 - DENDRO_0565 * gt5[pp]);
+double DENDRO_0199 = DENDRO_0091 + grad_0_gt5[pp];
 double DENDRO_0186 = -DENDRO_0081 * DENDRO_0092;
-double DENDRO_0462 = DENDRO_0424 + DENDRO_0461;
+double DENDRO_0207 = DENDRO_0143 * grad_1_gt5[pp];
+double DENDRO_0182 = DENDRO_0155 * grad_0_gt5[pp];
+double DENDRO_0180 = DENDRO_0147 * grad_2_gt5[pp];
+double DENDRO_0166 = DENDRO_0147 * grad_1_gt5[pp];
+double DENDRO_0179 = DENDRO_0074 * DENDRO_0107;
+double DENDRO_0175 = DENDRO_0072 * DENDRO_0094;
+double DENDRO_0174 = DENDRO_0074 * grad_0_gt5[pp];
+double DENDRO_0210 = DENDRO_0152 * DENDRO_0209;
+double DENDRO_0176 = DENDRO_0074 * DENDRO_0092;
+double DENDRO_0177 = -2 * DENDRO_0085 * DENDRO_0094 + DENDRO_0176;
+double DENDRO_0204 = DENDRO_0203 * (DENDRO_0084 + DENDRO_0202);
+double DENDRO_0181 = 2 * DENDRO_0180;
+double DENDRO_0168 = DENDRO_0143 * grad_2_gt5[pp];
+double DENDRO_0170 = DENDRO_0155 * grad_1_gt5[pp];
+double DENDRO_0205 = DENDRO_0147 * grad_0_gt5[pp];
+double DENDRO_0221 = DENDRO_0079 * DENDRO_0128;
+double DENDRO_0220 = DENDRO_0122 * grad_1_gt5[pp];
+double DENDRO_0216 = DENDRO_0128 * grad_2_gt3[pp];
+double DENDRO_0215 = DENDRO_0120 * grad_1_gt5[pp];
+double DENDRO_0217 = -DENDRO_0090 * DENDRO_0120;
+double DENDRO_0219 = DENDRO_0101 * DENDRO_0122;
+double DENDRO_0214 = DENDRO_0085 * DENDRO_0120;
+double DENDRO_0235 =
+    -DENDRO_0025 * DENDRO_0129 * (DENDRO_0089 + grad_1_gt5[pp]) -
+    DENDRO_0120 * DENDRO_0203 * (DENDRO_0100 + 4 * grad_1_gt4[pp]) -
+    DENDRO_0122 * DENDRO_0200 * (DENDRO_0083 + DENDRO_0234 + grad_1_gt2[pp]) +
+    DENDRO_0167 * (DENDRO_0213 + 2 * DENDRO_0214) +
+    DENDRO_0167 * (DENDRO_0218 + 2 * DENDRO_0219) +
+    DENDRO_0171 * (2 * DENDRO_0215 + DENDRO_0216) +
+    DENDRO_0171 * (2 * DENDRO_0101 * DENDRO_0128 + DENDRO_0217) -
+    DENDRO_0183 * (2 * DENDRO_0220 + DENDRO_0221) +
+    DENDRO_0211 * grad_2_Gt0[pp] + DENDRO_0212 * grad_2_Gt1[pp] -
+    DENDRO_0223 * grad2_0_1_gt5[pp] - DENDRO_0225 * grad2_1_2_gt5[pp] +
+    DENDRO_0227 * grad2_0_0_gt5[pp] + DENDRO_0229 * grad2_1_1_gt5[pp] +
+    DENDRO_0231 * grad2_2_2_gt5[pp] + DENDRO_0233 * grad2_0_2_gt5[pp] +
+    4 * grad_2_Gt2[pp] * gt5[pp];
+double DENDRO_0184 = DENDRO_0081 * grad_0_gt5[pp];
+double DENDRO_0185 = DENDRO_0094 * grad_2_gt0[pp];
+double DENDRO_0173 = DENDRO_0081 * DENDRO_0085;
+double DENDRO_0187 = DENDRO_0090 * DENDRO_0122;
+double DENDRO_0188 = -2 * DENDRO_0085 * DENDRO_0128 + DENDRO_0187;
+double DENDRO_0201 = DENDRO_0200 * (DENDRO_0106 + 4 * grad_0_gt2[pp]);
+double DENDRO_0169 = 2 * DENDRO_0168;
+double DENDRO_0236 =
+    -DENDRO_0025 * DENDRO_0095 * DENDRO_0199 - DENDRO_0074 * DENDRO_0204 -
+    DENDRO_0081 * DENDRO_0201 + DENDRO_0116 * grad_0_gt5[pp] +
+    DENDRO_0139 * grad_1_gt5[pp] - DENDRO_0155 * DENDRO_0210 +
+    DENDRO_0164 * grad_2_gt5[pp] +
+    DENDRO_0167 * (DENDRO_0165 + 2 * DENDRO_0166) +
+    DENDRO_0167 * (2 * DENDRO_0165 + DENDRO_0166) +
+    DENDRO_0167 * (DENDRO_0172 + 2 * DENDRO_0173) +
+    DENDRO_0167 * (DENDRO_0178 + 2 * DENDRO_0179) - DENDRO_0171 * DENDRO_0177 +
+    DENDRO_0171 * (DENDRO_0168 + 2 * DENDRO_0170) +
+    DENDRO_0171 * (DENDRO_0169 + DENDRO_0170) +
+    DENDRO_0171 * (2 * DENDRO_0174 + DENDRO_0175) + DENDRO_0183 * DENDRO_0188 -
+    DENDRO_0183 * (DENDRO_0180 + 2 * DENDRO_0182) -
+    DENDRO_0183 * (DENDRO_0181 + DENDRO_0182) -
+    DENDRO_0183 * (2 * DENDRO_0184 + DENDRO_0185) -
+    DENDRO_0183 * (2 * DENDRO_0094 * DENDRO_0107 + DENDRO_0186) +
+    DENDRO_0190 * DENDRO_0198 - DENDRO_0205 * DENDRO_0206 -
+    DENDRO_0207 * DENDRO_0208 + DENDRO_0235;
+double DENDRO_0574 = -DENDRO_0039 * DENDRO_0191 * grad_2_gt3[pp] +
+                     DENDRO_0140 * DENDRO_0191 + DENDRO_0141 * DENDRO_0191 +
+                     DENDRO_0189 * (-DENDRO_0565 * gt4[pp] + grad_1_chi[pp]);
+double DENDRO_0573 = -DENDRO_0118 * DENDRO_0191 -
+                     DENDRO_0189 * (-DENDRO_0570 * gt4[pp] + grad_2_chi[pp]) +
+                     DENDRO_0572;
+double DENDRO_0575 = DENDRO_0073 - DENDRO_0189 * DENDRO_0537 * gt4[pp];
+double DENDRO_0576 = DENDRO_0559 * DENDRO_0573 - DENDRO_0563 * DENDRO_0575 -
+                     DENDRO_0567 * DENDRO_0574 - 4 * grad2_1_2_alpha[pp];
+double DENDRO_0361 = DENDRO_0085 * DENDRO_0147;
+double DENDRO_0350 = DENDRO_0085 * DENDRO_0143;
+double DENDRO_0360 = DENDRO_0085 * DENDRO_0126;
+double DENDRO_0365 = DENDRO_0088 * DENDRO_0107;
+double DENDRO_0366 = DENDRO_0364 + DENDRO_0365;
+double DENDRO_0356 = -DENDRO_0090 * DENDRO_0155;
+double DENDRO_0346 = DENDRO_0085 * DENDRO_0088;
+double DENDRO_0348 = DENDRO_0346 + DENDRO_0347;
+double DENDRO_0389 = DENDRO_0013 * grad_2_Gt2[pp];
+double DENDRO_0393 = DENDRO_0229 * grad2_1_1_gt4[pp];
+double DENDRO_0392 = DENDRO_0227 * grad2_0_0_gt4[pp];
+double DENDRO_0384 = 2 * gt5[pp];
+double DENDRO_0385 = DENDRO_0384 * grad_1_Gt2[pp];
+double DENDRO_0382 = DENDRO_0005 * grad_1_Gt0[pp];
+double DENDRO_0395 = DENDRO_0233 * grad2_0_2_gt4[pp];
+double DENDRO_0394 = DENDRO_0231 * grad2_2_2_gt4[pp];
+double DENDRO_0388 = DENDRO_0387 * grad_2_Gt1[pp];
+double DENDRO_0383 = DENDRO_0013 * grad_1_Gt1[pp];
+double DENDRO_0391 = -DENDRO_0225 * grad2_1_2_gt4[pp];
+double DENDRO_0386 = DENDRO_0004 * grad_2_Gt0[pp];
+double DENDRO_0390 = -DENDRO_0223 * grad2_0_1_gt4[pp];
+double DENDRO_0397 = DENDRO_0116 * grad_0_gt4[pp] +
+                     DENDRO_0139 * grad_1_gt4[pp] +
+                     DENDRO_0164 * grad_2_gt4[pp] + DENDRO_0198 * DENDRO_0396 +
+                     DENDRO_0382 + DENDRO_0383 + DENDRO_0385 + DENDRO_0386 +
+                     DENDRO_0388 + DENDRO_0389 + DENDRO_0390 + DENDRO_0391 +
+                     DENDRO_0392 + DENDRO_0393 + DENDRO_0394 + DENDRO_0395;
+double DENDRO_0358 = DENDRO_0085 * DENDRO_0102;
+double DENDRO_0359 = DENDRO_0251 + DENDRO_0358;
+double DENDRO_0376 = DENDRO_0165 + DENDRO_0166;
+double DENDRO_0375 = DENDRO_0079 * DENDRO_0155;
+double DENDRO_0341 = -DENDRO_0090 * DENDRO_0143;
+double DENDRO_0340 = DENDRO_0157 * grad_2_gt5[pp];
+double DENDRO_0345 = DENDRO_0085 * DENDRO_0133 + DENDRO_0278;
+double DENDRO_0357 = DENDRO_0101 * DENDRO_0133;
+double DENDRO_0355 = DENDRO_0079 * DENDRO_0094 + DENDRO_0174;
+double DENDRO_0373 = DENDRO_0088 * grad_0_gt5[pp];
+double DENDRO_0374 = DENDRO_0372 + DENDRO_0373;
+double DENDRO_0371 = DENDRO_0094 * grad_1_gt0[pp];
+double DENDRO_0336 = DENDRO_0074 * DENDRO_0079 + DENDRO_0102 * grad_0_gt5[pp];
+double DENDRO_0335 = DENDRO_0074 * DENDRO_0085 + DENDRO_0094 * grad_0_gt3[pp];
+double DENDRO_0334 = DENDRO_0072 * DENDRO_0074;
+double DENDRO_0381 = DENDRO_0094 * DENDRO_0111 + DENDRO_0179;
+double DENDRO_0337 = DENDRO_0128 * grad_1_gt3[pp];
+double DENDRO_0338 = DENDRO_0133 * grad_1_gt5[pp];
+double DENDRO_0354 = DENDRO_0102 * DENDRO_0107 + DENDRO_0268;
+double DENDRO_0379 = DENDRO_0151 * grad_2_gt5[pp];
+double DENDRO_0380 = DENDRO_0085 * DENDRO_0155 + DENDRO_0379;
+double DENDRO_0378 = -DENDRO_0377;
+double DENDRO_0367 = DENDRO_0128 * grad_0_gt3[pp];
+double DENDRO_0368 = DENDRO_0126 * grad_1_gt5[pp];
+double DENDRO_0369 = DENDRO_0213 + DENDRO_0368;
+double DENDRO_0370 = DENDRO_0214 + DENDRO_0367;
+double DENDRO_0333 = DENDRO_0155 * grad_2_gt3[pp];
+double DENDRO_0343 = DENDRO_0101 * DENDRO_0126;
+double DENDRO_0344 = DENDRO_0342 + DENDRO_0343;
+double DENDRO_0339 = DENDRO_0101 * DENDRO_0120 + DENDRO_0337;
+double DENDRO_0398 =
+    DENDRO_0167 * (DENDRO_0260 + DENDRO_0348) +
+    DENDRO_0167 * (DENDRO_0278 + DENDRO_0344) +
+    DENDRO_0167 * (DENDRO_0342 + DENDRO_0345) +
+    DENDRO_0167 * (DENDRO_0350 + DENDRO_0352) +
+    DENDRO_0167 * (DENDRO_0353 + DENDRO_0354) +
+    DENDRO_0167 * (DENDRO_0101 * DENDRO_0147 + DENDRO_0263 + DENDRO_0349) +
+    DENDRO_0171 * (2 * DENDRO_0207 + DENDRO_0333) +
+    DENDRO_0171 * (DENDRO_0281 + DENDRO_0339) +
+    DENDRO_0171 * (DENDRO_0334 + DENDRO_0335) +
+    DENDRO_0171 * (-DENDRO_0094 * DENDRO_0098 + DENDRO_0336) +
+    DENDRO_0171 * (DENDRO_0281 + DENDRO_0337 + DENDRO_0338) +
+    DENDRO_0171 * (DENDRO_0101 * DENDRO_0155 + DENDRO_0340 + DENDRO_0341) -
+    DENDRO_0183 * (DENDRO_0178 + DENDRO_0381) -
+    DENDRO_0183 * (DENDRO_0213 + DENDRO_0370) -
+    DENDRO_0183 * (DENDRO_0367 + DENDRO_0369) -
+    DENDRO_0183 * (DENDRO_0371 + DENDRO_0374) -
+    DENDRO_0183 * (DENDRO_0375 + DENDRO_0376) -
+    DENDRO_0183 * (DENDRO_0378 + DENDRO_0380) -
+    DENDRO_0200 * (DENDRO_0295 + DENDRO_0366) -
+    DENDRO_0200 * (2 * DENDRO_0297 + DENDRO_0360) -
+    DENDRO_0200 * (DENDRO_0361 + DENDRO_0363) -
+    DENDRO_0203 * (DENDRO_0247 + DENDRO_0357) -
+    DENDRO_0203 * (-DENDRO_0253 + DENDRO_0359) -
+    DENDRO_0203 * (DENDRO_0245 + DENDRO_0246 + DENDRO_0248) -
+    DENDRO_0272 * (DENDRO_0175 + DENDRO_0355) -
+    DENDRO_0272 * (DENDRO_0215 + 2 * DENDRO_0216) -
+    DENDRO_0272 * (DENDRO_0168 + DENDRO_0170 + DENDRO_0356) + DENDRO_0397;
+double DENDRO_0448 = DENDRO_0223 * grad2_0_1_gt2[pp];
+double DENDRO_0449 = DENDRO_0225 * grad2_1_2_gt2[pp];
+double DENDRO_0451 =
+    DENDRO_0004 * grad_2_Gt1[pp] + DENDRO_0005 * grad_0_Gt0[pp] +
+    DENDRO_0005 * grad_2_Gt2[pp] + DENDRO_0013 * grad_0_Gt1[pp] +
+    DENDRO_0116 * grad_0_gt2[pp] + DENDRO_0139 * grad_1_gt2[pp] +
+    DENDRO_0164 * grad_2_gt2[pp] + DENDRO_0198 * DENDRO_0450 +
+    DENDRO_0227 * grad2_0_0_gt2[pp] + DENDRO_0229 * grad2_1_1_gt2[pp] +
+    DENDRO_0231 * grad2_2_2_gt2[pp] + DENDRO_0233 * grad2_0_2_gt2[pp] +
+    DENDRO_0384 * grad_0_Gt2[pp] + DENDRO_0447 * grad_2_Gt0[pp] - DENDRO_0448 -
+    DENDRO_0449;
+double DENDRO_0443 = DENDRO_0085 * DENDRO_0122 + DENDRO_0128 * grad_1_gt0[pp];
+double DENDRO_0467 = DENDRO_0183 * (-DENDRO_0090 * DENDRO_0135 + DENDRO_0443);
+double DENDRO_0456 = DENDRO_0369 + DENDRO_0414;
+double DENDRO_0436 = DENDRO_0085 * DENDRO_0135 + DENDRO_0318;
+double DENDRO_0466 = DENDRO_0200 * (DENDRO_0319 + DENDRO_0436);
+double DENDRO_0433 = DENDRO_0343 + DENDRO_0432;
 double DENDRO_0465 = DENDRO_0203 * (DENDRO_0279 + DENDRO_0433);
+double DENDRO_0435 = DENDRO_0107 * DENDRO_0113;
+double DENDRO_0442 = DENDRO_0079 * DENDRO_0122;
+double DENDRO_0444 = DENDRO_0072 * DENDRO_0122 + DENDRO_0135 * grad_1_gt5[pp];
+double DENDRO_0468 = DENDRO_0183 * (DENDRO_0442 + DENDRO_0444);
+double DENDRO_0427 = DENDRO_0304 + DENDRO_0426;
+double DENDRO_0457 = DENDRO_0166 + DENDRO_0379;
+double DENDRO_0416 = DENDRO_0072 * DENDRO_0155;
+double DENDRO_0430 = -DENDRO_0092 * DENDRO_0155;
+double DENDRO_0431 = DENDRO_0072 * DENDRO_0128 + DENDRO_0220;
+double DENDRO_0464 = DENDRO_0272 * (-DENDRO_0187 + DENDRO_0431);
+double DENDRO_0424 = DENDRO_0360 + DENDRO_0423;
+double DENDRO_0462 = DENDRO_0424 + DENDRO_0461;
+double DENDRO_0438 = DENDRO_0113 * grad_0_gt5[pp];
+double DENDRO_0408 = -DENDRO_0088 * DENDRO_0092;
+double DENDRO_0411 = DENDRO_0090 * DENDRO_0126;
+double DENDRO_0419 = DENDRO_0098 * DENDRO_0128;
+double DENDRO_0458 = -DENDRO_0101 * DENDRO_0122 + DENDRO_0411 + DENDRO_0419;
+double DENDRO_0422 = DENDRO_0085 * DENDRO_0113;
+double DENDRO_0418 = -DENDRO_0417;
+double DENDRO_0437 = DENDRO_0155 * grad_2_gt0[pp];
+double DENDRO_0445 = DENDRO_0160 * grad_2_gt5[pp];
+double DENDRO_0429 = DENDRO_0101 * DENDRO_0135 - DENDRO_0308;
+double DENDRO_0463 = DENDRO_0409 + DENDRO_0429;
+double DENDRO_0439 = DENDRO_0094 * grad_0_gt0[pp];
+double DENDRO_0441 = DENDRO_0081 * DENDRO_0107;
+double DENDRO_0446 = -DENDRO_0092 * DENDRO_0147 + DENDRO_0445;
 double DENDRO_0469 =
     DENDRO_0167 * DENDRO_0462 + DENDRO_0167 * DENDRO_0463 +
     DENDRO_0167 * (DENDRO_0303 + DENDRO_0427) +
@@ -983,49 +1058,79 @@ double DENDRO_0469 =
     DENDRO_0272 * (DENDRO_0181 + DENDRO_0430) -
     DENDRO_0272 * (DENDRO_0184 + DENDRO_0185 + DENDRO_0186) + DENDRO_0451 -
     DENDRO_0464 - DENDRO_0465 - DENDRO_0466 - DENDRO_0467 - DENDRO_0468;
-double DENDRO_0177 = -2 * DENDRO_0085 * DENDRO_0094 + DENDRO_0176;
-double DENDRO_0235 =
-    -DENDRO_0025 * DENDRO_0129 * (DENDRO_0089 + grad_1_gt5[pp]) -
-    DENDRO_0120 * DENDRO_0203 * (DENDRO_0100 + 4 * grad_1_gt4[pp]) -
-    DENDRO_0122 * DENDRO_0200 * (DENDRO_0083 + DENDRO_0234 + grad_1_gt2[pp]) +
-    DENDRO_0167 * (DENDRO_0213 + 2 * DENDRO_0214) +
-    DENDRO_0167 * (DENDRO_0218 + 2 * DENDRO_0219) +
-    DENDRO_0171 * (2 * DENDRO_0215 + DENDRO_0216) +
-    DENDRO_0171 * (2 * DENDRO_0101 * DENDRO_0128 + DENDRO_0217) -
-    DENDRO_0183 * (2 * DENDRO_0220 + DENDRO_0221) +
-    DENDRO_0211 * grad_2_Gt0[pp] + DENDRO_0212 * grad_2_Gt1[pp] -
-    DENDRO_0223 * grad2_0_1_gt5[pp] - DENDRO_0225 * grad2_1_2_gt5[pp] +
-    DENDRO_0227 * grad2_0_0_gt5[pp] + DENDRO_0229 * grad2_1_1_gt5[pp] +
-    DENDRO_0231 * grad2_2_2_gt5[pp] + DENDRO_0233 * grad2_0_2_gt5[pp] +
-    4 * grad_2_Gt2[pp] * gt5[pp];
-double DENDRO_0188 = -2 * DENDRO_0085 * DENDRO_0128 + DENDRO_0187;
-double DENDRO_0201 = DENDRO_0200 * (DENDRO_0106 + 4 * grad_0_gt2[pp]);
-double DENDRO_0210 = DENDRO_0152 * DENDRO_0209;
-double DENDRO_0204 = DENDRO_0203 * (DENDRO_0084 + DENDRO_0202);
-double DENDRO_0199 = DENDRO_0091 + grad_0_gt5[pp];
-double DENDRO_0236 =
-    -DENDRO_0025 * DENDRO_0095 * DENDRO_0199 - DENDRO_0074 * DENDRO_0204 -
-    DENDRO_0081 * DENDRO_0201 + DENDRO_0116 * grad_0_gt5[pp] +
-    DENDRO_0139 * grad_1_gt5[pp] - DENDRO_0155 * DENDRO_0210 +
-    DENDRO_0164 * grad_2_gt5[pp] +
-    DENDRO_0167 * (DENDRO_0165 + 2 * DENDRO_0166) +
-    DENDRO_0167 * (2 * DENDRO_0165 + DENDRO_0166) +
-    DENDRO_0167 * (DENDRO_0172 + 2 * DENDRO_0173) +
-    DENDRO_0167 * (DENDRO_0178 + 2 * DENDRO_0179) - DENDRO_0171 * DENDRO_0177 +
-    DENDRO_0171 * (DENDRO_0168 + 2 * DENDRO_0170) +
-    DENDRO_0171 * (DENDRO_0169 + DENDRO_0170) +
-    DENDRO_0171 * (2 * DENDRO_0174 + DENDRO_0175) + DENDRO_0183 * DENDRO_0188 -
-    DENDRO_0183 * (DENDRO_0180 + 2 * DENDRO_0182) -
-    DENDRO_0183 * (DENDRO_0181 + DENDRO_0182) -
-    DENDRO_0183 * (2 * DENDRO_0184 + DENDRO_0185) -
-    DENDRO_0183 * (2 * DENDRO_0094 * DENDRO_0107 + DENDRO_0186) +
-    DENDRO_0190 * DENDRO_0198 - DENDRO_0205 * DENDRO_0206 -
-    DENDRO_0207 * DENDRO_0208 + DENDRO_0235;
-double DENDRO_0566 = -DENDRO_0029 * DENDRO_0092 * DENDRO_0191 +
-                     DENDRO_0152 * DENDRO_0191 + DENDRO_0153 * DENDRO_0191 +
-                     DENDRO_0189 * (DENDRO_0564 - DENDRO_0565 * gt5[pp]);
-double DENDRO_0561 = DENDRO_0093 - DENDRO_0189 * DENDRO_0537 * gt5[pp];
-double DENDRO_0558 = DENDRO_0128 + DENDRO_0190 * DENDRO_0525;
+double DENDRO_0578 = -DENDRO_0039 * DENDRO_0079 * DENDRO_0191 +
+                     DENDRO_0144 * DENDRO_0191 + DENDRO_0145 * DENDRO_0191 +
+                     DENDRO_0189 * (-DENDRO_0565 * gt2[pp] + grad_0_chi[pp]);
+double DENDRO_0579 = DENDRO_0122 + DENDRO_0450 * DENDRO_0525;
+double DENDRO_0577 = -DENDRO_0027 * DENDRO_0079 * DENDRO_0191 +
+                     DENDRO_0075 * DENDRO_0191 + DENDRO_0076 * DENDRO_0191 +
+                     DENDRO_0189 * (-DENDRO_0538 * gt2[pp] + grad_2_chi[pp]);
+double DENDRO_0580 = DENDRO_0560 * DENDRO_0579 - DENDRO_0562 * DENDRO_0577 -
+                     DENDRO_0567 * DENDRO_0578 - 4 * grad2_0_2_alpha[pp];
+double DENDRO_0407 = DENDRO_0165 + DENDRO_0379;
+double DENDRO_0404 = DENDRO_0262 + DENDRO_0349;
+double DENDRO_0412 = -DENDRO_0183 * (DENDRO_0218 + DENDRO_0369) -
+                     DENDRO_0183 * (DENDRO_0370 - DENDRO_0411) -
+                     DENDRO_0200 * (DENDRO_0360 + DENDRO_0410) -
+                     DENDRO_0272 * (DENDRO_0215 + DENDRO_0216 + DENDRO_0217);
+double DENDRO_0406 = 2 * DENDRO_0246;
+double DENDRO_0401 = DENDRO_0092 * DENDRO_0102;
+double DENDRO_0402 = DENDRO_0207 + DENDRO_0340;
+double DENDRO_0413 = DENDRO_0167 * (DENDRO_0263 + DENDRO_0404) +
+                     DENDRO_0167 * (DENDRO_0267 + DENDRO_0354) +
+                     DENDRO_0167 * (DENDRO_0279 + DENDRO_0345) +
+                     DENDRO_0167 * (DENDRO_0344 + DENDRO_0405) +
+                     DENDRO_0167 * (DENDRO_0348 + DENDRO_0403) +
+                     DENDRO_0167 * (DENDRO_0351 + DENDRO_0404) +
+                     DENDRO_0171 * (2 * DENDRO_0281 + DENDRO_0338) +
+                     DENDRO_0171 * (DENDRO_0333 + DENDRO_0402) +
+                     DENDRO_0171 * (DENDRO_0334 + DENDRO_0336) +
+                     DENDRO_0171 * (DENDRO_0335 - DENDRO_0401) +
+                     DENDRO_0171 * (DENDRO_0341 + DENDRO_0402) +
+                     DENDRO_0171 * (-DENDRO_0090 * DENDRO_0133 + DENDRO_0339) -
+                     DENDRO_0183 * (DENDRO_0172 + DENDRO_0374) -
+                     DENDRO_0183 * (DENDRO_0375 + DENDRO_0407) -
+                     DENDRO_0183 * (DENDRO_0378 + DENDRO_0407) -
+                     DENDRO_0183 * (DENDRO_0381 + DENDRO_0408) -
+                     DENDRO_0200 * (DENDRO_0296 + DENDRO_0366) -
+                     DENDRO_0200 * (2 * DENDRO_0303 + DENDRO_0362) -
+                     DENDRO_0203 * (DENDRO_0245 + DENDRO_0406) -
+                     DENDRO_0203 * (DENDRO_0252 + DENDRO_0359) -
+                     DENDRO_0203 * (DENDRO_0243 + DENDRO_0244 + DENDRO_0357) -
+                     DENDRO_0272 * (DENDRO_0169 + DENDRO_0356) -
+                     DENDRO_0272 * (-DENDRO_0176 + DENDRO_0355) + DENDRO_0397 +
+                     DENDRO_0412;
+double DENDRO_0415 = DENDRO_0172 + DENDRO_0371;
+double DENDRO_0421 = DENDRO_0295 + DENDRO_0420;
+double DENDRO_0440 = DENDRO_0288 + DENDRO_0439;
+double DENDRO_0452 = DENDRO_0167 * (DENDRO_0297 + DENDRO_0424) +
+                     DENDRO_0167 * (DENDRO_0365 + DENDRO_0421) +
+                     DENDRO_0167 * (DENDRO_0421 + DENDRO_0422) +
+                     DENDRO_0167 * (DENDRO_0428 + DENDRO_0429) +
+                     DENDRO_0167 * (DENDRO_0107 * DENDRO_0143 + DENDRO_0427) +
+                     DENDRO_0167 * (DENDRO_0303 + DENDRO_0361 + DENDRO_0425) +
+                     DENDRO_0171 * (DENDRO_0173 + DENDRO_0415) +
+                     DENDRO_0171 * (DENDRO_0373 + DENDRO_0415) +
+                     DENDRO_0171 * (DENDRO_0376 + DENDRO_0416) +
+                     DENDRO_0171 * (DENDRO_0380 + DENDRO_0418) +
+                     DENDRO_0171 * (DENDRO_0218 + DENDRO_0219 - DENDRO_0419) +
+                     DENDRO_0171 * (DENDRO_0367 + DENDRO_0368 + DENDRO_0414) -
+                     DENDRO_0183 * (2 * DENDRO_0205 + DENDRO_0437) -
+                     DENDRO_0183 * (DENDRO_0438 + DENDRO_0440) -
+                     DENDRO_0183 * (DENDRO_0440 + DENDRO_0441) -
+                     DENDRO_0183 * (DENDRO_0442 + DENDRO_0443) -
+                     DENDRO_0183 * (DENDRO_0107 * DENDRO_0155 + DENDRO_0446) -
+                     DENDRO_0183 * (DENDRO_0111 * DENDRO_0128 + DENDRO_0444) -
+                     DENDRO_0200 * (DENDRO_0312 + DENDRO_0435) -
+                     DENDRO_0200 * (DENDRO_0326 + DENDRO_0436) -
+                     DENDRO_0200 * (DENDRO_0313 + DENDRO_0314 + DENDRO_0328) -
+                     DENDRO_0203 * (2 * DENDRO_0260 + DENDRO_0346) -
+                     DENDRO_0203 * (DENDRO_0278 + DENDRO_0433) -
+                     DENDRO_0203 * (DENDRO_0262 + DENDRO_0350 + DENDRO_0434) -
+                     DENDRO_0272 * (DENDRO_0184 + 2 * DENDRO_0185) -
+                     DENDRO_0272 * (DENDRO_0221 + DENDRO_0431) -
+                     DENDRO_0272 * (DENDRO_0180 + DENDRO_0182 + DENDRO_0430) +
+                     DENDRO_0451;
 double DENDRO_0585 =
     DENDRO_0191 *
     (-DENDRO_0027 * (DENDRO_0506 * alpha[pp] + DENDRO_0584) -
@@ -1044,81 +1149,40 @@ double DENDRO_0585 =
      DENDRO_0047 * (DENDRO_0236 * alpha[pp] + DENDRO_0558 * DENDRO_0560 -
                     DENDRO_0561 * DENDRO_0563 - DENDRO_0566 * DENDRO_0567 -
                     4 * grad2_2_2_alpha[pp]));
-double DENDRO_0589 =
-    -At1[pp] * DENDRO_0029 + At3[pp] * DENDRO_0039 - DENDRO_0058;
-double DENDRO_0631 = 2 * At4[pp];
-double DENDRO_0633 = DENDRO_0191 * DENDRO_0631;
-double DENDRO_0518 = 2 * At1[pp];
-double DENDRO_0520 = DENDRO_0191 * DENDRO_0518;
-double DENDRO_0588 =
-    -At1[pp] * DENDRO_0031 + At3[pp] * DENDRO_0027 - DENDRO_0032;
-double DENDRO_0587 = DENDRO_0034 + DENDRO_0044 - DENDRO_0065;
-double DENDRO_0521 = 2 * DENDRO_0191;
-double DENDRO_0632 = At3[pp] * DENDRO_0521;
-double DENDRO_0012 = (4.0 / 3.0) * grad_1_beta1[pp];
-double DENDRO_0011 = (2.0 / 3.0) * grad_0_beta0[pp];
-//--- TRUE OUTPUT VAR: At_rhs11[pp]
-At_rhs11[pp] =
-    -At3[pp] * DENDRO_0008 - At3[pp] * DENDRO_0011 + At3[pp] * DENDRO_0012 +
-    DENDRO_0517 *
-        (-DENDRO_0527 * DENDRO_0571 +
-         DENDRO_0533 * (DENDRO_0157 - DENDRO_0269 * DENDRO_0529) +
-         DENDRO_0557 *
-             (DENDRO_0073 * DENDRO_0274 + DENDRO_0087 * DENDRO_0270 +
-              DENDRO_0132 * DENDRO_0276 -
-              DENDRO_0142 * DENDRO_0271 * DENDRO_0272 +
-              DENDRO_0150 * DENDRO_0275 +
-              DENDRO_0167 * (DENDRO_0259 + DENDRO_0602) +
-              DENDRO_0167 * (2 * DENDRO_0079 * DENDRO_0157 - DENDRO_0604) +
-              DENDRO_0167 * (DENDRO_0085 * DENDRO_0157 - 2 * DENDRO_0603) +
-              DENDRO_0167 * (DENDRO_0102 * grad_1_gt0[pp] - 2 * DENDRO_0601) +
-              DENDRO_0167 * (DENDRO_0126 * grad_1_gt3[pp] - 2 * DENDRO_0635) +
-              DENDRO_0167 * (2 * DENDRO_0126 * grad_1_gt3[pp] - DENDRO_0635) -
-              DENDRO_0171 * DENDRO_0254 +
-              DENDRO_0171 * (DENDRO_0243 - 2 * DENDRO_0636) +
-              DENDRO_0171 * (DENDRO_0246 - 2 * DENDRO_0638) +
-              DENDRO_0171 * (DENDRO_0247 - DENDRO_0636) +
-              DENDRO_0171 * (DENDRO_0072 * DENDRO_0102 - 2 * DENDRO_0639) -
-              DENDRO_0171 * (DENDRO_0101 * DENDRO_0142 + DENDRO_0250) +
-              DENDRO_0183 * DENDRO_0266 +
-              DENDRO_0183 * (2 * DENDRO_0594 + DENDRO_0606) +
-              DENDRO_0183 * (DENDRO_0607 + 2 * DENDRO_0640) +
-              DENDRO_0183 * (DENDRO_0610 + 2 * DENDRO_0637) -
-              DENDRO_0269 * DENDRO_0556 + DENDRO_0283 -
-              DENDRO_0553 * grad_1_gt3[pp] - DENDRO_0554 * grad_0_gt3[pp] -
-              DENDRO_0555 * grad_2_gt3[pp]) +
-         DENDRO_0585 * gt3[pp] +
-         DENDRO_0634 * (DENDRO_0102 - DENDRO_0269 * DENDRO_0536) -
-         12 * grad2_1_1_alpha[pp]) +
-    DENDRO_0518 * grad_1_beta0[pp] + DENDRO_0631 * grad_1_beta2[pp] -
-    alpha[pp] * (-At3[pp] * K[pp] + DENDRO_0520 * DENDRO_0588 +
-                 DENDRO_0587 * DENDRO_0632 + DENDRO_0589 * DENDRO_0633) +
-    beta0[pp] * grad_0_At3[pp] + beta1[pp] * grad_1_At3[pp] +
-    beta2[pp] * grad_2_At3[pp];
-double DENDRO_0519 = 2 * At2[pp];
-double DENDRO_0523 = DENDRO_0191 * DENDRO_0519;
-double DENDRO_0522 = At0[pp] * DENDRO_0521;
-double DENDRO_0586 = (1.0 / 3.0) * At1[pp];
-double DENDRO_0598 = DENDRO_0079 * DENDRO_0146;
-double DENDRO_0599 = DENDRO_0159 * grad_1_gt5[pp];
-double DENDRO_0600 = DENDRO_0142 * grad_2_gt0[pp] + DENDRO_0599;
+double DENDRO_0540 = 6 * grad_0_alpha[pp];
+double DENDRO_0532 = 6 * grad_2_alpha[pp];
+double DENDRO_0533 = DENDRO_0191 * DENDRO_0532;
 double DENDRO_0591 = DENDRO_0073 * grad_2_gt0[pp];
 double DENDRO_0592 = DENDRO_0072 * DENDRO_0080;
 double DENDRO_0593 = DENDRO_0591 + DENDRO_0592;
 double DENDRO_0590 = DENDRO_0079 * DENDRO_0080;
-double DENDRO_0608 = DENDRO_0606 + DENDRO_0607;
+double DENDRO_0545 = DENDRO_0087 * grad_0_gt0[pp];
+double DENDRO_0546 = DENDRO_0112 * grad_1_gt0[pp];
+double DENDRO_0599 = DENDRO_0159 * grad_1_gt5[pp];
+double DENDRO_0600 = DENDRO_0142 * grad_2_gt0[pp] + DENDRO_0599;
+double DENDRO_0598 = DENDRO_0079 * DENDRO_0146;
 double DENDRO_0605 = DENDRO_0080 * grad_0_gt3[pp];
+double DENDRO_0606 = DENDRO_0073 * grad_1_gt0[pp];
+double DENDRO_0607 = DENDRO_0072 * DENDRO_0087;
+double DENDRO_0608 = DENDRO_0606 + DENDRO_0607;
+double DENDRO_0556 = DENDRO_0191 * DENDRO_0197;
+double DENDRO_0551 = DENDRO_0150 * grad_2_gt0[pp];
+double DENDRO_0552 = DENDRO_0085 * DENDRO_0159;
+double DENDRO_0610 = DENDRO_0150 * grad_1_gt5[pp];
+double DENDRO_0611 = DENDRO_0146 * grad_2_gt3[pp] + DENDRO_0610;
+double DENDRO_0609 = DENDRO_0072 * DENDRO_0142;
+double DENDRO_0604 = DENDRO_0101 * DENDRO_0150;
+double DENDRO_0603 = DENDRO_0150 * grad_2_gt3[pp];
 double DENDRO_0595 = DENDRO_0080 * DENDRO_0111;
 double DENDRO_0596 = DENDRO_0072 * DENDRO_0112 + DENDRO_0073 * grad_0_gt0[pp];
+double DENDRO_0594 = DENDRO_0079 * DENDRO_0087;
 double DENDRO_0541 = DENDRO_0080 * grad_1_gt0[pp];
 double DENDRO_0542 = DENDRO_0087 * grad_2_gt0[pp];
 double DENDRO_0597 = DENDRO_0541 + DENDRO_0542;
-double DENDRO_0545 = DENDRO_0087 * grad_0_gt0[pp];
-double DENDRO_0546 = DENDRO_0112 * grad_1_gt0[pp];
-double DENDRO_0609 = DENDRO_0072 * DENDRO_0142;
-double DENDRO_0611 = DENDRO_0146 * grad_2_gt3[pp] + DENDRO_0610;
-double DENDRO_0551 = DENDRO_0150 * grad_2_gt0[pp];
-double DENDRO_0552 = DENDRO_0085 * DENDRO_0159;
+double DENDRO_0601 = DENDRO_0087 * grad_0_gt3[pp];
+double DENDRO_0602 = DENDRO_0087 * DENDRO_0098;
+double DENDRO_0557 = 3 * alpha[pp];
+double DENDRO_0527 = 6 * grad_1_alpha[pp];
 //--- TRUE OUTPUT VAR: At_rhs01[pp]
 At_rhs01[pp] =
     At0[pp] * grad_1_beta0[pp] - At1[pp] * DENDRO_0008 +
@@ -1172,13 +1236,83 @@ At_rhs01[pp] =
                  DENDRO_0522 * DENDRO_0588 + DENDRO_0523 * DENDRO_0589) +
     beta0[pp] * grad_0_At1[pp] + beta1[pp] * grad_1_At1[pp] +
     beta2[pp] * grad_2_At1[pp];
-double DENDRO_0528 = DENDRO_0191 * DENDRO_0527;
-double DENDRO_0544 = DENDRO_0072 * DENDRO_0146;
-double DENDRO_0543 = DENDRO_0150 * grad_0_gt5[pp];
-double DENDRO_0549 = DENDRO_0146 * grad_2_gt0[pp];
-double DENDRO_0550 = DENDRO_0159 * grad_0_gt5[pp];
+double DENDRO_0631 = 2 * At4[pp];
+double DENDRO_0634 = DENDRO_0191 * DENDRO_0540;
+double DENDRO_0640 = DENDRO_0073 * DENDRO_0111;
+double DENDRO_0637 = DENDRO_0079 * DENDRO_0142;
+double DENDRO_0638 = DENDRO_0142 * grad_2_gt3[pp];
+double DENDRO_0636 = DENDRO_0132 * grad_2_gt3[pp];
+double DENDRO_0635 = DENDRO_0132 * grad_0_gt3[pp];
+double DENDRO_0639 = DENDRO_0073 * grad_0_gt3[pp];
+double DENDRO_0012 = (4.0 / 3.0) * grad_1_beta1[pp];
+double DENDRO_0633 = DENDRO_0191 * DENDRO_0631;
+double DENDRO_0632 = At3[pp] * DENDRO_0521;
+//--- TRUE OUTPUT VAR: At_rhs11[pp]
+At_rhs11[pp] =
+    -At3[pp] * DENDRO_0008 - At3[pp] * DENDRO_0011 + At3[pp] * DENDRO_0012 +
+    DENDRO_0517 *
+        (-DENDRO_0527 * DENDRO_0571 +
+         DENDRO_0533 * (DENDRO_0157 - DENDRO_0269 * DENDRO_0529) +
+         DENDRO_0557 *
+             (DENDRO_0073 * DENDRO_0274 + DENDRO_0087 * DENDRO_0270 +
+              DENDRO_0132 * DENDRO_0276 -
+              DENDRO_0142 * DENDRO_0271 * DENDRO_0272 +
+              DENDRO_0150 * DENDRO_0275 +
+              DENDRO_0167 * (DENDRO_0259 + DENDRO_0602) +
+              DENDRO_0167 * (2 * DENDRO_0079 * DENDRO_0157 - DENDRO_0604) +
+              DENDRO_0167 * (DENDRO_0085 * DENDRO_0157 - 2 * DENDRO_0603) +
+              DENDRO_0167 * (DENDRO_0102 * grad_1_gt0[pp] - 2 * DENDRO_0601) +
+              DENDRO_0167 * (DENDRO_0126 * grad_1_gt3[pp] - 2 * DENDRO_0635) +
+              DENDRO_0167 * (2 * DENDRO_0126 * grad_1_gt3[pp] - DENDRO_0635) -
+              DENDRO_0171 * DENDRO_0254 +
+              DENDRO_0171 * (DENDRO_0243 - 2 * DENDRO_0636) +
+              DENDRO_0171 * (DENDRO_0246 - 2 * DENDRO_0638) +
+              DENDRO_0171 * (DENDRO_0247 - DENDRO_0636) +
+              DENDRO_0171 * (DENDRO_0072 * DENDRO_0102 - 2 * DENDRO_0639) -
+              DENDRO_0171 * (DENDRO_0101 * DENDRO_0142 + DENDRO_0250) +
+              DENDRO_0183 * DENDRO_0266 +
+              DENDRO_0183 * (2 * DENDRO_0594 + DENDRO_0606) +
+              DENDRO_0183 * (DENDRO_0607 + 2 * DENDRO_0640) +
+              DENDRO_0183 * (DENDRO_0610 + 2 * DENDRO_0637) -
+              DENDRO_0269 * DENDRO_0556 + DENDRO_0283 -
+              DENDRO_0553 * grad_1_gt3[pp] - DENDRO_0554 * grad_0_gt3[pp] -
+              DENDRO_0555 * grad_2_gt3[pp]) +
+         DENDRO_0585 * gt3[pp] +
+         DENDRO_0634 * (DENDRO_0102 - DENDRO_0269 * DENDRO_0536) -
+         12 * grad2_1_1_alpha[pp]) +
+    DENDRO_0518 * grad_1_beta0[pp] + DENDRO_0631 * grad_1_beta2[pp] -
+    alpha[pp] * (-At3[pp] * K[pp] + DENDRO_0520 * DENDRO_0588 +
+                 DENDRO_0587 * DENDRO_0632 + DENDRO_0589 * DENDRO_0633) +
+    beta0[pp] * grad_0_At3[pp] + beta1[pp] * grad_1_At3[pp] +
+    beta2[pp] * grad_2_At3[pp];
 double DENDRO_0548 = DENDRO_0112 * grad_2_gt0[pp];
 double DENDRO_0547 = DENDRO_0080 * grad_0_gt0[pp];
+double DENDRO_0543 = DENDRO_0150 * grad_0_gt5[pp];
+double DENDRO_0550 = DENDRO_0159 * grad_0_gt5[pp];
+double DENDRO_0549 = DENDRO_0146 * grad_2_gt0[pp];
+double DENDRO_0616 = DENDRO_0146 * grad_2_gt5[pp];
+double DENDRO_0617 = 2 * DENDRO_0616;
+double DENDRO_0544 = DENDRO_0072 * DENDRO_0146;
+double DENDRO_0630 = DENDRO_0087 * DENDRO_0107;
+double DENDRO_0620 = DENDRO_0150 * grad_2_gt5[pp];
+double DENDRO_0619 = DENDRO_0146 * grad_1_gt5[pp];
+double DENDRO_0621 = DENDRO_0619 + DENDRO_0620;
+double DENDRO_0628 = -DENDRO_0087 * DENDRO_0092;
+double DENDRO_0629 = DENDRO_0080 * DENDRO_0085;
+double DENDRO_0627 = DENDRO_0085 * DENDRO_0087;
+double DENDRO_0625 = DENDRO_0146 * grad_0_gt5[pp];
+double DENDRO_0626 = DENDRO_0159 * grad_2_gt5[pp] + DENDRO_0625;
+double DENDRO_0624 = -DENDRO_0080 * DENDRO_0092;
+double DENDRO_0623 = DENDRO_0093 * grad_2_gt0[pp];
+double DENDRO_0622 = DENDRO_0080 * grad_0_gt5[pp];
+double DENDRO_0618 = DENDRO_0087 * grad_0_gt5[pp];
+double DENDRO_0528 = DENDRO_0191 * DENDRO_0527;
+double DENDRO_0615 =
+    At4[pp] * DENDRO_0039 - At5[pp] * DENDRO_0047 - DENDRO_0036;
+double DENDRO_0614 =
+    -At2[pp] * DENDRO_0031 + At4[pp] * DENDRO_0027 - DENDRO_0056;
+double DENDRO_0613 =
+    At2[pp] * DENDRO_0027 - At4[pp] * DENDRO_0041 + DENDRO_0066;
 double DENDRO_0003 = (4.0 / 3.0) * grad_0_beta0[pp];
 //--- TRUE OUTPUT VAR: At_rhs00[pp]
 At_rhs00[pp] =
@@ -1230,29 +1364,196 @@ At_rhs00[pp] =
              (-At0[pp] * DENDRO_0029 + At1[pp] * DENDRO_0039 - DENDRO_0057)) +
     beta0[pp] * grad_0_At0[pp] + beta1[pp] * grad_1_At0[pp] +
     beta2[pp] * grad_2_At0[pp];
-double DENDRO_0015 = (4.0 / 3.0) * grad_2_beta2[pp];
-double DENDRO_0613 =
-    At2[pp] * DENDRO_0027 - At4[pp] * DENDRO_0041 + DENDRO_0066;
-double DENDRO_0615 =
-    At4[pp] * DENDRO_0039 - At5[pp] * DENDRO_0047 - DENDRO_0036;
-double DENDRO_0614 =
-    -At2[pp] * DENDRO_0031 + At4[pp] * DENDRO_0027 - DENDRO_0056;
-double DENDRO_0642 = DENDRO_0142 * grad_1_gt5[pp];
-double DENDRO_0622 = DENDRO_0080 * grad_0_gt5[pp];
-double DENDRO_0623 = DENDRO_0093 * grad_2_gt0[pp];
-double DENDRO_0624 = -DENDRO_0080 * DENDRO_0092;
-double DENDRO_0629 = DENDRO_0080 * DENDRO_0085;
-double DENDRO_0651 = DENDRO_0154 * grad_1_gt5[pp];
-double DENDRO_0646 = DENDRO_0142 * grad_2_gt5[pp];
-double DENDRO_0650 = DENDRO_0154 * grad_0_gt5[pp];
-double DENDRO_0616 = DENDRO_0146 * grad_2_gt5[pp];
-double DENDRO_0617 = 2 * DENDRO_0616;
-double DENDRO_0648 = DENDRO_0073 * grad_0_gt5[pp];
+double DENDRO_0677 = (1.0 / 3.0) * DENDRO_0226;
+double DENDRO_0691 =
+    -1.0 / 3.0 * DENDRO_0017 * DENDRO_0025 * DENDRO_0115 -
+    7.0 / 3.0 * DENDRO_0027 * DENDRO_0191 * grad2_0_1_beta0[pp] -
+    1.0 / 3.0 * DENDRO_0027 * DENDRO_0191 * grad2_1_1_beta1[pp] -
+    1.0 / 3.0 * DENDRO_0027 * DENDRO_0191 * grad2_1_2_beta2[pp] -
+    DENDRO_0037 * DENDRO_0113 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0037 * DENDRO_0678 -
+    2 * DENDRO_0039 * DENDRO_0191 * grad2_1_2_beta0[pp] -
+    DENDRO_0045 * DENDRO_0102 * DENDRO_0679 * alpha[pp] -
+    DENDRO_0051 * DENDRO_0094 * DENDRO_0679 * alpha[pp] -
+    2 * DENDRO_0059 * DENDRO_0081 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0059 * DENDRO_0682 -
+    2 * DENDRO_0062 * DENDRO_0088 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0062 * DENDRO_0683 -
+    2 * DENDRO_0068 * DENDRO_0074 * DENDRO_0679 * alpha[pp] +
+    (4.0 / 3.0) * DENDRO_0226 * grad2_0_0_beta0[pp] +
+    DENDRO_0228 * grad2_1_1_beta0[pp] + DENDRO_0230 * grad2_2_2_beta0[pp] +
+    DENDRO_0675 * grad2_0_2_beta0[pp] + DENDRO_0676 * grad2_1_2_beta1[pp] +
+    DENDRO_0676 * grad2_2_2_beta2[pp] + DENDRO_0677 * grad2_0_1_beta1[pp] +
+    DENDRO_0677 * grad2_0_2_beta2[pp] +
+    DENDRO_0681 * (DENDRO_0027 * DENDRO_0685 + DENDRO_0062 * DENDRO_0687) +
+    DENDRO_0681 *
+        (-DENDRO_0029 * DENDRO_0684 +
+         9 * DENDRO_0059 * DENDRO_0189 * DENDRO_0191 * grad_2_chi[pp]) +
+    DENDRO_0681 *
+        (-DENDRO_0031 * DENDRO_0680 +
+         9 * DENDRO_0037 * DENDRO_0189 * DENDRO_0191 * grad_0_chi[pp]) +
+    DENDRO_0688 * grad_1_beta0[pp] + DENDRO_0689 * grad_0_beta0[pp] +
+    DENDRO_0690 * grad_2_beta0[pp] - beta0[pp] * grad_0_Gt0[pp] -
+    beta1[pp] * grad_1_Gt0[pp] - beta2[pp] * grad_2_Gt0[pp];
+//--- TRUE OUTPUT VAR: Gt_rhs0[pp]
+Gt_rhs0[pp] = -DENDRO_0691;
+//--- TRUE OUTPUT VAR: B_rhs0[pp]
+B_rhs0[pp] =
+    -B0[pp] * eta - DENDRO_0691 +
+    lambda[2] * (beta0[pp] * grad_0_B0[pp] + beta1[pp] * grad_1_B0[pp] +
+                 beta2[pp] * grad_2_B0[pp]) -
+    lambda[3] * (beta0[pp] * grad_0_Gt0[pp] + beta1[pp] * grad_1_Gt0[pp] +
+                 beta2[pp] * grad_2_Gt0[pp]);
+double DENDRO_0006 = (2.0 / 3.0) * gt0[pp];
+//--- TRUE OUTPUT VAR: gt_rhs00[pp]
+gt_rhs00[pp]       = -At0[pp] * DENDRO_0000 + DENDRO_0003 * gt0[pp] +
+               DENDRO_0004 * grad_0_beta1[pp] + DENDRO_0005 * grad_0_beta2[pp] -
+               DENDRO_0006 * grad_1_beta1[pp] - DENDRO_0006 * grad_2_beta2[pp] +
+               beta0[pp] * grad_0_gt0[pp] + beta1[pp] * grad_1_gt0[pp] +
+               beta2[pp] * grad_2_gt0[pp];
+//--- TRUE OUTPUT VAR: gt_rhs11[pp]
+gt_rhs11[pp] = -At3[pp] * DENDRO_0000 + DENDRO_0004 * grad_1_beta0[pp] -
+               DENDRO_0008 * gt3[pp] - DENDRO_0011 * gt3[pp] +
+               DENDRO_0012 * gt3[pp] + DENDRO_0013 * grad_1_beta2[pp] +
+               beta0[pp] * grad_0_gt3[pp] + beta1[pp] * grad_1_gt3[pp] +
+               beta2[pp] * grad_2_gt3[pp];
+double DENDRO_0002 =
+    (3.0 / 4.0) * alpha[pp] * lambda_f[1] + (3.0 / 4.0) * lambda_f[0];
+//--- TRUE OUTPUT VAR: b_rhs1[pp]
+b_rhs1[pp] = B1[pp] * DENDRO_0002 + lambda[1] * (beta0[pp] * grad_0_beta1[pp] +
+                                                 beta1[pp] * grad_1_beta1[pp] +
+                                                 beta2[pp] * grad_2_beta1[pp]);
+//--- TRUE OUTPUT VAR: b_rhs2[pp]
+b_rhs2[pp] = B2[pp] * DENDRO_0002 + lambda[1] * (beta0[pp] * grad_0_beta2[pp] +
+                                                 beta1[pp] * grad_1_beta2[pp] +
+                                                 beta2[pp] * grad_2_beta2[pp]);
+double DENDRO_0026 = 12 * DENDRO_0025;
+double DENDRO_0053 = 24 * DENDRO_0025;
+double DENDRO_0400 = 3 * DENDRO_0399;
+double DENDRO_0454 = 3 * DENDRO_0453;
+double DENDRO_0237 = 3 * chi[pp];
+double DENDRO_0508 = 3 * DENDRO_0507;
+double DENDRO_0016 = (2.0 / 3.0) * chi[pp];
+//--- TRUE OUTPUT VAR: chi_rhs[pp]
+chi_rhs[pp] =
+    -BSSN_CAHD_C * DENDRO_0517 *
+        (-8 * DENDRO_0018 + DENDRO_0026 * DENDRO_0038 +
+         DENDRO_0026 * DENDRO_0046 + DENDRO_0026 * DENDRO_0052 +
+         DENDRO_0053 * DENDRO_0060 + DENDRO_0053 * DENDRO_0063 +
+         DENDRO_0053 * DENDRO_0069 + DENDRO_0226 * DENDRO_0237 * DENDRO_0332 +
+         DENDRO_0228 * DENDRO_0237 * DENDRO_0284 +
+         DENDRO_0230 * DENDRO_0236 * DENDRO_0237 - DENDRO_0398 * DENDRO_0400 -
+         DENDRO_0400 * DENDRO_0413 + DENDRO_0452 * DENDRO_0454 +
+         DENDRO_0454 * DENDRO_0469 - DENDRO_0506 * DENDRO_0508 -
+         DENDRO_0508 * DENDRO_0516) *
+        1.0 / dt * dx_i * dx_i -
+    DENDRO_0016 * DENDRO_0017 + DENDRO_0016 * K[pp] * alpha[pp] +
+    beta0[pp] * grad_0_chi[pp] + beta1[pp] * grad_1_chi[pp] +
+    beta2[pp] * grad_2_chi[pp];
+double DENDRO_0641 = (1.0 / 3.0) * At4[pp];
+double DENDRO_0645 = -DENDRO_0157 * grad_0_gt5[pp];
 double DENDRO_0649 = DENDRO_0073 * DENDRO_0107;
-double DENDRO_0619 = DENDRO_0146 * grad_1_gt5[pp];
-double DENDRO_0643 = DENDRO_0142 * grad_0_gt5[pp];
-double DENDRO_0625 = DENDRO_0146 * grad_0_gt5[pp];
+double DENDRO_0648 = DENDRO_0073 * grad_0_gt5[pp];
+double DENDRO_0646 = DENDRO_0142 * grad_2_gt5[pp];
 double DENDRO_0647 = 2 * DENDRO_0646;
+double DENDRO_0642 = DENDRO_0142 * grad_1_gt5[pp];
+double DENDRO_0643 = DENDRO_0142 * grad_0_gt5[pp];
+double DENDRO_0644 = DENDRO_0620 + DENDRO_0643;
+//--- TRUE OUTPUT VAR: At_rhs12[pp]
+At_rhs12[pp] =
+    At1[pp] * grad_2_beta0[pp] + At2[pp] * grad_1_beta0[pp] +
+    At3[pp] * grad_2_beta1[pp] - At4[pp] * DENDRO_0011 +
+    At5[pp] * grad_1_beta2[pp] +
+    DENDRO_0517 *
+        (DENDRO_0527 * DENDRO_0573 - DENDRO_0532 * DENDRO_0574 +
+         DENDRO_0557 *
+             (DENDRO_0167 * (-DENDRO_0611 - DENDRO_0645) +
+              DENDRO_0167 * (-DENDRO_0079 * DENDRO_0132 + DENDRO_0344) +
+              DENDRO_0167 * (-DENDRO_0085 * DENDRO_0132 + DENDRO_0472) +
+              DENDRO_0167 * (-DENDRO_0610 - DENDRO_0637 - DENDRO_0645) +
+              DENDRO_0167 *
+                  (DENDRO_0102 * DENDRO_0107 - DENDRO_0607 - DENDRO_0640) +
+              DENDRO_0167 *
+                  (DENDRO_0102 * grad_2_gt0[pp] - DENDRO_0605 - DENDRO_0627) +
+              DENDRO_0171 * (DENDRO_0090 * DENDRO_0132 + DENDRO_0339) +
+              DENDRO_0171 * (2 * DENDRO_0120 * grad_2_gt3[pp] -
+                             DENDRO_0132 * grad_1_gt5[pp]) +
+              DENDRO_0171 *
+                  (-DENDRO_0072 * DENDRO_0073 - DENDRO_0073 * DENDRO_0079 +
+                   DENDRO_0102 * grad_0_gt5[pp]) -
+              DENDRO_0171 * (DENDRO_0073 * DENDRO_0085 +
+                             DENDRO_0093 * grad_0_gt3[pp] + DENDRO_0401) +
+              DENDRO_0171 *
+                  (DENDRO_0090 * DENDRO_0142 + DENDRO_0340 - DENDRO_0642) +
+              DENDRO_0171 * (-DENDRO_0154 * grad_2_gt3[pp] +
+                             DENDRO_0157 * grad_2_gt5[pp] - DENDRO_0642) +
+              DENDRO_0183 * (DENDRO_0079 * DENDRO_0154 + DENDRO_0644) -
+              DENDRO_0183 * (DENDRO_0090 * DENDRO_0146 - DENDRO_0644) +
+              DENDRO_0183 * (DENDRO_0590 + DENDRO_0591 + DENDRO_0618) -
+              DENDRO_0183 *
+                  (-DENDRO_0093 * DENDRO_0111 - DENDRO_0628 - DENDRO_0649) +
+              DENDRO_0200 * (2 * DENDRO_0543 + DENDRO_0598) +
+              DENDRO_0200 * (DENDRO_0542 + DENDRO_0595 + DENDRO_0630) -
+              DENDRO_0203 * (DENDRO_0406 - DENDRO_0638) -
+              DENDRO_0203 * (DENDRO_0252 + DENDRO_0358 - DENDRO_0639) -
+              DENDRO_0203 * (-DENDRO_0101 * DENDRO_0132 +
+                             DENDRO_0120 * grad_1_gt3[pp] - DENDRO_0636) -
+              DENDRO_0272 * (DENDRO_0090 * DENDRO_0154 - DENDRO_0647) -
+              DENDRO_0272 * (DENDRO_0073 * DENDRO_0092 -
+                             DENDRO_0079 * DENDRO_0093 - DENDRO_0648) +
+              DENDRO_0382 + DENDRO_0383 + DENDRO_0385 + DENDRO_0386 +
+              DENDRO_0388 + DENDRO_0389 + DENDRO_0390 + DENDRO_0391 +
+              DENDRO_0392 + DENDRO_0393 + DENDRO_0394 + DENDRO_0395 -
+              DENDRO_0396 * DENDRO_0556 + DENDRO_0412 -
+              DENDRO_0553 * grad_1_gt4[pp] - DENDRO_0554 * grad_0_gt4[pp] -
+              DENDRO_0555 * grad_2_gt4[pp]) -
+         DENDRO_0575 * DENDRO_0634 + DENDRO_0585 * gt4[pp] -
+         12 * grad2_1_2_alpha[pp]) +
+    DENDRO_0641 * grad_1_beta1[pp] + DENDRO_0641 * grad_2_beta2[pp] -
+    alpha[pp] * (-At4[pp] * K[pp] + DENDRO_0520 * DENDRO_0614 +
+                 DENDRO_0613 * DENDRO_0632 + DENDRO_0615 * DENDRO_0633) +
+    beta0[pp] * grad_0_At4[pp] + beta1[pp] * grad_1_At4[pp] +
+    beta2[pp] * grad_2_At4[pp];
+//--- TRUE OUTPUT VAR: b_rhs0[pp]
+b_rhs0[pp] = B0[pp] * DENDRO_0002 + lambda[1] * (beta0[pp] * grad_0_beta0[pp] +
+                                                 beta1[pp] * grad_1_beta0[pp] +
+                                                 beta2[pp] * grad_2_beta0[pp]);
+double DENDRO_0009 = (1.0 / 3.0) * gt2[pp];
+//--- TRUE OUTPUT VAR: gt_rhs02[pp]
+gt_rhs02[pp]       = -At2[pp] * DENDRO_0000 + DENDRO_0009 * grad_0_beta0[pp] +
+               DENDRO_0009 * grad_2_beta2[pp] - DENDRO_0010 * gt2[pp] +
+               beta0[pp] * grad_0_gt2[pp] + beta1[pp] * grad_1_gt2[pp] +
+               beta2[pp] * grad_2_gt2[pp] + grad_0_beta1[pp] * gt4[pp] +
+               grad_0_beta2[pp] * gt5[pp] + grad_2_beta0[pp] * gt0[pp] +
+               grad_2_beta1[pp] * gt1[pp];
+//--- TRUE OUTPUT VAR: B_rhs1[pp]
+B_rhs1[pp] =
+    -B1[pp] * eta + (1.0 / 3.0) * DENDRO_0017 * DENDRO_0025 * DENDRO_0138 +
+    (1.0 / 3.0) * DENDRO_0027 * DENDRO_0191 * grad2_0_0_beta0[pp] +
+    (7.0 / 3.0) * DENDRO_0027 * DENDRO_0191 * grad2_0_1_beta1[pp] +
+    (1.0 / 3.0) * DENDRO_0027 * DENDRO_0191 * grad2_0_2_beta2[pp] +
+    DENDRO_0037 * DENDRO_0135 * DENDRO_0679 * alpha[pp] +
+    (1.0 / 3.0) * DENDRO_0039 * DENDRO_0191 * grad2_0_2_beta0[pp] +
+    (7.0 / 3.0) * DENDRO_0039 * DENDRO_0191 * grad2_1_2_beta1[pp] +
+    (1.0 / 3.0) * DENDRO_0039 * DENDRO_0191 * grad2_2_2_beta2[pp] +
+    DENDRO_0045 * DENDRO_0133 * DENDRO_0679 * alpha[pp] +
+    DENDRO_0051 * DENDRO_0128 * DENDRO_0679 * alpha[pp] +
+    2 * DENDRO_0059 * DENDRO_0122 * DENDRO_0679 * alpha[pp] +
+    2 * DENDRO_0062 * DENDRO_0126 * DENDRO_0679 * alpha[pp] -
+    DENDRO_0062 * DENDRO_0678 +
+    2 * DENDRO_0068 * DENDRO_0120 * DENDRO_0679 * alpha[pp] -
+    DENDRO_0068 * DENDRO_0682 + DENDRO_0681 * DENDRO_0704 -
+    DENDRO_0681 * (DENDRO_0062 * DENDRO_0698 + DENDRO_0697) -
+    DENDRO_0681 * (DENDRO_0068 * DENDRO_0700 + DENDRO_0699) -
+    DENDRO_0688 * grad_1_beta1[pp] - DENDRO_0689 * grad_0_beta1[pp] -
+    DENDRO_0690 * grad_2_beta1[pp] - DENDRO_0692 - DENDRO_0693 - DENDRO_0694 -
+    DENDRO_0695 - DENDRO_0696 - DENDRO_0702 - DENDRO_0703 -
+    DENDRO_0709 * lambda[3] + beta0[pp] * grad_0_Gt1[pp] +
+    beta1[pp] * grad_1_Gt1[pp] + beta2[pp] * grad_2_Gt1[pp] +
+    lambda[2] * (beta0[pp] * grad_0_B1[pp] + beta1[pp] * grad_1_B1[pp] +
+                 beta2[pp] * grad_2_B1[pp]);
+double DENDRO_0650 = DENDRO_0154 * grad_0_gt5[pp];
+double DENDRO_0651 = DENDRO_0154 * grad_1_gt5[pp];
 //--- TRUE OUTPUT VAR: At_rhs22[pp]
 At_rhs22[pp] =
     -At5[pp] * DENDRO_0010 - At5[pp] * DENDRO_0011 + At5[pp] * DENDRO_0015 +
@@ -1286,13 +1587,9 @@ At_rhs22[pp] =
                  DENDRO_0523 * DENDRO_0614 + DENDRO_0613 * DENDRO_0633) +
     beta0[pp] * grad_0_At5[pp] + beta1[pp] * grad_1_At5[pp] +
     beta2[pp] * grad_2_At5[pp];
-double DENDRO_0627 = DENDRO_0085 * DENDRO_0087;
-double DENDRO_0620 = DENDRO_0150 * grad_2_gt5[pp];
-double DENDRO_0621 = DENDRO_0619 + DENDRO_0620;
-double DENDRO_0628 = -DENDRO_0087 * DENDRO_0092;
-double DENDRO_0630 = DENDRO_0087 * DENDRO_0107;
-double DENDRO_0618 = DENDRO_0087 * grad_0_gt5[pp];
-double DENDRO_0626 = DENDRO_0159 * grad_2_gt5[pp] + DENDRO_0625;
+// --- END COMPONENT 0 ---
+
+// -- DENDRO: Executing component 1 (Blocks: {31}) ---
 double DENDRO_0612 = (1.0 / 3.0) * At2[pp];
 //--- TRUE OUTPUT VAR: At_rhs02[pp]
 At_rhs02[pp] =
@@ -1350,297 +1647,6 @@ At_rhs02[pp] =
                  DENDRO_0522 * DENDRO_0614 + DENDRO_0523 * DENDRO_0615) +
     beta0[pp] * grad_0_At2[pp] + beta1[pp] * grad_1_At2[pp] +
     beta2[pp] * grad_2_At2[pp];
-double DENDRO_0016 = (2.0 / 3.0) * chi[pp];
-double DENDRO_0237 = 3 * chi[pp];
-double DENDRO_0053 = 24 * DENDRO_0025;
-double DENDRO_0026 = 12 * DENDRO_0025;
-double DENDRO_0508 = 3 * DENDRO_0507;
-double DENDRO_0400 = 3 * DENDRO_0399;
-double DENDRO_0454 = 3 * DENDRO_0453;
-double DENDRO_0017 = grad_0_beta0[pp] + grad_1_beta1[pp] + grad_2_beta2[pp];
-//--- TRUE OUTPUT VAR: chi_rhs[pp]
-chi_rhs[pp] =
-    -BSSN_CAHD_C * DENDRO_0517 *
-        (-8 * DENDRO_0018 + DENDRO_0026 * DENDRO_0038 +
-         DENDRO_0026 * DENDRO_0046 + DENDRO_0026 * DENDRO_0052 +
-         DENDRO_0053 * DENDRO_0060 + DENDRO_0053 * DENDRO_0063 +
-         DENDRO_0053 * DENDRO_0069 + DENDRO_0226 * DENDRO_0237 * DENDRO_0332 +
-         DENDRO_0228 * DENDRO_0237 * DENDRO_0284 +
-         DENDRO_0230 * DENDRO_0236 * DENDRO_0237 - DENDRO_0398 * DENDRO_0400 -
-         DENDRO_0400 * DENDRO_0413 + DENDRO_0452 * DENDRO_0454 +
-         DENDRO_0454 * DENDRO_0469 - DENDRO_0506 * DENDRO_0508 -
-         DENDRO_0508 * DENDRO_0516) *
-        1.0 / dt * dx_i * dx_i -
-    DENDRO_0016 * DENDRO_0017 + DENDRO_0016 * K[pp] * alpha[pp] +
-    beta0[pp] * grad_0_chi[pp] + beta1[pp] * grad_1_chi[pp] +
-    beta2[pp] * grad_2_chi[pp];
-double DENDRO_0641 = (1.0 / 3.0) * At4[pp];
-double DENDRO_0645 = -DENDRO_0157 * grad_0_gt5[pp];
-double DENDRO_0644 = DENDRO_0620 + DENDRO_0643;
-//--- TRUE OUTPUT VAR: At_rhs12[pp]
-At_rhs12[pp] =
-    At1[pp] * grad_2_beta0[pp] + At2[pp] * grad_1_beta0[pp] +
-    At3[pp] * grad_2_beta1[pp] - At4[pp] * DENDRO_0011 +
-    At5[pp] * grad_1_beta2[pp] +
-    DENDRO_0517 *
-        (DENDRO_0527 * DENDRO_0573 - DENDRO_0532 * DENDRO_0574 +
-         DENDRO_0557 *
-             (DENDRO_0167 * (-DENDRO_0611 - DENDRO_0645) +
-              DENDRO_0167 * (-DENDRO_0079 * DENDRO_0132 + DENDRO_0344) +
-              DENDRO_0167 * (-DENDRO_0085 * DENDRO_0132 + DENDRO_0472) +
-              DENDRO_0167 * (-DENDRO_0610 - DENDRO_0637 - DENDRO_0645) +
-              DENDRO_0167 *
-                  (DENDRO_0102 * DENDRO_0107 - DENDRO_0607 - DENDRO_0640) +
-              DENDRO_0167 *
-                  (DENDRO_0102 * grad_2_gt0[pp] - DENDRO_0605 - DENDRO_0627) +
-              DENDRO_0171 * (DENDRO_0090 * DENDRO_0132 + DENDRO_0339) +
-              DENDRO_0171 * (2 * DENDRO_0120 * grad_2_gt3[pp] -
-                             DENDRO_0132 * grad_1_gt5[pp]) +
-              DENDRO_0171 *
-                  (-DENDRO_0072 * DENDRO_0073 - DENDRO_0073 * DENDRO_0079 +
-                   DENDRO_0102 * grad_0_gt5[pp]) -
-              DENDRO_0171 * (DENDRO_0073 * DENDRO_0085 +
-                             DENDRO_0093 * grad_0_gt3[pp] + DENDRO_0401) +
-              DENDRO_0171 *
-                  (DENDRO_0090 * DENDRO_0142 + DENDRO_0340 - DENDRO_0642) +
-              DENDRO_0171 * (-DENDRO_0154 * grad_2_gt3[pp] +
-                             DENDRO_0157 * grad_2_gt5[pp] - DENDRO_0642) +
-              DENDRO_0183 * (DENDRO_0079 * DENDRO_0154 + DENDRO_0644) -
-              DENDRO_0183 * (DENDRO_0090 * DENDRO_0146 - DENDRO_0644) +
-              DENDRO_0183 * (DENDRO_0590 + DENDRO_0591 + DENDRO_0618) -
-              DENDRO_0183 *
-                  (-DENDRO_0093 * DENDRO_0111 - DENDRO_0628 - DENDRO_0649) +
-              DENDRO_0200 * (2 * DENDRO_0543 + DENDRO_0598) +
-              DENDRO_0200 * (DENDRO_0542 + DENDRO_0595 + DENDRO_0630) -
-              DENDRO_0203 * (DENDRO_0406 - DENDRO_0638) -
-              DENDRO_0203 * (DENDRO_0252 + DENDRO_0358 - DENDRO_0639) -
-              DENDRO_0203 * (-DENDRO_0101 * DENDRO_0132 +
-                             DENDRO_0120 * grad_1_gt3[pp] - DENDRO_0636) -
-              DENDRO_0272 * (DENDRO_0090 * DENDRO_0154 - DENDRO_0647) -
-              DENDRO_0272 * (DENDRO_0073 * DENDRO_0092 -
-                             DENDRO_0079 * DENDRO_0093 - DENDRO_0648) +
-              DENDRO_0382 + DENDRO_0383 + DENDRO_0385 + DENDRO_0386 +
-              DENDRO_0388 + DENDRO_0389 + DENDRO_0390 + DENDRO_0391 +
-              DENDRO_0392 + DENDRO_0393 + DENDRO_0394 + DENDRO_0395 -
-              DENDRO_0396 * DENDRO_0556 + DENDRO_0412 -
-              DENDRO_0553 * grad_1_gt4[pp] - DENDRO_0554 * grad_0_gt4[pp] -
-              DENDRO_0555 * grad_2_gt4[pp]) -
-         DENDRO_0575 * DENDRO_0634 + DENDRO_0585 * gt4[pp] -
-         12 * grad2_1_2_alpha[pp]) +
-    DENDRO_0641 * grad_1_beta1[pp] + DENDRO_0641 * grad_2_beta2[pp] -
-    alpha[pp] * (-At4[pp] * K[pp] + DENDRO_0520 * DENDRO_0614 +
-                 DENDRO_0613 * DENDRO_0632 + DENDRO_0615 * DENDRO_0633) +
-    beta0[pp] * grad_0_At4[pp] + beta1[pp] * grad_1_At4[pp] +
-    beta2[pp] * grad_2_At4[pp];
-double DENDRO_0001 = sqrt(chi[pp]);
-//--- TRUE OUTPUT VAR: a_rhs[pp]
-a_rhs[pp] =
-    -DENDRO_0000 * K[pp] -
-    DENDRO_0001 * h_ssl * (-DENDRO_0001 + alpha[pp]) *
-        exp(-1.0 / 2.0 * 1.0 / (sig_ssl * sig_ssl) * t * t) +
-    lambda[0] * (beta0[pp] * grad_0_alpha[pp] + beta1[pp] * grad_1_alpha[pp] +
-                 beta2[pp] * grad_2_alpha[pp]);
-//--- TRUE OUTPUT VAR: gt_rhs11[pp]
-gt_rhs11[pp] = -At3[pp] * DENDRO_0000 + DENDRO_0004 * grad_1_beta0[pp] -
-               DENDRO_0008 * gt3[pp] - DENDRO_0011 * gt3[pp] +
-               DENDRO_0012 * gt3[pp] + DENDRO_0013 * grad_1_beta2[pp] +
-               beta0[pp] * grad_0_gt3[pp] + beta1[pp] * grad_1_gt3[pp] +
-               beta2[pp] * grad_2_gt3[pp];
-double DENDRO_0002 =
-    (3.0 / 4.0) * alpha[pp] * lambda_f[1] + (3.0 / 4.0) * lambda_f[0];
-//--- TRUE OUTPUT VAR: b_rhs0[pp]
-b_rhs0[pp] = B0[pp] * DENDRO_0002 + lambda[1] * (beta0[pp] * grad_0_beta0[pp] +
-                                                 beta1[pp] * grad_1_beta0[pp] +
-                                                 beta2[pp] * grad_2_beta0[pp]);
-//--- TRUE OUTPUT VAR: gt_rhs22[pp]
-gt_rhs22[pp] = -At5[pp] * DENDRO_0000 + DENDRO_0005 * grad_2_beta0[pp] -
-               DENDRO_0010 * gt5[pp] - DENDRO_0011 * gt5[pp] +
-               DENDRO_0013 * grad_2_beta1[pp] + DENDRO_0015 * gt5[pp] +
-               beta0[pp] * grad_0_gt5[pp] + beta1[pp] * grad_1_gt5[pp] +
-               beta2[pp] * grad_2_gt5[pp];
-double DENDRO_0686 = 9 * DENDRO_0189;
-double DENDRO_0687 = DENDRO_0194 * DENDRO_0686;
-double DENDRO_0685 = 4 * grad_1_K[pp];
-double DENDRO_0704 = DENDRO_0041 * DENDRO_0685 - DENDRO_0045 * DENDRO_0687;
-double DENDRO_0681 = DENDRO_0191 * DENDRO_0674;
-double DENDRO_0679 = 1.0 / (DENDRO_0024 * DENDRO_0024 * DENDRO_0024);
-double DENDRO_0678 = DENDRO_0025 * DENDRO_0562;
-double DENDRO_0701 = (1.0 / 3.0) * DENDRO_0228;
-double DENDRO_0702 = DENDRO_0701 * grad2_0_1_beta0[pp];
-double DENDRO_0703 = DENDRO_0701 * grad2_1_2_beta2[pp];
-double DENDRO_0696 = (4.0 / 3.0) * DENDRO_0228 * grad2_1_1_beta1[pp];
-double DENDRO_0688 = (1.0 / 2.0) * DENDRO_0139;
-double DENDRO_0693 = DENDRO_0230 * grad2_2_2_beta1[pp];
-double DENDRO_0690 = (1.0 / 2.0) * DENDRO_0164;
-double DENDRO_0698 = DENDRO_0195 * DENDRO_0686;
-double DENDRO_0680 = 4 * grad_0_K[pp];
-double DENDRO_0697 = DENDRO_0027 * DENDRO_0680;
-double DENDRO_0682 = DENDRO_0025 * DENDRO_0567;
-double DENDRO_0694 = DENDRO_0049 * DENDRO_0191 * grad2_0_2_beta1[pp];
-double DENDRO_0692 = DENDRO_0226 * grad2_0_0_beta1[pp];
-double DENDRO_0683 = DENDRO_0025 * DENDRO_0559;
-double DENDRO_0695 = DENDRO_0045 * DENDRO_0683;
-double DENDRO_0684 = 4 * grad_2_K[pp];
-double DENDRO_0699 = DENDRO_0039 * DENDRO_0684;
-double DENDRO_0700 = DENDRO_0196 * DENDRO_0686;
-double DENDRO_0709 = beta0[pp] * grad_0_Gt1[pp] + beta1[pp] * grad_1_Gt1[pp] +
-                     beta2[pp] * grad_2_Gt1[pp];
-double DENDRO_0689 = (1.0 / 2.0) * DENDRO_0116;
-//--- TRUE OUTPUT VAR: B_rhs1[pp]
-B_rhs1[pp] =
-    -B1[pp] * eta + (1.0 / 3.0) * DENDRO_0017 * DENDRO_0025 * DENDRO_0138 +
-    (1.0 / 3.0) * DENDRO_0027 * DENDRO_0191 * grad2_0_0_beta0[pp] +
-    (7.0 / 3.0) * DENDRO_0027 * DENDRO_0191 * grad2_0_1_beta1[pp] +
-    (1.0 / 3.0) * DENDRO_0027 * DENDRO_0191 * grad2_0_2_beta2[pp] +
-    DENDRO_0037 * DENDRO_0135 * DENDRO_0679 * alpha[pp] +
-    (1.0 / 3.0) * DENDRO_0039 * DENDRO_0191 * grad2_0_2_beta0[pp] +
-    (7.0 / 3.0) * DENDRO_0039 * DENDRO_0191 * grad2_1_2_beta1[pp] +
-    (1.0 / 3.0) * DENDRO_0039 * DENDRO_0191 * grad2_2_2_beta2[pp] +
-    DENDRO_0045 * DENDRO_0133 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0051 * DENDRO_0128 * DENDRO_0679 * alpha[pp] +
-    2 * DENDRO_0059 * DENDRO_0122 * DENDRO_0679 * alpha[pp] +
-    2 * DENDRO_0062 * DENDRO_0126 * DENDRO_0679 * alpha[pp] -
-    DENDRO_0062 * DENDRO_0678 +
-    2 * DENDRO_0068 * DENDRO_0120 * DENDRO_0679 * alpha[pp] -
-    DENDRO_0068 * DENDRO_0682 + DENDRO_0681 * DENDRO_0704 -
-    DENDRO_0681 * (DENDRO_0062 * DENDRO_0698 + DENDRO_0697) -
-    DENDRO_0681 * (DENDRO_0068 * DENDRO_0700 + DENDRO_0699) -
-    DENDRO_0688 * grad_1_beta1[pp] - DENDRO_0689 * grad_0_beta1[pp] -
-    DENDRO_0690 * grad_2_beta1[pp] - DENDRO_0692 - DENDRO_0693 - DENDRO_0694 -
-    DENDRO_0695 - DENDRO_0696 - DENDRO_0702 - DENDRO_0703 -
-    DENDRO_0709 * lambda[3] + beta0[pp] * grad_0_Gt1[pp] +
-    beta1[pp] * grad_1_Gt1[pp] + beta2[pp] * grad_2_Gt1[pp] +
-    lambda[2] * (beta0[pp] * grad_0_B1[pp] + beta1[pp] * grad_1_B1[pp] +
-                 beta2[pp] * grad_2_B1[pp]);
-double DENDRO_0675 = (7.0 / 3.0) * DENDRO_0232;
-double DENDRO_0676 = (1.0 / 3.0) * DENDRO_0232;
-double DENDRO_0710 = (1.0 / 3.0) * DENDRO_0230;
-double DENDRO_0711 =
-    -1.0 / 3.0 * DENDRO_0017 * DENDRO_0025 * DENDRO_0163 -
-    2 * DENDRO_0027 * DENDRO_0191 * grad2_0_1_beta2[pp] -
-    DENDRO_0037 * DENDRO_0160 * DENDRO_0679 * alpha[pp] -
-    1.0 / 3.0 * DENDRO_0039 * DENDRO_0191 * grad2_0_1_beta0[pp] -
-    1.0 / 3.0 * DENDRO_0039 * DENDRO_0191 * grad2_1_1_beta1[pp] -
-    7.0 / 3.0 * DENDRO_0039 * DENDRO_0191 * grad2_1_2_beta2[pp] -
-    DENDRO_0045 * DENDRO_0157 * DENDRO_0679 * alpha[pp] -
-    DENDRO_0051 * DENDRO_0155 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0051 * DENDRO_0682 -
-    2 * DENDRO_0059 * DENDRO_0147 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0059 * DENDRO_0678 -
-    2 * DENDRO_0062 * DENDRO_0151 * DENDRO_0679 * alpha[pp] -
-    2 * DENDRO_0068 * DENDRO_0143 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0068 * DENDRO_0683 + DENDRO_0226 * grad2_0_0_beta2[pp] +
-    DENDRO_0228 * grad2_1_1_beta2[pp] +
-    (4.0 / 3.0) * DENDRO_0230 * grad2_2_2_beta2[pp] +
-    DENDRO_0675 * grad2_0_2_beta2[pp] + DENDRO_0676 * grad2_0_0_beta0[pp] +
-    DENDRO_0676 * grad2_0_1_beta1[pp] +
-    DENDRO_0681 *
-        (-DENDRO_0029 * DENDRO_0680 +
-         9 * DENDRO_0059 * DENDRO_0189 * DENDRO_0191 * grad_0_chi[pp]) +
-    DENDRO_0681 * (DENDRO_0039 * DENDRO_0685 + DENDRO_0068 * DENDRO_0687) +
-    DENDRO_0681 *
-        (-DENDRO_0047 * DENDRO_0684 +
-         9 * DENDRO_0051 * DENDRO_0189 * DENDRO_0191 * grad_2_chi[pp]) +
-    DENDRO_0688 * grad_1_beta2[pp] + DENDRO_0689 * grad_0_beta2[pp] +
-    DENDRO_0690 * grad_2_beta2[pp] + DENDRO_0710 * grad2_0_2_beta0[pp] +
-    DENDRO_0710 * grad2_1_2_beta1[pp] - beta0[pp] * grad_0_Gt2[pp] -
-    beta1[pp] * grad_1_Gt2[pp] - beta2[pp] * grad_2_Gt2[pp];
-//--- TRUE OUTPUT VAR: Gt_rhs2[pp]
-Gt_rhs2[pp] = -DENDRO_0711;
-//--- TRUE OUTPUT VAR: B_rhs2[pp]
-B_rhs2[pp] =
-    -B2[pp] * eta - DENDRO_0711 +
-    lambda[2] * (beta0[pp] * grad_0_B2[pp] + beta1[pp] * grad_1_B2[pp] +
-                 beta2[pp] * grad_2_B2[pp]) -
-    lambda[3] * (beta0[pp] * grad_0_Gt2[pp] + beta1[pp] * grad_1_Gt2[pp] +
-                 beta2[pp] * grad_2_Gt2[pp]);
-double DENDRO_0006 = (2.0 / 3.0) * gt0[pp];
-//--- TRUE OUTPUT VAR: gt_rhs00[pp]
-gt_rhs00[pp]       = -At0[pp] * DENDRO_0000 + DENDRO_0003 * gt0[pp] +
-               DENDRO_0004 * grad_0_beta1[pp] + DENDRO_0005 * grad_0_beta2[pp] -
-               DENDRO_0006 * grad_1_beta1[pp] - DENDRO_0006 * grad_2_beta2[pp] +
-               beta0[pp] * grad_0_gt0[pp] + beta1[pp] * grad_1_gt0[pp] +
-               beta2[pp] * grad_2_gt0[pp];
-//--- TRUE OUTPUT VAR: b_rhs1[pp]
-b_rhs1[pp] = B1[pp] * DENDRO_0002 + lambda[1] * (beta0[pp] * grad_0_beta1[pp] +
-                                                 beta1[pp] * grad_1_beta1[pp] +
-                                                 beta2[pp] * grad_2_beta1[pp]);
-double DENDRO_0708 = DENDRO_0000 * DENDRO_0679;
-double DENDRO_0705 = (1.0 / 3.0) * DENDRO_0222;
-double DENDRO_0706 = (1.0 / 3.0) * DENDRO_0224;
-double DENDRO_0707 = DENDRO_0679 * alpha[pp];
-//--- TRUE OUTPUT VAR: Gt_rhs1[pp]
-Gt_rhs1[pp] =
-    -1.0 / 3.0 * DENDRO_0017 * DENDRO_0553 +
-    DENDRO_0037 * DENDRO_0135 * DENDRO_0707 -
-    DENDRO_0045 * DENDRO_0132 * DENDRO_0707 +
-    DENDRO_0051 * DENDRO_0128 * DENDRO_0707 +
-    DENDRO_0059 * DENDRO_0122 * DENDRO_0708 -
-    DENDRO_0061 * DENDRO_0126 * DENDRO_0708 + DENDRO_0061 * DENDRO_0678 -
-    DENDRO_0067 * DENDRO_0120 * DENDRO_0708 + DENDRO_0067 * DENDRO_0682 +
-    (7.0 / 3.0) * DENDRO_0222 * grad2_0_1_beta1[pp] +
-    (7.0 / 3.0) * DENDRO_0224 * grad2_1_2_beta1[pp] +
-    (1.0 / 2.0) * DENDRO_0553 * grad_1_beta1[pp] +
-    (1.0 / 2.0) * DENDRO_0554 * grad_0_beta1[pp] +
-    (1.0 / 2.0) * DENDRO_0555 * grad_2_beta1[pp] + DENDRO_0681 * DENDRO_0704 -
-    DENDRO_0681 * (-DENDRO_0061 * DENDRO_0698 + DENDRO_0697) -
-    DENDRO_0681 * (-DENDRO_0067 * DENDRO_0700 + DENDRO_0699) - DENDRO_0692 -
-    DENDRO_0693 - DENDRO_0694 - DENDRO_0695 - DENDRO_0696 - DENDRO_0702 -
-    DENDRO_0703 + DENDRO_0705 * grad2_0_0_beta0[pp] +
-    DENDRO_0705 * grad2_0_2_beta2[pp] + DENDRO_0706 * grad2_0_2_beta0[pp] +
-    DENDRO_0706 * grad2_2_2_beta2[pp] + DENDRO_0709;
-double DENDRO_0014 = (1.0 / 3.0) * gt4[pp];
-//--- TRUE OUTPUT VAR: gt_rhs12[pp]
-gt_rhs12[pp]       = -At4[pp] * DENDRO_0000 - DENDRO_0011 * gt4[pp] +
-               DENDRO_0014 * grad_1_beta1[pp] + DENDRO_0014 * grad_2_beta2[pp] +
-               beta0[pp] * grad_0_gt4[pp] + beta1[pp] * grad_1_gt4[pp] +
-               beta2[pp] * grad_2_gt4[pp] + grad_1_beta0[pp] * gt2[pp] +
-               grad_1_beta2[pp] * gt5[pp] + grad_2_beta0[pp] * gt1[pp] +
-               grad_2_beta1[pp] * gt3[pp];
-//--- TRUE OUTPUT VAR: b_rhs2[pp]
-b_rhs2[pp] = B2[pp] * DENDRO_0002 + lambda[1] * (beta0[pp] * grad_0_beta2[pp] +
-                                                 beta1[pp] * grad_1_beta2[pp] +
-                                                 beta2[pp] * grad_2_beta2[pp]);
-double DENDRO_0677 = (1.0 / 3.0) * DENDRO_0226;
-double DENDRO_0691 =
-    -1.0 / 3.0 * DENDRO_0017 * DENDRO_0025 * DENDRO_0115 -
-    7.0 / 3.0 * DENDRO_0027 * DENDRO_0191 * grad2_0_1_beta0[pp] -
-    1.0 / 3.0 * DENDRO_0027 * DENDRO_0191 * grad2_1_1_beta1[pp] -
-    1.0 / 3.0 * DENDRO_0027 * DENDRO_0191 * grad2_1_2_beta2[pp] -
-    DENDRO_0037 * DENDRO_0113 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0037 * DENDRO_0678 -
-    2 * DENDRO_0039 * DENDRO_0191 * grad2_1_2_beta0[pp] -
-    DENDRO_0045 * DENDRO_0102 * DENDRO_0679 * alpha[pp] -
-    DENDRO_0051 * DENDRO_0094 * DENDRO_0679 * alpha[pp] -
-    2 * DENDRO_0059 * DENDRO_0081 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0059 * DENDRO_0682 -
-    2 * DENDRO_0062 * DENDRO_0088 * DENDRO_0679 * alpha[pp] +
-    DENDRO_0062 * DENDRO_0683 -
-    2 * DENDRO_0068 * DENDRO_0074 * DENDRO_0679 * alpha[pp] +
-    (4.0 / 3.0) * DENDRO_0226 * grad2_0_0_beta0[pp] +
-    DENDRO_0228 * grad2_1_1_beta0[pp] + DENDRO_0230 * grad2_2_2_beta0[pp] +
-    DENDRO_0675 * grad2_0_2_beta0[pp] + DENDRO_0676 * grad2_1_2_beta1[pp] +
-    DENDRO_0676 * grad2_2_2_beta2[pp] + DENDRO_0677 * grad2_0_1_beta1[pp] +
-    DENDRO_0677 * grad2_0_2_beta2[pp] +
-    DENDRO_0681 * (DENDRO_0027 * DENDRO_0685 + DENDRO_0062 * DENDRO_0687) +
-    DENDRO_0681 *
-        (-DENDRO_0029 * DENDRO_0684 +
-         9 * DENDRO_0059 * DENDRO_0189 * DENDRO_0191 * grad_2_chi[pp]) +
-    DENDRO_0681 *
-        (-DENDRO_0031 * DENDRO_0680 +
-         9 * DENDRO_0037 * DENDRO_0189 * DENDRO_0191 * grad_0_chi[pp]) +
-    DENDRO_0688 * grad_1_beta0[pp] + DENDRO_0689 * grad_0_beta0[pp] +
-    DENDRO_0690 * grad_2_beta0[pp] - beta0[pp] * grad_0_Gt0[pp] -
-    beta1[pp] * grad_1_Gt0[pp] - beta2[pp] * grad_2_Gt0[pp];
-//--- TRUE OUTPUT VAR: Gt_rhs0[pp]
-Gt_rhs0[pp] = -DENDRO_0691;
-//--- TRUE OUTPUT VAR: B_rhs0[pp]
-B_rhs0[pp] =
-    -B0[pp] * eta - DENDRO_0691 +
-    lambda[2] * (beta0[pp] * grad_0_B0[pp] + beta1[pp] * grad_1_B0[pp] +
-                 beta2[pp] * grad_2_B0[pp]) -
-    lambda[3] * (beta0[pp] * grad_0_Gt0[pp] + beta1[pp] * grad_1_Gt0[pp] +
-                 beta2[pp] * grad_2_Gt0[pp]);
-// --- END COMPONENT 0 ---
+// --- END COMPONENT 1 ---
 
 // END Dendro }}

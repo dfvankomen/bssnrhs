@@ -75,6 +75,10 @@ double BSSN_EPSILON_CAKO_GAUGE = 0.0;
 double BSSN_EPSILON_CAKO_OTHER = 0.0;
 bool BSSN_CAKO_ENABLED         = false;
 
+unsigned int workspace_number  = 600;
+std::vector<DendroScalar> massive_workspace;
+std::vector<DendroScalar> eta;
+
 std::mt19937 rng;
 
 void prep_data_structures() {
@@ -100,6 +104,12 @@ void prep_data_structures() {
 
         // and set the number of blocks!
         bssnrhstests::numBlocks = block_list.size();
+
+        // then we set up our eta based on the largest block size
+        bssnrhstests::eta       = std::vector<DendroScalar>(largest_block_size);
+        // and then the scratch space:
+        bssnrhstests::massive_workspace = std::vector<DendroScalar>(
+            largest_block_size * bssnrhstests::workspace_number);
 
         return;
     }
@@ -196,6 +206,12 @@ void prep_data_structures() {
     // as *part* of this experiment, we'll need to modify this
     deriv_workspace =
         std::vector<DendroScalar>(bssn_num_grad * largest_block_size);
+
+    // then we set up our eta based on the largest block size
+    bssnrhstests::eta = std::vector<DendroScalar>(largest_block_size);
+    // and then the scratch space:
+    bssnrhstests::massive_workspace = std::vector<DendroScalar>(
+        largest_block_size * bssnrhstests::workspace_number);
 
     // then we're good to go
 }

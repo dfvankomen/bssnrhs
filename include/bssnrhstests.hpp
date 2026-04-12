@@ -155,6 +155,10 @@ const double BSSN_CAHD_C = 0.0;
 extern unsigned int total_pts_per_var;
 extern unsigned int total_pts_per_const;
 
+extern unsigned int workspace_number;
+extern std::vector<DendroScalar> massive_workspace;
+extern std::vector<DendroScalar> eta;
+
 void read_from_cli(int argc, char** argv);
 void dump_args();
 void prep_data_structures();

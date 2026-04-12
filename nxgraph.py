@@ -1021,3 +1021,96 @@ class ExpressionGraph:
             # print(f"Generation {gen}: best storage = {-best_fitness}")
 
         return best_ordering, -best_fitness
+
+    def partition_by_register_pressure(self, max_regs=25):
+        if not hasattr(self, "_G_"):
+            raise ValueError(
+                "Please be sure to call composed_graph() before this function!"
+            )
+
+        sorted_nodes = self.random_dfs_sort()
+
+        blocks = []
+        current_block_nodes = []
+
+        # this effectively tracks global remaining uses to know what var is really "dead"
+        # this also keeps us from counting a var as live if we just consumed the last use
+        global_uses_remaining = {n: self._G_.out_degree(n) for n in sorted_nodes}
+
+        # set of vals currently held in registers (computed locally or loaded inputs)
+        live_set = set()
+
+        for node in sorted_nodes:
+            # identify inputs required by this node, dependencies are the successors, we consume children
+            children = list(self._G_.successors(node))
+
+            # inputs we need to bring in (if not live)
+            new_inputs = {p for p in children if p not in live_set}
+
+            # identify what dies immediately
+            dying_children = set()
+            for c in children:
+                # last global use = dead, but don't decrement yet
+                if global_uses_remaining[c] == 1:
+                    dying_children.add(c)
+
+            # estimate peak pressure for this instruction
+            peak_pressure = len(live_set) + len(new_inputs) + 1
+
+            # decision time, do we cut the graph or keep?
+
+            # if pressure is too high and we made progress in the block
+            if peak_pressure > max_regs and len(current_block_nodes) > 0:
+                # we commit it all
+                subgraph = self._G_.subgraph(current_block_nodes).copy()
+                inputs, outputs = self.get_cluster_io(current_block_nodes)
+
+                blocks.append(
+                    {
+                        "subgraph": subgraph,
+                        "inputs": inputs,
+                        "outputs": outputs,
+                        "id": f"RegBlock_{len(blocks)}",
+                        "data": Community_Data(peak_pressure, [], []),
+                    }
+                )
+
+                # reset for the new block
+                current_block_nodes = []
+
+                # live set effectively spills to memory (scratchpad), for next block these should be inputs
+                live_set.clear()
+
+                # re-calculate inputs for the current node (since we reset)
+                # they all are inputs from memory
+                new_inputs = set(children)
+
+            # commit everything
+            current_block_nodes.append(node)
+
+            # update live set
+            live_set.update(new_inputs)
+            live_set.add(node)
+
+            # update usage counts and kill dead variables
+            for c in children:
+                global_uses_remaining[c] -= 1
+                if global_uses_remaining[c] == 0:
+                    if c in live_set:
+                        live_set.remove(c)
+
+        # append the final block
+        if current_block_nodes:
+            subgraph = self._G_.subgraph(current_block_nodes).copy()
+            inputs, outputs = self.get_cluster_io(current_block_nodes)
+            blocks.append(
+                {
+                    "subgraph": subgraph,
+                    "inputs": inputs,
+                    "outputs": outputs,
+                    "id": f"RegBlock_{len(blocks)}",
+                    "data": Community_Data(0, [], []),
+                }
+            )
+
+        return blocks

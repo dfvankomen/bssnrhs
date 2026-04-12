@@ -10,6 +10,7 @@
 #include "derivs.h"
 
 // rhs function includes
+#include "rhsfuncs/bssn_inplace_nocse_register_method.hpp"
 #include "rhsfuncs/default_rhs.hpp"
 #include "rhsfuncs/first_block_test_rhs.hpp"
 #include "rhsfuncs/first_block_test_rhs_inplace.hpp"
@@ -29,6 +30,8 @@ void register_all_rhs_functions() {
     register_rhs_function("first-block-true", rhs::first_block_test_rhs_true);
     register_rhs_function("first-block-inplace",
                           rhs::first_block_test_rhs_inplace);
+    register_rhs_function("register-method",
+                          rhs::bssn_inplace_nocse_register_method);
 }
 
 void register_rhs_function(const std::string &name, BSSNRHSFunction func) {

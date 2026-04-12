@@ -1,6 +1,4 @@
-
-
-#include "rhsfuncs/first_block_test_rhs_inplace.hpp"
+#include "rhsfuncs/bssn_inplace_nocse_register_method.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -11,7 +9,7 @@
 namespace bssnrhstests {
 namespace rhs {
 
-void first_block_test_rhs_inplace(const RHSFunctionInputs& v) {
+void bssn_inplace_nocse_register_method(const RHSFunctionInputs& v) {
     auto& [alpha, chi, K, gt0, gt1, gt2, gt3, gt4, gt5, beta0, beta1, beta2,
            At0, At1, At2, At3, At4, At5, Gt0, Gt1, Gt2, B0, B1, B2,
 
@@ -92,7 +90,7 @@ void first_block_test_rhs_inplace(const RHSFunctionInputs& v) {
     }
 
     using namespace bssnrhstests;
-#include "generated/bssneq_FIRST_BLOCK_TEST_INPLACE.cpp"
+#include "generated/BSSN_REGISTER_25reg_blocks.cpp"
 }
 
 }  // namespace rhs

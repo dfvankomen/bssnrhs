@@ -12,7 +12,7 @@ from sympy import symbols, sqrt, exp, Rational, Matrix
 # Math Initialization **
 ###################################################################
 
-l1, l2, l3, l4, eta = symbols("lambda[0] lambda[1] lambda[2] lambda[3] eta")
+l1, l2, l3, l4, eta = symbols("lambda[0] lambda[1] lambda[2] lambda[3] eta[pp]")
 lf0, lf1 = symbols("lambda_f[0] lambda_f[1]")
 
 # Additional parameters for damping term
@@ -279,14 +279,14 @@ def generate_code(
 
     print("//Codgen: Generating Optimized Block Code...")
 
-    ex, vnames, idx = dendro.construct_expression_list(outs, vnames, "[pp]")
+    flat_ex, flat_vnames, idx = dendro.construct_expression_list(outs, vnames, "[pp]")
 
-    cse_list = dendro.construct_cse(ex, vnames, "[pp]")
+    cse_list = dendro.construct_cse(flat_ex, flat_vnames, "[pp]")
 
     output_code_original = dendro.generate_cpu_preextracted(
         cse_list[0],
-        vnames,
-        "[pp]",
+        flat_vnames,
+        "",
         cse_list[1],
         generate_for_python=generate_for_python,
     )
@@ -308,15 +308,17 @@ def generate_code(
     #     f.write(output_code)
 
     output_code_inplace, output_code_graph = dendro.generate_cpu_blocks(
-        outs,
-        vnames,
+        flat_ex,
+        flat_vnames,
         "[pp]",
         cse_data=cse_list[0],
         orig_ops=cse_list[1],
-        lname=vnames,
-        lexp=ex,
         generate_for_python=generate_for_python,
         return_inplace_and_non_inplace=True,
+        use_register_aware_method=False,
+        inplace_max_nodes_per_kernel=200,
+        register_limit=25,
+        skip_cse_calc=False,
     )
 
     with open(f"{prefix}_bssn_BLOCKS_INPLACE.{file_end}", "w") as f:

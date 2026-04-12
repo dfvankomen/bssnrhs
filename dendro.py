@@ -21,6 +21,7 @@ from nxgraph import ExpressionGraph
 import sympy
 import re as regex
 import os
+import heapq
 
 from sympy.printing.c import C99CodePrinter
 
@@ -1196,6 +1197,343 @@ def generate_code_from_graph(
     return out_code
 
 
+def allocate_global_scratchpads(ordered_blocks_data, graph):
+    # analyze variable lifetimes across blocks
+    lifetimes = {}
+
+    for exec_idx, block in enumerate(ordered_blocks_data):
+        # if block produces a var, it's life starts here
+        for out_hash in block["outputs"]:
+            expr = graph.get_expr_from_hash(out_hash)
+            children = list(graph._G_.successors(out_hash))
+
+            # now we have a check to see if it's a constant value, a "main input", or essentially a number
+            # to determine if we need it in our scratchpad
+            is_stateless = False
+            if expr.is_Number:
+                # it's a number, we just resolve it down, don't need scratch pad
+                is_stateless = True
+            elif expr.is_Symbol:
+                if not children:
+                    # this is a full blown global symbol
+                    is_stateless = True
+                elif children:
+                    # this is a cse variable, look deeper to see if it points to a number or global
+                    child_expr = graph.get_expr_from_hash(children[0])
+                    grand_children = list(graph._G_.successors(children[0]))
+                    if child_expr.is_Number or (
+                        child_expr.is_Symbol and not grand_children
+                    ):
+                        # therefore it's an alias variable
+                        is_stateless = True
+            if is_stateless:
+                continue
+
+            if out_hash not in lifetimes:
+                lifetimes[out_hash] = [exec_idx, exec_idx]
+            else:
+                # update start if we found an earlier producer (unlikely)
+                lifetimes[out_hash][0] = min(lifetimes[out_hash][0], exec_idx)
+
+        # if the block reads a varaible, life must extend to at least here
+        for in_hash in block["inputs"]:
+            if in_hash in lifetimes:
+                lifetimes[in_hash][1] = max(lifetimes[in_hash][1], exec_idx)
+            # if not in lifetimes, it's probably global grid var
+
+    # filter to only things that are produced by the blocks
+    boundary_vars = sorted(lifetimes.keys(), key=lambda k: lifetimes[k][0])
+
+    scratch_map = {}
+
+    # priority queue of free scratchpad
+    free_ids = []
+
+    active_allocs = []
+
+    max_scratch_used = 0
+    next_fresh_id = 0
+
+    for var in boundary_vars:
+        start, end = lifetimes[var]
+
+        # expire old allocations, and only keep those that are still alive at current 'start' time
+        still_active = []
+        for alloc_end, alloc_id in active_allocs:
+            if alloc_end >= start:
+                still_active.append((alloc_end, alloc_id))
+            else:
+                # scratchpad is free to use now
+                heapq.heappush(free_ids, alloc_id)
+        active_allocs = still_active
+
+        if free_ids:
+            my_id = heapq.heappop(free_ids)
+        else:
+            my_id = next_fresh_id
+            next_fresh_id += 1
+
+        max_scratch_used = max(max_scratch_used, my_id + 1)
+        scratch_map[var] = f"scratch_{my_id}"
+
+        active_allocs.append((end, my_id))
+
+    return scratch_map, max_scratch_used
+
+
+def generate_block_kernel_greedy(
+    block_data, scratch_map, graph, custom_functions, final_output_map
+):
+    stats = {
+        "flops_add_sub": 0,
+        "flops_mul_div": 0,
+        "flops_pow": 0,
+        "flops_special": 0,
+        "writes_scratch": 0,
+        "writes_local": 0,
+    }
+
+    # note that this just does ONE block with greedy register allocation
+    subgraph = block_data["subgraph"]
+    main_G = graph._G_
+
+    # local liveness analysis
+    uses_remaining = {}
+    for n in subgraph.nodes:
+        uses = subgraph.in_degree(n)
+        # if we're an output, we just add an implicit extra use for writing to scratchpad
+        if n in block_data["outputs"]:
+            uses += 1
+
+        uses_remaining[n] = uses
+
+    node_to_var = {}
+    free_pool = []
+    tmp_counter = 0
+    lines = []
+
+    def resolve_arg(node_h):
+        # start by checking the scratch map
+        # if node_h in block_data["inputs"]:
+        # NOTE: we used to check to see if it was in the inputs first, but now we don't
+        if node_h in scratch_map:
+            return f"{scratch_map[node_h]}[pp]"
+
+        # then we want to go through local registers
+        if node_h in node_to_var:
+            return node_to_var[node_h]
+
+        expr = graph.get_expr_from_hash(node_h)
+        children = list(main_G.successors(node_h))
+
+        # if it's a number as is, we're good to go and just return the expression
+        if expr.is_Number:
+            if expr.is_Rational and not expr.is_Integer:
+                # Force evaluation to float string (e.g. "0.75")
+                return str(float(expr))
+            return str(expr)
+
+        # if it's a symbol, we need to do a bit more here
+        if expr.is_Symbol:
+            if not children:
+                # if there are no children, then it's a global symbol
+                return str(expr)
+            else:
+                # if there are children, this is a CSE proxy, and we recurse even if the child isn't an input, because resolving a stateless alias doesn't require reading RAM
+                return resolve_arg(children[0])
+
+        # this is a real trap to make sure everything works proprly, if we can't find it, it's not
+        # a number, or a symbol, or in our locals, or in the inputs so it's impossible
+        raise RuntimeError(
+            f"Node {node_h} ({expr}) required but missing! (Not in inputs, locals, or stateless)"
+        )
+
+        # OLDER LOGIC THAT DOESN"T CHECK FOR CONSTANTS
+        if node_h in block_data["inputs"]:
+            if node_h in scratch_map:
+                return f"{scratch_map[node_h]}[pp]"
+            expr = graph.get_expr_from_hash(node_h)
+            return str(expr)
+
+        # computed local var?
+        if node_h in node_to_var:
+            return node_to_var[node_h]
+
+        expr = graph.get_expr_from_hash(node_h)
+        return str(expr)
+
+    # iterate in topological sort order
+    topo_order = list(nx.topological_sort(subgraph))
+
+    # we need to go leaves -> roots, so we go backwards
+    for node in reversed(topo_order):
+        # skip the inputs and constatns, we don't compute them
+        if node in block_data["inputs"]:
+            if node in block_data["outputs"]:
+                print("WARNING UNHANDLED INPUT IS SUB-BLOCK OUTPUT")
+            continue
+
+        expr = graph.get_expr_from_hash(node)
+        children = list(main_G.successors(node))
+
+        # literal number we can skip
+        if expr.is_Number:
+            if node in block_data["outputs"]:
+                print("WARNING UNHANDLED NUMBER IS SUB-BLOCK OUTPUT")
+                continue
+                target_arr = scratch_map[node]
+                # Just write the number directly
+                lines.append(f"    {target_arr}[pp] = {str(expr)};")
+
+            continue
+
+        # symbol with NO dependencies
+        if expr.is_Symbol and not children:
+            if node in block_data["outputs"]:
+                print(
+                    "WARNING UNHANDLED SYMBOL WITH NO DEPENDENCIES IS SUB-BLOCK OUTPUT"
+                )
+                continue
+                target_arr = scratch_map[node]
+                # Write the variable name (e.g., "alpha" or "x[pp]" if resolved differently)
+                # We use resolve_arg to handle cases like "x" vs "x[pp]" if you have that logic
+                # But usually for globals "alpha" is fine.
+                rhs = str(expr)
+                # If you have logic that turns "h" into "h[pp]", apply it here.
+                # Assuming simple globals for now:
+                lines.append(f"    {target_arr}[pp] = {rhs};")
+            continue
+
+        # symbol WITH dependencies, i.e. a cse value
+        if expr.is_Symbol and children:
+            def_node = children[0]
+
+            # ensure it was actually computed
+            if def_node in node_to_var:
+                val_to_write = node_to_var[def_node]
+            elif def_node in block_data["inputs"]:
+                # this is if it's input from other block, so we must resolve
+                val_to_write = resolve_arg(def_node)
+            else:
+                # if for some reason the value is a constant or a symbol parameter
+                val_to_write = resolve_arg(def_node)
+
+            # record the alias for local use
+            node_to_var[node] = val_to_write
+
+            # then write to output if it's somehow needed!
+            if node in block_data["outputs"]:
+                if node in scratch_map:
+                    target_arr = scratch_map[node]
+                    lines.append(f"    {target_arr}[pp] = {val_to_write};")
+                    stats["writes_scratch"] += 1
+                else:
+                    # if the output is a global var, which seems unlikely
+                    pass
+
+            if node in final_output_map:
+                out_name = final_output_map[node]
+                # NOTE: final outputs already have [pp] appended!
+                lines.append(f"    {out_name} = {val_to_write};")
+                stats["writes_scratch"] += 1
+
+            # there should be no code, we just need to resolve it
+            continue
+
+        # keep track of the stats here
+        if expr.is_Add:
+            # a + b + c -> 2 adds
+            stats["flops_add_sub"] += max(0, len(expr.args) - 1)
+        elif expr.is_Mul:
+            # a * b * c -> 2 muls
+            stats["flops_mul_div"] += max(0, len(expr.args) - 1)
+        elif expr.is_Pow:
+            stats["flops_pow"] += 1
+        elif expr.func.__name__ in custom_functions:
+            # Custom functions or standard math functions (sin, cos)
+            stats["flops_special"] += 1
+
+        # resolve children and manage register death
+        dummy_args = []
+        arg_strs = []
+        freed_now = []
+
+        for child in children:
+            arg_str = resolve_arg(child)
+            arg_strs.append(arg_str)
+
+            child_expr = graph.get_expr_from_hash(child)
+
+            if child_expr.is_Number:
+                dummy_args.append(child_expr)
+            else:
+                dummy_args.append(sympy.Symbol(arg_str))
+
+            # decrement life of local children
+            if child in uses_remaining:
+                uses_remaining[child] -= 1
+                if uses_remaining[child] == 0:
+                    # only free local temps
+                    if child in node_to_var:
+                        freed_now.append(node_to_var[child])
+
+        if freed_now:
+            lhs_var = freed_now.pop(0)
+            # make sure the rest are in the pool
+            free_pool.extend(freed_now)
+        elif free_pool:
+            lhs_var = free_pool.pop()
+        else:
+            lhs_var = f"_tmp_{tmp_counter}"
+            tmp_counter += 1
+            lines.append(f"    double {lhs_var};")
+
+        node_to_var[node] = lhs_var
+
+        # every math op writes to a register
+        stats["writes_local"] += 1
+
+        # generate math: reconstruct the call
+        if not children:
+            rhs_str = str(expr)
+        else:
+            # OLDER version of dummy args extraction
+            # dummy_args = [sympy.Symbol(s) for s in arg_strs]
+
+            new_expr = type(expr)(*dummy_args)
+
+            # calculates flot version of expressions
+            new_expr = new_expr.replace(
+                lambda x: x.is_Rational and not x.is_Integer,
+                lambda x: sympy.Float(x.p) / sympy.Float(x.q),
+            )
+
+            # expand out the powers
+            new_expr = replace_pow(new_expr)
+
+            # TODO: fast sqrt here
+
+            # generate the code and change deriv names
+            raw_code = ccode(new_expr, user_functions=custom_functions)
+            rhs_str = change_deriv_names(raw_code)
+
+        lines.append(f"    {lhs_var} = {rhs_str};")
+
+        # scratch pad write
+        if node in block_data["outputs"]:
+            target_arr = scratch_map[node]
+            lines.append(f"    {target_arr}[pp] = {lhs_var};")
+            stats["writes_scratch"] += 1
+
+        # final output to the rhs vars
+        if node in final_output_map:
+            out_name = final_output_map[node]
+            lines.append(f"    {out_name}[pp] = {lhs_var};")
+            stats["writes_scratch"] += 1
+
+    return "\n".join(lines), stats
+
+
 def generate_code_from_graph_inplace(
     block_data_map,
     blocks_data,
@@ -1206,193 +1544,281 @@ def generate_code_from_graph_inplace(
     sub_var_names,
     cse_defs=None,
     generate_for_python=False,
+    max_nodes_per_kernel=50,
 ):
     if generate_for_python:
-        code_exporter = pycode
-        comm = "#"
-        type_prefix = ""
-        ender = ""
-        # Python doesn't declare types, so strict "reuse" logic is just assignment
-    else:
-        code_exporter = ccode
-        comm = "//"
-        type_prefix = "double "
-        ender = ";"
+        # Fallback or implement python version if needed
+        return "# Python generation not implemented for new InPlace allocator"
 
-    out_code = f"\n\n{comm} Dendro: {{{{\n"
-    out_code += f"{comm} Dendro: Executing {len(blocks_data)} blocks in {len(component_order)} components.\n"
+    comm = "//"
+    out_code = f"\n\n{comm} Dendro: START VECTORIZED BLOCK GENERATION\n"
 
-    # necessary map to be able to store which code we're working with
-    node_to_temp_var = {}
+    # start by linearizing the list of blocks by fusing, sorting then slicing (this is the only way to mathematically handle blocks!)
+    final_execution_blocks = []
 
-    # this is our pre-traversal of the node checking to see what our count is
-    uses_remaining = {n: graph._G_.in_degree(n) for n in graph._G_.nodes}
+    for comp_idx in component_order:
+        block_ids = scc[comp_idx]
 
-    # this is a stack of available vars that we are finished with, for reusing
-    available_vars = []
+        # collect all nodes in this component *all of them*
+        component_nodes = set()
+        for bid in block_ids:
+            component_nodes.update(block_data_map[bid]["subgraph"].nodes())
 
-    # this is our counter for creating new temp vars
-    temp_var_counter = 0
+        # topological sort
+        sorted_nodes = graph.random_dfs_sort(relevant_nodes=component_nodes)
 
-    # then the set of temp vars that have been declared so far, to know if we need to use "double" on new and fresh ones
-    # TODO: this should probably be a *prefix* so we could eventually just use a pool of contiguous data like an array
-    defined_temp_vars = set()
+        # force small kernels (the previous blocks help us get a good order and sometimes may find small communities that are fully separable)
+        current_chunk_nodes = []
+        chunk_counter = 0
 
-    # seed map with input symbols
-    for node_hash, data in graph._G_.nodes(data=True):
-        expr = graph.get_expr_from_hash(node_hash)
-        # nodes with no dependencies!
-        if expr is not None:
-            if expr.is_Number:
-                node_to_temp_var[node_hash] = (
-                    str(float(expr)) if not expr.is_Integer else str(expr)
+        for node in sorted_nodes:
+            current_chunk_nodes.append(node)
+
+            if len(current_chunk_nodes) >= max_nodes_per_kernel:
+                subgraph = graph._G_.subgraph(current_chunk_nodes).copy()
+                inputs, outputs = graph.get_cluster_io(current_chunk_nodes)
+
+                final_execution_blocks.append(
+                    {
+                        "id": f"Comp{comp_idx}_Slice{chunk_counter}",
+                        "subgraph": subgraph,
+                        "inputs": inputs,
+                        "outputs": outputs,
+                    }
                 )
-            elif expr.is_Symbol and not str(expr).startswith("DENDRO_"):
-                node_to_temp_var[node_hash] = str(expr)
 
-    # components need to be processed in topological order
-    for component_index in component_order:
-        component_block_ids = scc[component_index]
-        out_code += f"\n{comm} -- DENDRO: Executing component {component_index} (Blocks: {component_block_ids}) ---\n"
+                # empty the nodes
+                current_chunk_nodes = []
+                chunk_counter += 1
 
-        # get all expression node hashes from all blocks in this components
-        all_node_hashes_in_component = set()
-        for block_id in component_block_ids:
-            block = block_data_map[block_id]
-            # add all nodes from this blocks subgraph
-            all_node_hashes_in_component.update(block["subgraph"].nodes())
+        # and then any other leftovers
+        if current_chunk_nodes:
+            subgraph = graph._G_.subgraph(current_chunk_nodes).copy()
+            inputs, outputs = graph.get_cluster_io(current_chunk_nodes)
 
-        # # use the random dfs sort
-        component_nodes_in_order = graph.random_dfs_sort(
-            relevant_nodes=all_node_hashes_in_component
-        )
-
-        # now we can iterate over the correctly ordered nodes
-        for ii, node_hash in enumerate(component_nodes_in_order):
-            # skip nodes already in our map
-            if node_hash in node_to_temp_var:
-                continue
-
-            expr = graph.get_expr_from_hash(node_hash)
-            if expr is None:
-                out_code += f"{comm} Could not find expression for hash {node_hash}\n"
-                continue
-
-            # build our substituted expression for the RHS
-            deps_hashes = list(graph._G_.successors(node_hash))
-
-            def resolve_dep(d_hash):
-                if d_hash in node_to_temp_var:
-                    return node_to_temp_var[d_hash]
-
-                # simple fallback
-                d_expr = graph.get_expr_from_hash(d_hash)
-                if d_expr is not None:
-                    if d_expr.is_Number:
-                        val = (
-                            str(float(d_expr)) if not d_expr.is_Integer else str(d_expr)
-                        )
-                        node_to_temp_var[d_hash] = val
-                        return val
-                    elif d_expr.is_Symbol:
-                        val = str(d_expr)
-                        node_to_temp_var[d_hash] = val
-                        return val
-
-                return None
-
-            subs_dict = {}
-
-            # do a standard substutition: expression to tempvar
-            for d_hash in deps_hashes:
-                d_var_name = resolve_dep(d_hash)
-                if d_var_name is None:
-                    # this really only happens if there's a broken graph or cross-component bug
-                    d_expr_obj = graph.get_expr_from_hash(d_hash)
-                    out_code += f"{comm} ERROR: Dep {d_hash} ({d_expr_obj}) missing for Node {node_hash}\n"
-                    d_var_name = str(d_expr_obj)
-
-                d_expr_obj = graph.get_expr_from_hash(d_hash)
-                subs_dict[d_expr_obj] = sympy.Symbol(d_var_name)
-
-            # then a CSE symbol substitution: symbol to tempvar
-            if cse_defs:
-                # look for atoms in the expression that are DENDRO_ symbols
-                for atom in expr.atoms(sympy.Symbol):
-                    atom_str = str(atom)
-                    if atom_str in cse_defs:
-                        rhs_hash = cse_defs[atom_str]
-
-                        # if there's a temp var allocated for the RHS of this CSE symbol...
-                        if rhs_hash in node_to_temp_var:
-                            target_var = node_to_temp_var[rhs_hash]
-                            subs_dict[atom] = sympy.Symbol(target_var)
-
-            substituted_expr = expr.subs(subs_dict)
-
-            # find a temporary variable (lhs) for this expression
-            lhs_var = None
-            freed_vars_from_this_op = []
-
-            # decrement usage count for all deps and check for freeing
-            for d_hash in deps_hashes:
-                if d_hash in uses_remaining:
-                    uses_remaining[d_hash] -= 1
-                    if uses_remaining[d_hash] == 0:
-                        # dep is no longer needed by others
-                        d_temp = node_to_temp_var.get(d_hash)
-                        if d_temp and d_temp.startswith("_dendro_tmp"):
-                            freed_vars_from_this_op.append(d_temp)
-
-            if freed_vars_from_this_op:
-                # try to reuse a var that was just freed
-                lhs_var = freed_vars_from_this_op.pop(0)
-            elif available_vars:
-                # otherwise reuse a var from global pool
-                lhs_var = available_vars.pop()
-            else:
-                # otherwise we have to create a new one
-                lhs_var = f"_dendro_tmp_{temp_var_counter}"
-                temp_var_counter += 1
-
-            # add other freed vars to global pool
-            available_vars.extend(freed_vars_from_this_op)
-
-            # now we finally just get the C/Py code for the substituted rhs
-            rhs_text = change_deriv_names(
-                code_exporter(
-                    replace_pow(substituted_expr), user_functions=custom_functions
-                )
+            final_execution_blocks.append(
+                {
+                    "id": f"Comp{comp_idx}_Slice{chunk_counter}",
+                    "subgraph": subgraph,
+                    "inputs": inputs,
+                    "outputs": outputs,
+                }
             )
 
-            # establish whether or not we have to declare the var
-            if lhs_var not in defined_temp_vars:
-                out_code += f"{type_prefix}{lhs_var} = {rhs_text}{ender}\n"
-                defined_temp_vars.add(lhs_var)
-            else:
-                out_code += f"{lhs_var} = {rhs_text}{ender}\n"
+    out_code += (
+        f"{comm} Total Execution Units (After Slicing): {len(final_execution_blocks)}\n"
+    )
 
-            # map node's hash to new temp var
-            node_to_temp_var[node_hash] = lhs_var
+    # allocate the scratch pads for boundaries between slices
+    scratch_map, max_scratch = allocate_global_scratchpads(
+        final_execution_blocks, graph
+    )
 
-            # then handle assignments to cse vars and the final outputs
-            if "vnames" in graph._G_.nodes[node_hash]:
-                var_names = graph._G_.nodes[node_hash]["vnames"]
-                for vname in var_names:
-                    if vname.startswith("DENDRO_"):
-                        vname_sym_hash = hash(Symbol(vname))
-                        node_to_temp_var[vname_sym_hash] = lhs_var
-                    else:
-                        # this is a final output variable, we just assign the variable to it
-                        out_code += (
-                            f"{comm} ----- FINAL OUTPUT ASSIGNMENT {vname} ----- \n"
-                        )
-                        out_code += f"{vname} = {lhs_var}{ender}\n"
+    # scratch map declarations
+    if max_scratch > 0:
+        # out_code += f"{comm} Allocating {max_scratch} global scratchpads\n"
+        # out_code += "{\n"
 
-        out_code += f"{comm} --- END COMPONENT {component_index} ---\n\n"
+        for i in range(max_scratch):
+            # TODO: update this block to be able to handle memory pools that are more efficient than allocation
+            out_code += f"double *__restrict__ scratch_{i} = massive_workspace.data() + ({i} * nx * ny * nz);\n"
+            # out_code += f"double *scratch_{i} = new double[nx*ny*nz];\n"
 
-    out_code += f"\n{comm} Now only allocates: {temp_var_counter + 1} total vars\n"
-    out_code += f"{comm} END Dendro }}}}\n"
+    final_output_map = {}
+    for name, expr in graph._output_expr_map.items():
+        final_output_map[hash(expr)] = name
+
+    total_stats = {
+        "flops_add_sub": 0,
+        "flops_mul_div": 0,
+        "flops_pow": 0,
+        "flops_special": 0,
+        "writes_scratch": 0,
+        "writes_local": 0,
+    }
+
+    # now generate the kernels
+    for i, block_data in enumerate(final_execution_blocks):
+        block_id = block_data["id"]
+        out_code += f"\n{comm} --- Execution Unit {i} (ID: {block_id}) ---\n"
+
+        out_code += (
+            "for (unsigned int k=bssnrhstests::pw; k < nz-bssnrhstests::pw; k++) {\n"
+        )
+        out_code += " unsigned int k_offset = k * ny * nx;\n"
+        out_code += (
+            " for (unsigned int j=bssnrhstests::pw; j < ny-bssnrhstests::pw; j++) {\n"
+        )
+        out_code += "  unsigned int j_offset = k_offset + j * nx;\n"
+        out_code += "#pragma omp simd\n"
+        out_code += (
+            "  for (unsigned int i=bssnrhstests::pw; i < nx-bssnrhstests::pw; i++) {\n"
+        )
+        out_code += "    unsigned int pp = j_offset + i;\n"
+
+        kernel_body, block_stats = generate_block_kernel_greedy(
+            block_data, scratch_map, graph, custom_functions, final_output_map
+        )
+
+        for k, v in block_stats.items():
+            total_stats[k] += v
+
+        out_code += kernel_body
+        out_code += "\n  }\n }\n}\n"
+
+    # make sure the scratchpad gets cleaned up
+    if max_scratch > 0:
+        # for i in range(max_scratch):
+        #     out_code += f"delete[] scratch_{i};\n"
+        # out_code += "} // End scratchpad scope\n"
+        pass
+
+    out_code += f"{comm} DENDRO: END GENERATION\n"
+
+    # report:
+    total_flops = (
+        total_stats["flops_add_sub"]
+        + total_stats["flops_mul_div"]
+        + total_stats["flops_pow"]
+        + total_stats["flops_special"]
+    )
+
+    report = f"""
+/**
+-------------------------
+  DENDRO CODE GENERATION STATS
+-------------------------
+
+  Total Blocks (Kernels) : {len(blocks_data)}
+  Global Scratchpads     : {max_scratch}
+
+  [OPS]
+  Add/Sub                : {total_stats["flops_add_sub"]}
+  Mul/Div                : {total_stats["flops_mul_div"]}
+  Pow                    : {total_stats["flops_pow"]}
+  Special Funcs          : {total_stats["flops_special"]}
+  ----------
+  Total FLOPs (Approx)   : {total_flops}
+
+  [MEMORY TRAFFIC]
+  Local Register Writes  : {total_stats["writes_local"]}
+  Global Mem Writes      : {total_stats["writes_scratch"]}
+
+-------------------------
+*/
+    """
+    out_code += report
+
+    return out_code
+
+
+def generate_code_register_aware(
+    graph, vnames, custom_functions, graph_out_map, max_regs=16
+):
+    comm = "//"
+    out_code = (
+        f"\n\n{comm} Dendro: START REGISTER-AWARE GENERATION (MaxRegs={max_regs})\n"
+    )
+
+    # 1. Partition the graph linearly
+    print(f"--- Partitioning graph with max_regs={max_regs}...")
+    blocks_data = graph.partition_by_register_pressure(max_regs=max_regs)
+
+    out_code += f"{comm} Total Execution Units: {len(blocks_data)}\n"
+
+    # 2. Allocate Scratchpads (Re-using your existing logic!)
+    #    Your allocate_global_scratchpads expects a list of dicts with 'inputs'/'outputs',
+    #    which our new partition method provides.
+    scratch_map, max_scratch = allocate_global_scratchpads(blocks_data, graph)
+
+    if max_scratch > 0:
+        # Assuming massive_workspace approach from your snippet
+        for i in range(max_scratch):
+            out_code += f"double *__restrict__ scratch_{i} = massive_workspace.data() + ({i} * nx * ny * nz);\n"
+
+    # 3. Generate Kernels
+    #    We can reuse generate_block_kernel_greedy because the block structure is identical.
+
+    # Map hashes to final output names (e.g. "grad_0[pp]")
+    final_output_map = {}
+    for name, expr in graph_out_map.items():
+        final_output_map[hash(expr)] = name
+
+    total_stats = {
+        "flops_add_sub": 0,
+        "flops_mul_div": 0,
+        "flops_pow": 0,
+        "flops_special": 0,
+        "writes_scratch": 0,
+        "writes_local": 0,
+    }
+
+    for i, block_data in enumerate(blocks_data):
+        block_id = block_data["id"]
+        out_code += f"\n{comm} --- Execution Unit {i} (ID: {block_id}) ---\n"
+
+        # Standard loop boilerplate
+        out_code += (
+            "for (unsigned int k=bssnrhstests::pw; k < nz-bssnrhstests::pw; k++) {\n"
+        )
+        out_code += " unsigned int k_offset = k * ny * nx;\n"
+        out_code += (
+            " for (unsigned int j=bssnrhstests::pw; j < ny-bssnrhstests::pw; j++) {\n"
+        )
+        out_code += "  unsigned int j_offset = k_offset + j * nx;\n"
+        out_code += "#pragma omp simd\n"
+        out_code += (
+            "  for (unsigned int i=bssnrhstests::pw; i < nx-bssnrhstests::pw; i++) {\n"
+        )
+        out_code += "    unsigned int pp = j_offset + i;\n"
+
+        # Reuse your existing kernel generator
+        kernel_body, block_stats = generate_block_kernel_greedy(
+            block_data, scratch_map, graph, custom_functions, final_output_map
+        )
+
+        for k, v in block_stats.items():
+            total_stats[k] += v
+
+        out_code += kernel_body
+        out_code += "\n  }\n }\n}\n"
+
+    out_code += f"{comm} DENDRO: END GENERATION\n"
+
+    # report:
+    total_flops = (
+        total_stats["flops_add_sub"]
+        + total_stats["flops_mul_div"]
+        + total_stats["flops_pow"]
+        + total_stats["flops_special"]
+    )
+
+    report = f"""
+/**
+-------------------------
+  DENDRO CODE GENERATION STATS
+-------------------------
+
+  Total Blocks (Kernels) : {len(blocks_data)}
+  Global Scratchpads     : {max_scratch}
+
+  [OPS]
+  Add/Sub                : {total_stats["flops_add_sub"]}
+  Mul/Div                : {total_stats["flops_mul_div"]}
+  Pow                    : {total_stats["flops_pow"]}
+  Special Funcs          : {total_stats["flops_special"]}
+  ----------
+  Total FLOPs (Approx)   : {total_flops}
+
+  [MEMORY TRAFFIC]
+  Local Register Writes  : {total_stats["writes_local"]}
+  Global Mem Writes      : {total_stats["writes_scratch"]}
+
+-------------------------
+*/
+    """
+    out_code += report
+
     return out_code
 
 
@@ -1402,15 +1828,19 @@ def generate_cpu_blocks(
     idx,
     cse_data=None,
     orig_ops=None,
-    lname=None,
-    lexp=None,
     dont_read_cache=True,
     use_inplace_temporaries=True,
     generate_for_python=False,
     return_inplace_and_non_inplace=False,
+    use_register_aware_method=False,
+    inplace_max_nodes_per_kernel=50,
+    skip_cse_calc=False,
+    register_limit=25,
 ):
     """
     Generate the C++ code by simplifying the expressions.
+
+    NOTE: we expect ex and vnames to already be flat!
     """
     # generate_code_nx(ex,vnames,idx)
     # return
@@ -1421,146 +1851,121 @@ def generate_cpu_blocks(
         "agrad": "agrad",
         "kograd": "kograd",
     }
-    mi = [0, 1, 2, 4, 5, 8]
-    midx = ["00", "01", "02", "11", "12", "22"]
+
+    lexp = ex
+    lname = vnames
+
+    if len(lexp) != len(lname):
+        raise ValueError(
+            f"Input mismatch: {len(lexp)} expressions vs {len(lname)} names"
+        )
 
     cse_cache_file = "cse_data.pkl"
     graph_cache_file = "composed_graph.pkl"
     blocks_cache_file = "blocks.pkl"
 
-    # generate the CSE if it doesn't already exist
+    if skip_cse_calc:
+        print("--- skipping sympy expressions")
+
+        cse_data = ([], lexp)
+        if orig_ops is None:
+            orig_ops = 0
 
     if cse_data is None:
-        if os.path.exists(cse_cache_file) and not dont_read_cache:
-            print("--- Cached CSE was found, loading from file...")
-            with open(cse_cache_file, "rb") as f:
-                cse_cache = pickle.load(f)
-                cse_data = cse_cache["cse"]
-                lname = cse_cache["lname"]
-        else:
-            # total number of expressions
-            # print("--------------------------------------------------------")
-            num_e = 0
-            lexp = []
-            lname = []
-            for i, e in enumerate(ex):
-                if type(e) == list:
-                    num_e = num_e + len(e)
-                    for j, ev in enumerate(e):
-                        lexp.append(ev)
-                        lname.append(vnames[i] + repr(j) + idx)
-                elif type(e) == Matrix:
-                    num_e = num_e + len(e)
-                    for j, k in enumerate(mi):
-                        lexp.append(e[k])
-                        lname.append(vnames[i] + midx[j] + idx)
-                else:
-                    num_e = num_e + 1
-                    lexp.append(e)
-                    lname.append(vnames[i] + idx)
-
-            print("--- Now generating csv...")
-            cse = construct_cse(ex, vnames, idx)
-            cse_data = cse[0]
-            orig_ops = cse[1]
-            print("--- CSV generated!")
-
-            print("--- Saving CSV to pickle")
-            cse_data_to_cache = {"cse": cse_data, "lname": lname, "orig_ops": orig_ops}
-            with open(cse_cache_file, "wb") as f:
-                pickle.dump(cse_data_to_cache, f)
+        print("--- Now generating csv...")
+        cse = construct_cse(lexp, lname, idx)
+        cse_data = cse[0]
+        orig_ops = cse[1]
+        print("--- CSV generated!")
 
     cse_defs = {}
-    if cse_data:
-        substitutions, _ = cse_data
-        for var_sym, expr in substitutions:
-            cse_defs[str(var_sym)] = hash(expr)
 
-    if os.path.exists(graph_cache_file) and not dont_read_cache:
-        print("--- Cached graph found, loading from file...")
-        with open(graph_cache_file, "rb") as f:
-            graph = pickle.load(f)
-    else:
-        print("--- converting cse to graph")
-        graph = ExpressionGraph()
-        substitutions, reduced_exprs = cse_data
+    print("--- converting all expressions to graph")
+    graph = ExpressionGraph()
+    substitutions, reduced_exprs = cse_data
 
-        print(
-            f"--- NOTE: n_substitutions={len(substitutions)} & n_reduced_exprs={len(reduced_exprs)}"
+    print(
+        f"--- NOTE: n_substitutions={len(substitutions)} & n_reduced_exprs={len(reduced_exprs)}"
+    )
+
+    # add to the graph the output mapping so we know what the original expresions are like
+    output_mapping = dict(zip(lname, reduced_exprs))
+    graph.set_output_expressions(output_mapping)
+
+    print("--- Adding CSE substitutions to the graph")
+    for var, expr in substitutions:
+        node_id = graph.add_expression(expr, str(var))
+        cse_defs[str(var)] = node_id
+
+    print("--- Adding CSE final expressions to graph")
+    for name, expr in zip(lname, reduced_exprs):
+        graph.add_expression(expr, name)
+
+    # sub_exprs = [expr for (_, expr) in substitutions]
+    # all_exprs = sub_exprs + reduced_exprs
+    #
+    # ## MY EDITS
+    #
+    # # (gets it to work)
+    # while len(vnames) < len(all_exprs):
+    #     vnames.append(f"_tmp_expr_{len(vnames)}")
+    #
+    # graph.add_expressions(all_exprs, vnames)
+
+    # NOTE: graph must be composed first
+    G = graph.composed_graph()
+
+    # now we link together CSE symbols to their expressions
+    print("--- Linking CSE symbols to their expressions")
+
+    count_linked = 0
+    for node, data in G.nodes(data=True):
+        sym_name = None
+
+        func = data.get("func")
+        is_symbol_node = False
+
+        if func is not None:
+            if (isinstance(func, type) and func.__name__ == "Symbol") or (
+                isinstance(func, sympy.Symbol)
+            ):
+                is_symbol_node = True
+
+        if is_symbol_node or func is None:
+            expr_obj = graph.get_expr_from_hash(node)
+            if expr_obj is not None:
+                if isinstance(expr_obj, sympy.Symbol):
+                    sym_name = str(expr_obj)
+
+        # add edge if we found everything
+        if sym_name and sym_name in cse_defs:
+            rhs_hash = cse_defs[sym_name]
+
+            # make sure we have the  hash in the graph
+            if G.has_node(rhs_hash):
+                # also then don't create self-loops or edges, so we get the definition before usage
+                if node != rhs_hash and not G.has_edge(node, rhs_hash):
+                    G.add_edge(node, rhs_hash)
+                    count_linked += 1
+
+    print(f"--- Linked {count_linked} CSE usages to their definitions.")
+
+    if use_register_aware_method:
+        print("--- Using Register Aware Generation Method")
+
+        out_code = generate_code_register_aware(
+            graph,
+            lname,
+            custom_functions,
+            graph._output_expr_map,  # Pass the output map directly
+            max_regs=register_limit,
         )
 
-        # add to the graph the output mapping so we know what the original expresions are like
-        output_mapping = dict(zip(lname, reduced_exprs))
-        graph.set_output_expressions(output_mapping)
+        if return_inplace_and_non_inplace:
+            return out_code, ""
 
-        print("--- Adding CSE substitutions to the graph")
-        for var, expr in substitutions:
-            node_id = graph.add_expression(expr, str(var))
-            cse_defs[str(var)] = node_id
+        return out_code
 
-        print("--- Adding CSE final expressions to graph")
-        for name, expr in zip(lname, reduced_exprs):
-            graph.add_expression(expr, name)
-
-        # sub_exprs = [expr for (_, expr) in substitutions]
-        # all_exprs = sub_exprs + reduced_exprs
-        #
-        # ## MY EDITS
-        #
-        # # (gets it to work)
-        # while len(vnames) < len(all_exprs):
-        #     vnames.append(f"_tmp_expr_{len(vnames)}")
-        #
-        # graph.add_expressions(all_exprs, vnames)
-
-        # NOTE: graph must be compsed first
-        G = graph.composed_graph()
-
-        # now we link together CSE symbols to their expressions
-        print("--- Linking CSE symbols to their expressions")
-
-        count_linked = 0
-        for node, data in G.nodes(data=True):
-            sym_name = None
-
-            func = data.get("func")
-            is_symbol_node = False
-
-            if func is not None:
-                if (isinstance(func, type) and func.__name__ == "Symbol") or (
-                    isinstance(func, sympy.Symbol)
-                ):
-                    is_symbol_node = True
-
-            if is_symbol_node or func is None:
-                expr_obj = graph.get_expr_from_hash(node)
-                if expr_obj is not None:
-                    if isinstance(expr_obj, sympy.Symbol):
-                        sym_name = str(expr_obj)
-
-            # add edge if we found everything
-            if sym_name and sym_name in cse_defs:
-                rhs_hash = cse_defs[sym_name]
-
-                # make sure we have the  hash in the graph
-                if G.has_node(rhs_hash):
-                    # also then don't create self-loops or edges, so we get the definition before usage
-                    if node != rhs_hash and not G.has_edge(node, rhs_hash):
-                        G.add_edge(node, rhs_hash)
-                        count_linked += 1
-
-        print(f"--- Linked {count_linked} CSE usages to their definitions.")
-
-        print("--- Saving graph object to pickle file")
-        with open(graph_cache_file, "wb") as f:
-            pickle.dump(graph, f)
-
-    if os.path.exists(blocks_cache_file) and not dont_read_cache:
-        print("--- Cached blocks found, loading from ", blocks_cache_file)
-        with open(blocks_cache_file, "rb") as f:
-            cached_data = pickle.load(f)
-            blocks = cached_data["blocks"]
-            output_map = cached_data["output_map"]
     else:
         print("--- Generating cluster!")
 
@@ -1574,112 +1979,113 @@ def generate_cpu_blocks(
         with open(blocks_cache_file, "wb") as f:
             pickle.dump({"blocks": blocks, "output_map": output_map}, f)
 
-    print(f"Found {len(blocks)} total blocks")
+        print(f"Found {len(blocks)} total blocks")
 
-    # for i, (graph_cluster, data) in enumerate(blocks):
-    #     print(f"\n--- BLOCK {i} ---")
-    #     print(f" Storage: {data.storage}")
-    #     print(f" num nodes in cluster: {graph_cluster.number_of_nodes()}")
-    #     print(f" num edges in cluster: {graph_cluster.number_of_edges()}")
-    #
-    #     if graph_cluster.number_of_nodes() < 20:
-    #         print(f"   Nodes: {list(graph_cluster.nodes())}")
+        # for i, (graph_cluster, data) in enumerate(blocks):
+        #     print(f"\n--- BLOCK {i} ---")
+        #     print(f" Storage: {data.storage}")
+        #     print(f" num nodes in cluster: {graph_cluster.number_of_nodes()}")
+        #     print(f" num edges in cluster: {graph_cluster.number_of_edges()}")
+        #
+        #     if graph_cluster.number_of_nodes() < 20:
+        #         print(f"   Nodes: {list(graph_cluster.nodes())}")
 
-    # import json
+        # import json
 
-    # print(json.dumps(output_map, indent=2))
+        # print(json.dumps(output_map, indent=2))
 
-    blocks_data = []
-    for i, (subgraph, data) in enumerate(blocks):
-        inputs, outputs = graph.get_cluster_io(subgraph.nodes())
-        blocks_data.append(
-            {
-                "id": i,
-                "subgraph": subgraph,
-                "inputs": inputs,
-                "outputs": outputs,
-                "data": data,
-            }
-        )
+        blocks_data = []
+        for i, (subgraph, data) in enumerate(blocks):
+            inputs, outputs = graph.get_cluster_io(subgraph.nodes())
+            blocks_data.append(
+                {
+                    "id": i,
+                    "subgraph": subgraph,
+                    "inputs": inputs,
+                    "outputs": outputs,
+                    "data": data,
+                }
+            )
 
-    # print(blocks_data)
+        # print(blocks_data)
 
-    # build dependency graph
-    block_dag = graph.build_block_graph(blocks)
+        # build dependency graph
+        block_dag = graph.build_block_graph(blocks)
 
-    # compute strongly connected ocmponents
-    scc = list(nx.strongly_connected_components(block_dag))
-    print(f"Found {len(scc)} strongly connected components")
+        # compute strongly connected ocmponents
+        scc = list(nx.strongly_connected_components(block_dag))
+        print(f"Found {len(scc)} strongly connected components")
 
-    # DAG of components to find execution order
-    component_graph = nx.condensation(block_dag, scc=scc)
+        # DAG of components to find execution order
+        component_graph = nx.condensation(block_dag, scc=scc)
 
-    # topologically sort the components
-    component_order = list(nx.topological_sort(component_graph))
+        # topologically sort the components, reminder that reversed is how we *actually* compute them
+        component_order = list(reversed(list(nx.topological_sort(component_graph))))
 
-    print("--- Component execution order determined by ExpressionGraph:")
-    print("    -> ".join(map(str, component_order)))
+        print("--- Component execution order determined by ExpressionGraph:")
+        print("    -> ".join(map(str, component_order)))
 
-    sub_var_names = set()
-    for var_sym, _ in cse_data[0]:
-        sub_var_names.add(str(var_sym))
+        sub_var_names = set()
+        for var_sym, _ in cse_data[0]:
+            sub_var_names.add(str(var_sym))
 
-    # easy look up of block data by ID
-    block_data_map = {b["id"]: b for b in blocks_data}
+        # easy look up of block data by ID
+        block_data_map = {b["id"]: b for b in blocks_data}
 
-    # get main expression graph for compent-wide subgraphs
-    main_expression_graph = graph._G_
+        # get main expression graph for compent-wide subgraphs
+        main_expression_graph = graph._G_
 
-    if return_inplace_and_non_inplace:
-        out_code_inplace = generate_code_from_graph_inplace(
-            block_data_map,
-            blocks_data,
-            component_order,
-            custom_functions,
-            graph,
-            scc,
-            sub_var_names,
-            cse_defs=cse_defs,
-            generate_for_python=generate_for_python,
-        )
+        if return_inplace_and_non_inplace:
+            out_code_inplace = generate_code_from_graph_inplace(
+                block_data_map,
+                blocks_data,
+                component_order,
+                custom_functions,
+                graph,
+                scc,
+                sub_var_names,
+                cse_defs=cse_defs,
+                generate_for_python=generate_for_python,
+                max_nodes_per_kernel=inplace_max_nodes_per_kernel,
+            )
 
-        out_code_graph = generate_code_from_graph(
-            block_data_map,
-            blocks_data,
-            component_order,
-            custom_functions,
-            graph,
-            scc,
-            sub_var_names,
-            generate_for_python=generate_for_python,
-        )
+            out_code_graph = generate_code_from_graph(
+                block_data_map,
+                blocks_data,
+                component_order,
+                custom_functions,
+                graph,
+                scc,
+                sub_var_names,
+                generate_for_python=generate_for_python,
+            )
 
-        return out_code_inplace, out_code_graph
-    if use_inplace_temporaries:
-        out_code = generate_code_from_graph_inplace(
-            block_data_map,
-            blocks_data,
-            component_order,
-            custom_functions,
-            graph,
-            scc,
-            sub_var_names,
-            cse_defs=cse_defs,
-            generate_for_python=generate_for_python,
-        )
-    else:
-        out_code = generate_code_from_graph(
-            block_data_map,
-            blocks_data,
-            component_order,
-            custom_functions,
-            graph,
-            scc,
-            sub_var_names,
-            generate_for_python=generate_for_python,
-        )
+            return out_code_inplace, out_code_graph
+        if use_inplace_temporaries:
+            out_code = generate_code_from_graph_inplace(
+                block_data_map,
+                blocks_data,
+                component_order,
+                custom_functions,
+                graph,
+                scc,
+                sub_var_names,
+                cse_defs=cse_defs,
+                generate_for_python=generate_for_python,
+            )
+        else:
+            out_code = generate_code_from_graph(
+                block_data_map,
+                blocks_data,
+                component_order,
+                custom_functions,
+                graph,
+                scc,
+                sub_var_names,
+                generate_for_python=generate_for_python,
+            )
 
-    return out_code
+        return out_code
 
 
 # MY older stuff in notes...
